@@ -40,9 +40,27 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             }
         });
 
+        // Show Database Exercises
+        //Button showDatabaseExercisesButton = findViewById(R.id.ShowDatabaseExercises);
+        // showDatabaseExercisesButton.setOnClickListener(new View.OnClickListener() {
+        // public void ShowDatabaseWorkout() {
+
+             //}
+        // }
+
+
         // Show All Exercises
-        Button sExercisesButton = (Button) findViewById(R.id.ShowExercises);
+        Button sExercisesButton = (Button) findViewById(R.id.AddExercise);
+
         // The Add one Exercise to the List
+        // Show My Saved Exercises
+        Button showMyExercisesButton = findViewById(R.id.ShowMyExercisesButton);
+        showMyExercisesButton.setOnClickListener(new View.OnClickListener() {
+                                              public void ShowMyExercises() {
+                                              }
+                                          }
+
+
 
         // Save Workout
         Button saveWorkoutButton = (Button) findViewById(R.id.SaveWorkout);

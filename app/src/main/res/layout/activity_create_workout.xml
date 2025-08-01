@@ -8,7 +8,7 @@
     tools:context=".CreateWorkoutActivity">
 
     <TextView
-        android:id="@+id/TextView11"
+        android:id="@+id/NewWorkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Workout"
@@ -21,25 +21,25 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="New Exercise Name"
-        tools:layout_editor_absoluteX="29dp"
-        tools:layout_editor_absoluteY="161dp" />
+        android:text="New Workout Name"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="103dp" />
 
     <Button
         android:id="@+id/CreateNewExercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create New Exercise"
-        tools:layout_editor_absoluteX="116dp"
-        tools:layout_editor_absoluteY="420dp" />
+        tools:layout_editor_absoluteX="207dp"
+        tools:layout_editor_absoluteY="554dp" />
 
     <Button
-        android:id="@+id/ShowExercises"
+        android:id="@+id/AddExercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Exercises"
-        tools:layout_editor_absoluteX="131dp"
-        tools:layout_editor_absoluteY="341dp" />
+        android:text="Add Exercise"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="553dp" />
 
     <Button
         android:id="@+id/SaveWorkout"
@@ -48,5 +48,12 @@
         android:text="Save Workout"
         tools:layout_editor_absoluteX="259dp"
         tools:layout_editor_absoluteY="667dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecycleViewAddExercises"
+        android:layout_width="409dp"
+        android:layout_height="404dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="149dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

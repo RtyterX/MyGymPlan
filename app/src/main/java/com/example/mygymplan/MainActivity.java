@@ -1,6 +1,10 @@
 package com.example.mygymplan;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +12,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.mygymplan.CreateWorkoutActivity;
+
+// Alt + Enter = Import Classes
+
 public class MainActivity extends AppCompatActivity {
+
+    private TextView yourName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +31,25 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Button createNewWorkoutButton = (Button) findViewById(R.id.CreateNewWorkout);
+
+        // Show Specific Workout
+
+        // Click on RecycleView Workout
+        // Intent intent = new Intent(MainActivity.this, ShowMyWorkoutActivity.class);
+        // intent.putExtra("SelectedWorkout", Workout);
+        //startActivity(intent);
+
+        // Change to Create New Workout
+        createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(MainActivity.this, CreateWorkoutActivity.class));
+            }
+        });
+
+
     }
+
+
 }
