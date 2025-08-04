@@ -14,6 +14,9 @@ public class Exercise {
     public int eRest; // Time
     public int eLoad;
 
+    public Exercise(Editable text, Editable text1, Editable text2, Editable text3, Editable text4, Editable text5) {
+    }
+
 
     public String geteName() {
         return eName;

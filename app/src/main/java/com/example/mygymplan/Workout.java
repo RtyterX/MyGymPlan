@@ -3,6 +3,7 @@ package com.example.mygymplan;
 public class Workout {
 
     public String wName;
+    public int wImage;
     public String wDescription;
     public WorkoutType[] types;
     public Exercise[] wExercises;
@@ -48,12 +49,20 @@ public class Workout {
         this.wDescription = wDescription;
     }
 
+    public int getwImage() {
+        return wImage;
+    }
 
-    public Workout(String wName, Boolean active, Exercise[] wExercises, WorkoutType[] types, String wDescription) {
+    public void setwImage(int wImage) {
+        this.wImage = wImage;
+    }
+
+    public Workout(String wName, int wImage, String wDescription, WorkoutType[] types, Exercise[] wExercises, Boolean active) {
         this.wName = wName;
-        this.active = active;
-        this.wExercises = wExercises;
-        this.types = types;
+        this.wImage = wImage;
         this.wDescription = wDescription;
+        this.types = types;
+        this.wExercises = wExercises;
+        this.active = active;
     }
 }

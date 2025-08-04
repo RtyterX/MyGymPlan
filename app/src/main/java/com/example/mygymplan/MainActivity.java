@@ -11,14 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.example.mygymplan.CreateWorkoutActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 // Alt + Enter = Import Classes
 
 public class MainActivity extends AppCompatActivity {
 
+    UserData user;
     private TextView yourName;
+    public Plan actualPlan;
+    Workout[] planWorkouts;
 
 
     @Override
@@ -32,17 +35,30 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button createNewWorkoutButton = (Button) findViewById(R.id.CreateNewWorkout);
+        // Components
+        Button editActualButton = (Button) findViewById(R.id.EditActualPlan);
+        Button createNewPlanButton = findViewById(R.id.CreateNewPlanButton);
+        RecyclerView recyclerView = findViewById(R.id.RecycleViewWorkouts);
 
-        // Show Specific Workout
+        // Show Actual Plan or Empty Recycler View
+        if (actualPlan == null) {
+            actualPlan = user.findMyActualPlan();
+        }
+
+        // Recycler View
+        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, actualPlan.planWorkouts);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         // Click on RecycleView Workout
         // Intent intent = new Intent(MainActivity.this, ShowMyWorkoutActivity.class);
         // intent.putExtra("SelectedWorkout", Workout);
         //startActivity(intent);
 
-        // Change to Create New Workout
-        createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
+
+        // Change to Create New Workout Plan
+        createNewPlanButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, CreateWorkoutActivity.class));
             }

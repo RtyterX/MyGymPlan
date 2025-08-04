@@ -2,6 +2,7 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CreateWorkoutActivity extends AppCompatActivity {
 
@@ -18,6 +21,10 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     public Exercise[] exercises;
 
     public UserData user;
+
+    public Plan thisPlan;
+    public Workout thisWorkout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +37,31 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             return insets;
         });
 
+        // ----- Received Data From Another Activity -----
+        Intent intent = getIntent();
+        thisPlan = intent.getParcelableExtra("SelectedPlan");
+
+        // Components
         wName = findViewById(R.id.NewWorkoutName);
+        RecyclerView recyclerView = findViewById(R.id.RecycleViewAddExercises);
+        Button nExerciseButton = (Button) findViewById(R.id.CreateNewExercise);
+
+        // Recycler View
+        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        // ----- BUTTONS -----
 
         // Create New Exercise
-        Button nExerciseButton = (Button) findViewById(R.id.CreateNewExercise);
         nExerciseButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                Intent intent = new Intent(CreateWorkoutActivity.this, CreateExerciseActivity.class);
+                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+                intent.putExtra("SelectedWorkout", (Parcelable) thisWorkout);
+                startActivity(intent);
+
                 startActivity(new Intent(CreateWorkoutActivity.this, CreateExerciseActivity.class));
             }
         });
@@ -69,7 +95,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 // Save new Exercise
                 user.myWorkouts = new Workout[]{new Workout(
                         wName.getText().toString(),
-                        exercises
+                        exercises,
+
                 )};
                 // Change Activity
                 startActivity(new Intent(CreateWorkoutActivity.this, MainActivity.class));

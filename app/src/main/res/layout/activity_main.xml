@@ -8,14 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/CreateNewWorkout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create New Workout"
-        tools:layout_editor_absoluteX="174dp"
-        tools:layout_editor_absoluteY="667dp" />
-
     <TextView
         android:id="@+id/MyWorkoutPlanText"
         android:layout_width="125dp"
@@ -33,6 +25,24 @@
         android:layout_width="409dp"
         android:layout_height="580dp"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="85dp" />
+        tools:layout_editor_absoluteY="85dp" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/EditActualPlan"
+        android:layout_width="145dp"
+        android:layout_height="49dp"
+        android:text="Edit Plan"
+        tools:layout_editor_absoluteX="228dp"
+        tools:layout_editor_absoluteY="666dp" />
+
+    <Button
+        android:id="@+id/CreateNewPlanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Plan"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="667dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

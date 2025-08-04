@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/RecyclerWorkoutImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="16dp"
@@ -14,7 +14,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/RecycleWorkoutName"
+        android:id="@+id/RecyclerWorkoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Workout Name"
@@ -22,7 +22,7 @@
         tools:layout_editor_absoluteY="327dp" />
 
     <TextView
-        android:id="@+id/RecycleWorkoutType"
+        android:id="@+id/RecyclerWorkoutType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Workout Enum"
@@ -30,7 +30,7 @@
         tools:layout_editor_absoluteY="327dp" />
 
     <TextView
-        android:id="@+id/RecycleWorkoutDescription"
+        android:id="@+id/RecyclerWorkoutDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Descrição: aushaushaushaushaushaushaushaushaushauashuas"

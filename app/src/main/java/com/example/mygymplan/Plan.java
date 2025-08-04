@@ -1,25 +1,26 @@
 package com.example.mygymplan;
 
+import java.util.ArrayList;
+
 public class Plan {
 
     public String planName;
-    public Workout[] planWorkouts;
+    // public Workout[] planWorkouts;
+    public ArrayList<Workout> planWorkouts;
     public Boolean active;
 
 
-    public String getPlanName() {
-        return planName;
-    }
-
-    public void setPlanName(String planName) {
+    public Plan(String planName, ArrayList<Workout> planWorkouts, Boolean active) {
         this.planName = planName;
+        this.planWorkouts = planWorkouts;
+        this.active = active;
     }
 
-    public Workout[] getPlanWorkouts() {
+    public ArrayList<Workout> getPlanWorkouts() {
         return planWorkouts;
     }
 
-    public void setPlanWorkouts(Workout[] planWorkouts) {
+    public void setPlanWorkouts(ArrayList<Workout> planWorkouts) {
         this.planWorkouts = planWorkouts;
     }
 
@@ -31,12 +32,11 @@ public class Plan {
         this.active = active;
     }
 
-    public Plan(Workout[] planWorkouts, Boolean active, String planName) {
-        this.planWorkouts = planWorkouts;
-        this.active = active;
-        this.planName = planName;
+    public String getPlanName() {
+        return planName;
     }
 
-
-
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
 }

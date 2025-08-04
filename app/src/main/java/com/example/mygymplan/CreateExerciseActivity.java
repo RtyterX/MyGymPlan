@@ -2,6 +2,7 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private EditText eLoad;
 
     private UserData user;
+    public Plan thisPlan;
+    public Workout thisWorkout;
 
 
     @Override
@@ -36,6 +39,11 @@ public class CreateExerciseActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // ----- Received Data From Another Activity -----
+        Intent intent = getIntent();
+        thisPlan = intent.getParcelableExtra("SelectedPlan");
+        thisWorkout = intent.getParcelableExtra("SelectedWorkout");
 
         // Components
         eName = findViewById(R.id.NewExerciseName);

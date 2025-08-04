@@ -13,7 +13,7 @@
         tools:layout_editor_absoluteY="-32dp">
 
         <TextView
-            android:id="@+id/RecycleExerciseName"
+            android:id="@+id/RecyclerExerciseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exercise Name"
@@ -21,7 +21,7 @@
             tools:layout_editor_absoluteY="318dp" />
 
         <TextView
-            android:id="@+id/RecycleExerciseType"
+            android:id="@+id/RecyclerExerciseType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exercise Type"
@@ -29,7 +29,7 @@
             tools:layout_editor_absoluteY="395dp" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ImageRecyclerExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="16dp"
