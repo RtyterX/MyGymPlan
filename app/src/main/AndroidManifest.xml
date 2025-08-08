@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyGymPlan">
         <activity
+            android:name=".ShowWorkoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditPlan"
             android:exported="false" />
         <activity
-            android:name=".ShowMyWorkoutActivity"
+            android:name=".ShowExerciseActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

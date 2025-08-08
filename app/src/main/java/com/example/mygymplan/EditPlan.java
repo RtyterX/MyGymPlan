@@ -77,7 +77,7 @@ public class EditPlan extends AppCompatActivity {
         createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                Intent intent = new Intent(EditPlan.this, CreateWorkoutActivity.class);
+                Intent intent = new Intent(EditPlan.this, ShowWorkoutActivity.class);
                 intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
                 startActivity(intent);
 

@@ -1,5 +1,7 @@
 package com.example.mygymplan;
 
+import java.util.ArrayList;
+
 public class Workout {
 
     public String wName;
@@ -8,6 +10,9 @@ public class Workout {
     public WorkoutType[] types;
     public Exercise[] wExercises;
     public Boolean active;
+
+    public Workout(String string, ArrayList<Exercise> wExercises) {
+    }
 
     public String getwName() {
         return wName;

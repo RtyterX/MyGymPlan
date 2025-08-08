@@ -14,7 +14,19 @@ public class Exercise {
     public int eRest; // Time
     public int eLoad;
 
-    public Exercise(Editable text, Editable text1, Editable text2, Editable text3, Editable text4, Editable text5) {
+
+    public Exercise(String eName, int eImage, String eDescription, WorkoutType eType, int eSets, int eReps, int eRest, int eLoad) {
+        this.eName = eName;
+        this.eImage = eImage;
+        this.eDescription = eDescription;
+        this.eType = eType;
+        this.eSets = eSets;
+        this.eReps = eReps;
+        this.eRest = eRest;
+        this.eLoad = eLoad;
+    }
+
+    public Exercise(EditText eName, Editable text, Editable text1, Editable text2, Editable text3, Editable text4) {
     }
 
 
@@ -81,17 +93,4 @@ public class Exercise {
     public void seteLoad(int eLoad) {
         this.eLoad = eLoad;
     }
-
-    public Exercise(String eName, int eLoad, int eRest, int eReps, int eSets, WorkoutType eType, String eDescription, int eImage) {
-        this.eName = eName;
-        this.eLoad = eLoad;
-        this.eRest = eRest;
-        this.eReps = eReps;
-        this.eSets = eSets;
-        this.eType = eType;
-        this.eDescription = eDescription;
-        this.eImage = eImage;
-    }
-
-
 }

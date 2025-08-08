@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 // Alt + Enter = Import Classes
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     UserData user;
     private TextView yourName;
     public Plan actualPlan;
-    Workout[] planWorkouts;
+    // Workout[] planWorkouts;
 
 
     @Override
@@ -36,19 +35,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Components
-        Button editActualButton = (Button) findViewById(R.id.EditActualPlan);
-        Button createNewPlanButton = findViewById(R.id.CreateNewPlanButton);
+        Button editActualPlanButton = (Button) findViewById(R.id.EditActualPlan);
+        Button createNewPlanButton = (Button) findViewById(R.id.CreateNewPlanButton);
         RecyclerView recyclerView = findViewById(R.id.RecycleViewWorkouts);
 
         // Show Actual Plan or Empty Recycler View
-        if (actualPlan == null) {
-            actualPlan = user.findMyActualPlan();
-        }
+        //if (actualPlan == null) {
+          //  actualPlan = user.findMyActualPlan();
+       // }
 
         // Recycler View
-        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, actualPlan.planWorkouts);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+       // RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, actualPlan.planWorkouts);
+       // recyclerView.setAdapter(adapter);
+       // recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         // Click on RecycleView Workout
@@ -59,10 +58,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Change to Create New Workout Plan
         createNewPlanButton.setOnClickListener(new View.OnClickListener(){
+            @Override
             public void onClick(View v){
-                startActivity(new Intent(MainActivity.this, CreateWorkoutActivity.class));
+                startActivity(new Intent(MainActivity.this, ShowWorkoutActivity.class));
             }
         });
+
+        // Edit Active Workout Plan
+        editActualPlanButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(MainActivity.this, EditPlan.class));
+            }
+        });
+
 
 
     }
