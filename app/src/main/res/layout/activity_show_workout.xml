@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".ShowWorkoutActivity">
 
+    <Button
+        android:id="@+id/BackButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back Button"
+        app:layout_constraintEnd_toStartOf="@+id/SavePlanButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/WorkoutName"
         android:layout_width="wrap_content"
@@ -56,12 +65,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Create New ExerciseButton"
+        android:text="Create New Exercise"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecycleViewWorkouts"
         android:layout_width="410dp"
         android:layout_height="396dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
@@ -70,5 +80,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.799" />
+
+    <Button
+        android:id="@+id/DeleteWorkoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Workout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

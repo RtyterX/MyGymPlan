@@ -2,25 +2,31 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 // Alt + Enter = Import Classes
 
 public class MainActivity extends AppCompatActivity {
 
+    // Data
     UserData user;
-    private TextView yourName;
-    public Plan actualPlan;
-    // Workout[] planWorkouts;
+    Plan thisPlan;
+    ArrayList<Workout> planWorkouts;
 
 
     @Override
@@ -34,40 +40,58 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // ----- Received Data From Another Activity -----
+        Intent intent = getIntent();
+        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
+
+
         // Components
         Button editActualPlanButton = (Button) findViewById(R.id.EditActualPlan);
         Button createNewPlanButton = (Button) findViewById(R.id.CreateNewPlanButton);
         RecyclerView recyclerView = findViewById(R.id.RecycleViewWorkouts);
 
-        // Show Actual Plan or Empty Recycler View
-        //if (actualPlan == null) {
-          //  actualPlan = user.findMyActualPlan();
-       // }
 
         // Recycler View
-       // RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, actualPlan.planWorkouts);
-       // recyclerView.setAdapter(adapter);
-       // recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
+        //recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Show Actual Plan or Empty Recycler View
+        //if (actualPlan == null) {
+        //  actualPlan = user.findMyActualPlan();
+        // }
 
 
-        // Click on RecycleView Workout
-        // Intent intent = new Intent(MainActivity.this, ShowMyWorkoutActivity.class);
-        // intent.putExtra("SelectedWorkout", Workout);
-        //startActivity(intent);
-
+        // ----- BUTTONS -----
 
         // Change to Create New Workout Plan
         createNewPlanButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                startActivity(new Intent(MainActivity.this, ShowWorkoutActivity.class));
+
+                ThisIgualNewPlan();
+
+                Workout newWorkout = new Workout(
+                        0,
+                        "New Workout"
+                );
+
+                Intent intent = new Intent(MainActivity.this, EditPlan.class);
+                intent.putExtra("SelectedPlan", thisPlan);
+                // intent.putExtra("SelectedWorkout", newWorkout);
+
+                startActivity(intent);
             }
         });
 
         // Edit Active Workout Plan
         editActualPlanButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(MainActivity.this, EditPlan.class));
+
+                Intent intent = new Intent(MainActivity.this, EditPlan.class);
+                intent.putExtra("SelectedPlan", thisPlan);
+
+                startActivity(intent);
             }
         });
 
@@ -75,5 +99,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void ThisIgualNewPlan() {
+        ArrayList<Workout> newWorkoutList = new ArrayList<Workout>();
+
+        thisPlan = new Plan(
+                0,
+                "Tyter é foda",
+                newWorkoutList,
+                true
+        );
+
+
+    }
 
 }

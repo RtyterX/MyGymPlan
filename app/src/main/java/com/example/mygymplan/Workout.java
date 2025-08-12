@@ -1,25 +1,39 @@
 package com.example.mygymplan;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Workout {
+public class Workout implements Serializable {
 
+    public int id;
     public String wName;
     public int wImage;
     public String wDescription;
     public WorkoutType[] types;
-    public Exercise[] wExercises;
+    public ArrayList<Exercise> wExercises;
     public Boolean active;
 
-    public Workout(String string, ArrayList<Exercise> wExercises) {
+
+    // ---- Constructor ----
+
+    public Workout(int length, String string, ArrayList<Exercise> wExercises) {
     }
 
-    public String getwName() {
-        return wName;
+
+    public Workout(int id, String name) {
+        this.id = id;
+        wName = name;
     }
 
-    public void setwName(String wName) {
-        this.wName = wName;
+    // ---- Getters and Setters ----
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Boolean getActive() {
@@ -30,11 +44,11 @@ public class Workout {
         this.active = active;
     }
 
-    public Exercise[] getwExercises() {
+    public ArrayList<Exercise> getwExercises() {
         return wExercises;
     }
 
-    public void setwExercises(Exercise[] wExercises) {
+    public void setwExercises(ArrayList<Exercise> wExercises) {
         this.wExercises = wExercises;
     }
 
@@ -62,12 +76,11 @@ public class Workout {
         this.wImage = wImage;
     }
 
-    public Workout(String wName, int wImage, String wDescription, WorkoutType[] types, Exercise[] wExercises, Boolean active) {
+    public String getwName() {
+        return wName;
+    }
+
+    public void setwName(String wName) {
         this.wName = wName;
-        this.wImage = wImage;
-        this.wDescription = wDescription;
-        this.types = types;
-        this.wExercises = wExercises;
-        this.active = active;
     }
 }

@@ -2,12 +2,14 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,16 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EditPlan extends AppCompatActivity {
 
     UserData user;
     Plan thisPlan;
-    Plan alteredPlan;
 
     public EditText planName;
     ArrayList<Workout> thisPlanWorkouts;
-    public Boolean isActive;
+    public boolean isActive;
+
+    int  i;
+    String NewPlanCompareString;
 
 
     @Override
@@ -39,9 +44,10 @@ public class EditPlan extends AppCompatActivity {
             return insets;
         });
 
+
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-        thisPlan = intent.getParcelableExtra("SelectedPlan");
+        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
 
         // Components
         planName = findViewById(R.id.NewPlanName);
@@ -51,17 +57,16 @@ public class EditPlan extends AppCompatActivity {
         Button savePlanButton = findViewById(R.id.SavePlanButton);
         RecyclerView recyclerView = findViewById(R.id.PlanWorkoutsRecyclerView);
 
+        // Set Plan Name based on Received Data
+        planName.setText(thisPlan.planName);
+        i = thisPlan.id;
+        NewPlanCompareString = thisPlan.planName;
+
         // Recycler View
-        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
+        //recyclerView.setAdapter(adapter);
+       // recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        // Change Active Plan Button text to Deactivate, if is already Active
-        if (thisPlan.active)
-        {
-            activePlanButton.setText("Deactive");
-        }
 
 
         // ---- BUTTONS ----
@@ -77,8 +82,14 @@ public class EditPlan extends AppCompatActivity {
         createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
+                Workout newWorkout = new Workout(
+                        0,
+                        "New Workout test"
+                );
+
                 Intent intent = new Intent(EditPlan.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", newWorkout);
                 startActivity(intent);
 
             }
@@ -86,17 +97,54 @@ public class EditPlan extends AppCompatActivity {
 
         // Save This Plan
         savePlanButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                alteredPlan = new Plan(planName.toString(), thisPlanWorkouts, isActive);
-                thisPlan = alteredPlan;
+            public void onClick(View v) {
+                // Create if Workout is New
+                if (Objects.equals(NewPlanCompareString, "New Plan")) {
+                    Plan newPlan = new Plan(
+                            user.myPlans.size(),
+                            planName.getText().toString(),
+                            thisPlanWorkouts,
+                            false
+
+                    );
+                    user.myPlans.add(newPlan);
+                }
+                // Save if Workout is already created
+                else {
+                    Plan savePlan = new Plan(
+                            i,
+                            planName.getText().toString(),
+                            thisPlanWorkouts,
+                            false
+                    );
+                    user.myPlans.set(i, savePlan);
+                }
+
+
+                // Change Activity
+                Intent intent = new Intent(EditPlan.this, MainActivity.class);
+                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+
+                startActivity(intent);
             }
         });
 
         // Return to Main Activity
         backButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (thisPlan == alteredPlan) {
-                    startActivity(new Intent(EditPlan.this, MainActivity.class));
+
+                Plan alteredPlan = new Plan(
+                        i,
+                        planName.getText().toString(),
+                        thisPlanWorkouts,
+                        false
+                );
+
+                if (Objects.equals(thisPlan, alteredPlan)) {
+
+                    Intent intent = new Intent(EditPlan.this, MainActivity.class);
+                    intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+                    startActivity(intent);
                 }
                 else {
                     // Show Warning
@@ -105,4 +153,6 @@ public class EditPlan extends AppCompatActivity {
         });
 
     }
+
+
 }

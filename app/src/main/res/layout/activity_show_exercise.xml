@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".ShowExerciseActivity">
 
+    <Button
+        android:id="@+id/BackButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Back Button"
+        app:layout_constraintEnd_toStartOf="@+id/SavePlanButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/ExerciseName"
         android:layout_width="wrap_content"
@@ -33,10 +43,11 @@
         android:id="@+id/SaveExercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save New Exercise"
         android:paddingBottom="20dp"
+        android:text="Save New Exercise"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ScrollView
@@ -114,5 +125,16 @@
                 android:inputType="number" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/DeleteExerciseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Delete Exercise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/SaveExercise"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

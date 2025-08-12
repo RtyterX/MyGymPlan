@@ -16,7 +16,6 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
     UserData user;
     Context context;
-    public Exercise[] savedExercises = user.myExercises;
 
     ArrayList<Exercise> myExercises;
 
@@ -52,7 +51,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return user.myExercises.length;
+        return user.myExercises.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

@@ -49,7 +49,7 @@ class RV_PrefabExerciseAdapter extends RecyclerView.Adapter<RV_PrefabExerciseAda
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return examples.size() + user.myExercises.length;
+        return user.myExercises.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

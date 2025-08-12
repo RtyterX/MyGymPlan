@@ -1,27 +1,44 @@
 package com.example.mygymplan;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Plan {
 
+public class Plan implements Serializable {
+
+    public int id;
     public String planName;
-    // public Workout[] planWorkouts;
-    public ArrayList<Workout> planWorkouts;
     public Boolean active;
+    public ArrayList<Workout> planWorkouts;
 
+    // ---- Constructor ----
 
-    public Plan(String planName, ArrayList<Workout> planWorkouts, Boolean active) {
+    public Plan(int id, String planName, ArrayList<Workout> planWorkouts, Boolean active) {
+        this.id = id;
         this.planName = planName;
         this.planWorkouts = planWorkouts;
         this.active = active;
     }
 
-    public ArrayList<Workout> getPlanWorkouts() {
-        return planWorkouts;
+
+    // ---- Getters and Setters ----
+
+    public int getId() {
+        return id;
     }
 
-    public void setPlanWorkouts(ArrayList<Workout> planWorkouts) {
-        this.planWorkouts = planWorkouts;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
 
     public Boolean getActive() {
@@ -32,11 +49,11 @@ public class Plan {
         this.active = active;
     }
 
-    public String getPlanName() {
-        return planName;
+    public ArrayList<Workout> getPlanWorkouts() {
+        return planWorkouts;
     }
 
-    public void setPlanName(String planName) {
-        this.planName = planName;
+    public void setPlanWorkouts(ArrayList<Workout> planWorkouts) {
+        this.planWorkouts = planWorkouts;
     }
 }
