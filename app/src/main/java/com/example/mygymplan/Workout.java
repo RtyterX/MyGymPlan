@@ -16,18 +16,12 @@ public class Workout implements Serializable {
 
     // ---- Constructor ----
 
-    public Workout(int length, String string, ArrayList<Exercise> wExercises) {
-    }
-
-
-    public Workout(int id, String name) {
+    public Workout(int id, String name, ArrayList<Exercise> wExercises) {
         this.id = id;
         wName = name;
+        this.wExercises = wExercises;
     }
 
-    public Workout() {
-
-    }
 
     // ---- Getters and Setters ----
 

@@ -49,12 +49,6 @@ public class ShowExerciseActivity extends AppCompatActivity {
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
         //i = thisExercise.id;
 
-        // Examples to Test:
-        //String receivedString = intent.getStringExtra("key_string");
-        //int receivedInt = intent.getIntExtra("key_int", 0); // 0 is a default value
-        // MyCustomObject receivedObject = (MyCustomObject) intent.getSerializableExtra("key_object");
-        // Or: MyCustomObject receivedObject = intent.getParcelableExtra("key_object");
-
 
         // Components
         EditText eName = findViewById(R.id.ExerciseName);

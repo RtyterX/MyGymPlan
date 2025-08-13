@@ -22,15 +22,21 @@ import java.util.Objects;
 
 public class EditPlan extends AppCompatActivity {
 
+    // Data
     UserData user;
     Plan thisPlan;
-
-    public EditText planName;
-    ArrayList<Workout> thisPlanWorkouts;
-    public boolean isActive;
-
     int  i;
     String NewPlanCompareString;
+     
+    // UI Elements
+    public EditText planName;
+    ArrayList<Workout> displayedWorkouts;
+    public boolean isActive;
+
+    // Recycler View
+    RV_MyWorkoutAdapter adapter;
+    RecyclerView recyclerView;
+    TextView emptyView;
 
 
     @Override
@@ -49,24 +55,29 @@ public class EditPlan extends AppCompatActivity {
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
 
+
         // Components
         planName = findViewById(R.id.NewPlanName);
         Button activePlanButton = findViewById(R.id.ActivePlan);
         Button createNewWorkoutButton = findViewById(R.id.CreateNewWorkout);
         Button backButton = findViewById(R.id.BackButton);
         Button savePlanButton = findViewById(R.id.SavePlanButton);
-        RecyclerView recyclerView = findViewById(R.id.PlanWorkoutsRecyclerView);
 
-        // Set Plan Name based on Received Data
+        recyclerView = findViewById(R.id.PlanWorkoutsRecyclerView);
+        emptyView = findViewById(R.id.EditPlanEmptyRVWorkouts);
+
+
+        // Set Values based on Received Data
         planName.setText(thisPlan.planName);
         i = thisPlan.id;
         NewPlanCompareString = thisPlan.planName;
+        displayedWorkouts = thisPlan.planWorkouts;
+
 
         // Recycler View
-        //RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
-        //recyclerView.setAdapter(adapter);
-       // recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, displayedWorkouts);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         // ---- BUTTONS ----
@@ -152,6 +163,19 @@ public class EditPlan extends AppCompatActivity {
             }
         });
 
+
+        checkEmptyState();
+
+    }
+
+    private void checkEmptyState(){
+    if (displayedWorkouts.isEmpty()) {
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+    }
+    else {
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
     }
 
 
