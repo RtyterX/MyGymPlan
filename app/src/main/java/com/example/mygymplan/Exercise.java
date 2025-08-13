@@ -4,7 +4,9 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.widget.EditText;
 
-public class Exercise {
+import java.io.Serializable;
+
+public class Exercise implements Serializable {
 
     public int id;
     public String eName;

@@ -27,6 +27,9 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         this.myWorkout = myWorkout;
     }
 
+    public RV_MyWorkoutAdapter(ArrayList<Exercise> exercises) {
+    }
+
     @NonNull
     @Override
     public RV_MyWorkoutAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

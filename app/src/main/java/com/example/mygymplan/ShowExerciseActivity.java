@@ -3,16 +3,19 @@ package com.example.mygymplan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Objects;
 
@@ -42,8 +45,8 @@ public class ShowExerciseActivity extends AppCompatActivity {
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
-        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
-       // thisExercise = intent.getParcelableExtra("SelectedExercise");
+        // thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
+        thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
         //i = thisExercise.id;
 
         // Examples to Test:
@@ -55,7 +58,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
         // Components
         EditText eName = findViewById(R.id.ExerciseName);
-        ImageView eImage = findViewById(R.id.ExerciseImage);
+        // ImageView eImage = findViewById(R.id.ExerciseImage);
         EditText eDescription = findViewById(R.id.ExerciseDescription);
         EditText eSets = findViewById(R.id.ExerciseSets);
         EditText eReps = findViewById(R.id.ExerciseReps);
@@ -66,15 +69,15 @@ public class ShowExerciseActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.BackButton3);               // Just for Test - Going to be in Toolbar
 
         // Set UI Values
-        //eName.setText(intent.getParcelableExtra(thisExercise.eName));
+        //eName.setText(thisExercise.eName);
         // eImage.setText(intent.getParcelableExtra(thisExercise.eName));
-        //eDescription.setText(intent.getParcelableExtra(thisExercise.eDescription));
-        //eSets.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eSets)));
-        //eReps.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eReps)));
-        //eRest.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eRest)));
-        //eLoad.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eLoad)));
+        // eDescription.setText(intent.getParcelableExtra(thisExercise.eDescription));
+        //eSets.setText(intent.getExtras(thisExercise.eSets));
+        //Reps.setText(intent.get(String.valueOf((int) thisExercise.eReps)));
+        // eRest.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eRest)));
+        // eLoad.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eLoad)));
 
-        NewExerciseCompareString = thisExercise.eName;
+        // NewExerciseCompareString = thisExercise.eName;
 
         // ----- Buttons -----
 
@@ -111,8 +114,8 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
                 // Change Activity
                 Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-                intent.putExtra("SelectedWorkout", (Parcelable) thisWorkout);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
 
                 startActivity(intent);
             }
@@ -126,8 +129,8 @@ public class ShowExerciseActivity extends AppCompatActivity {
                 user.myExercises.remove(i);
 
                 Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-                intent.putExtra("SelectedWorkout", (Parcelable) thisWorkout);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
 
                 startActivity(intent);
             }
@@ -138,13 +141,14 @@ public class ShowExerciseActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-                intent.putExtra("SelectedWorkout", (Parcelable) thisWorkout);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
 
                 startActivity(intent);
             }
         });
 
     }
+
 
 }

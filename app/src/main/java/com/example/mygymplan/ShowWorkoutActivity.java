@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +34,12 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     public Workout thisWorkout;
     int i;  // Id for exercise already created
 
-    String NewWorkoutCompareString;
+    String NewWorkoutCompareString;  // Check if Workout is a New Workout
+
+    RV_MyWorkoutAdapter adapter;
+    RecyclerView recyclerView;
+    TextView emptyView;
+
 
     // UI Elements
     private EditText wName;
@@ -65,20 +71,27 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
         Button backButton = findViewById(R.id.BackButton2);
         Button deleteButton = findViewById(R.id.DeleteWorkoutButton);
-        RecyclerView recyclerView = findViewById(R.id.RecycleViewWorkouts);
+
+        recyclerView = findViewById(R.id.RecycleViewWorkouts);
+        emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
         // Set Workout Name based on Received Data
+        thisWorkout.wExercises = new ArrayList<>();
+        thisPlan.planWorkouts = new ArrayList<>();
         wName.setText(thisWorkout.wName);
         i = thisWorkout.id;
         NewWorkoutCompareString = thisWorkout.wName;
 
 
-
         // Recycler View
-        //RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
-        //recyclerView.setAdapter(adapter);
+         RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
+        //adapter = new RV_MyWorkoutAdapter(new ArrayList<Exercise>());
+
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+         checkEmptyState();
 
 
         // ----- BUTTONS -----
@@ -87,7 +100,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         newExerciseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Exercise newExercise = new Exercise(
-                        user.myExercises.size(),
+                        1,
                         "New Exercise",
                         "Write your Description here...",
                         "4",
@@ -97,8 +110,12 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                 );
 
 
+                thisWorkout = new Workout();
+
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
- 
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
+                intent.putExtra("SelectedWorkout", newExercise);
 
                 startActivity(intent);
             }
@@ -125,22 +142,12 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                 //popupWindow.showAtLocation(findViewById(R.id.activity_main), Gravity.CENTER, 0, 0);
 
 
-                Exercise newExercise = new Exercise(
-                        user.myExercises.size(),
-                        "New Exercise",
-                        "Write your description here...",
-                        "4",
-                        "8",
-                        "1",
-                        "0"
-                );
+                //Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
+                //intent.putExtra("SelectedPlan", thisPlan);
+               // intent.putExtra("SelectedWorkout", thisWorkout);
+               // intent.putExtra("SelectedWorkout", newExercise);
 
-                Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-                intent.putExtra("SelectedWorkout", (Parcelable) thisWorkout);
-                intent.putExtra("SelectedWorkout", (Parcelable) newExercise);
-
-                startActivity(intent);
+                //startActivity(intent);
 
             }
 
@@ -174,7 +181,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
                 // Change Activity
                 Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+                intent.putExtra("SelectedPlan", thisPlan);
 
                 startActivity(intent);
 
@@ -199,7 +206,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-                intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
+                intent.putExtra("SelectedPlan", thisPlan);
 
                 startActivity(intent);
             }
@@ -231,6 +238,19 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         //});
+    }
+
+    private void checkEmptyState(){
+        if (thisWorkout.wExercises.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
+
     }
 
 }

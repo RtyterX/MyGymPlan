@@ -29,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Workout> planWorkouts;
 
 
+
+    // UI
+    RecyclerView recyclerView;
+    TextView emptyView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +50,16 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
 
+        assert thisPlan != null;
+        planWorkouts = thisPlan.getPlanWorkouts();
+
 
         // Components
         Button editActualPlanButton = (Button) findViewById(R.id.EditActualPlan);
         Button createNewPlanButton = (Button) findViewById(R.id.CreateNewPlanButton);
-        RecyclerView recyclerView = findViewById(R.id.RecycleViewWorkouts);
+
+        recyclerView = findViewById(R.id.RecycleViewWorkouts);
+        emptyView = findViewById(R.id.EmptyRVWorkouts2);
 
 
         // Recycler View
@@ -95,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        checkEmptyState();
 
     }
 
@@ -108,6 +119,19 @@ public class MainActivity extends AppCompatActivity {
                 newWorkoutList,
                 true
         );
+
+
+    }
+
+    private void checkEmptyState(){
+        if (thisPlan.planWorkouts.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
 
 
     }

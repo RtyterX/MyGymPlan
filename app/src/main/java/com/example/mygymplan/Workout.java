@@ -25,6 +25,10 @@ public class Workout implements Serializable {
         wName = name;
     }
 
+    public Workout() {
+
+    }
+
     // ---- Getters and Setters ----
 
 

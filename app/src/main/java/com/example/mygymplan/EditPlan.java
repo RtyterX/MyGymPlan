@@ -84,7 +84,7 @@ public class EditPlan extends AppCompatActivity {
 
                 Workout newWorkout = new Workout(
                         0,
-                        "New Workout test"
+                        "New Workout test 2"
                 );
 
                 Intent intent = new Intent(EditPlan.this, ShowWorkoutActivity.class);
