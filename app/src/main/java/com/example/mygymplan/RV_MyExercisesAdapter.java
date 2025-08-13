@@ -14,16 +14,14 @@ import java.util.ArrayList;
 
 public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAdapter.MyViewHolder> {
 
-    UserData user;
     Context context;
-
-    ArrayList<Exercise> myExercises;
+    ArrayList<Exercise> exerciseList;
 
 
     // Constructor
-    public RV_MyExercisesAdapter(Context context, ArrayList<Exercise> myExercises) {
+    public RV_MyExercisesAdapter(Context context, ArrayList<Exercise> exerciseList) {
         this.context = context;
-        this.myExercises = myExercises;
+        this.exerciseList = exerciseList;
     }
 
     @NonNull
@@ -42,16 +40,16 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(myExercises.get(position).geteName());
-        holder.textViewType.setText(myExercises.get(position).geteType().toString());
-        holder.imageView.setImageResource(myExercises.get(position).geteImage());
+        holder.textViewName.setText(exerciseList.get(position).geteName());
+        holder.textViewType.setText(exerciseList.get(position).geteType().toString());
+        // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
 
     @Override
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return user.myExercises.size();
+        return exerciseList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +66,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
             textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
-            imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
+            // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
         }
     }
 }

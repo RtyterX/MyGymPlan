@@ -33,17 +33,16 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     public Plan thisPlan;
     public Workout thisWorkout;
     int i;  // Id for exercise already created
-
     String NewWorkoutCompareString;  // Check if Workout is a New Workout
-
-    RV_MyWorkoutAdapter adapter;
-    RecyclerView recyclerView;
-    TextView emptyView;
-
 
     // UI Elements
     private EditText wName;
-    ArrayList<Exercise> wExercises;
+    ArrayList<Exercise> displayedExercises; 
+
+    // RecyclerView
+    RV_MyExercisesAdapter adapter;
+    RecyclerView recyclerView;
+    TextView emptyView;
 
 
     @Override
@@ -76,22 +75,18 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
-        // Set Workout Name based on Received Data
-        thisWorkout.wExercises = new ArrayList<>();
-        thisPlan.planWorkouts = new ArrayList<>();
+        // Set Values based on Received Data
+        displayedExercises = thisWorkout.wExercises;
         wName.setText(thisWorkout.wName);
         i = thisWorkout.id;
         NewWorkoutCompareString = thisWorkout.wName;
 
 
-        // Recycler View
-         RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, thisPlan.planWorkouts);
-        //adapter = new RV_MyWorkoutAdapter(new ArrayList<Exercise>());
-
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Recycler View Adapter
+        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(this, displayedExercises);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-         checkEmptyState();
 
 
         // ----- BUTTONS -----
@@ -162,7 +157,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                 // Create if Workout is New
                 if (Objects.equals(NewWorkoutCompareString, "New Workout")) {
                     Workout newWorkout = new Workout(
-                            user.myWorkouts.size(),
+                            1,
                             wName.getText().toString(),
                             wExercises
                     );
@@ -171,7 +166,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                 // Save if Workout is already created
                 else {
                     Workout saveWorkout = new Workout(
-                            i,
+                            2,
                             wName.getText().toString(),
                             wExercises
                     );
@@ -238,10 +233,15 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         //});
+
+
+        checkEmptyState();
+
     }
 
     private void checkEmptyState(){
-        if (thisWorkout.wExercises.isEmpty()) {
+        //if (thisWorkout.wExercises.isEmpty()) {
+        if (displayedExercises.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -249,7 +249,6 @@ public class ShowWorkoutActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-
 
     }
 

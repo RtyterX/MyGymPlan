@@ -17,17 +17,13 @@ import java.util.Arrays;
 
 public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapter.MyViewHolder>  {
 
-    UserData user;
     Context context;
-    ArrayList<Workout> myWorkout;
+    ArrayList<Workout> workoutList;
 
     // Constructor
-    public RV_MyWorkoutAdapter(Context context, ArrayList<Workout> myWorkout) {
+    public RV_MyWorkoutAdapter(Context context, ArrayList<Workout> workoutList) {
         this.context = context;
-        this.myWorkout = myWorkout;
-    }
-
-    public RV_MyWorkoutAdapter(ArrayList<Exercise> exercises) {
+        this.workoutList = workoutList;
     }
 
     @NonNull
@@ -46,10 +42,10 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(myWorkout.get(position).getwName());
-        holder.textViewType.setText(Arrays.toString(myWorkout.get(position).getTypes()));
-        holder.textViewDescription.setText(myWorkout.get(position).getwDescription());
-        holder.imageView.setImageResource(myWorkout.get(position).getwImage());
+        holder.textViewName.setText(workoutList.get(position).getwName());
+        holder.textViewType.setText(Arrays.toString(workoutList.get(position).getTypes()));
+        holder.textViewDescription.setText(workoutList.get(position).getwDescription());
+        // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
 
     }
@@ -58,7 +54,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return user.myWorkouts.size();
+        return WorkoutList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +64,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         TextView textViewName;
         TextView textViewType;
         TextView textViewDescription;
-        ImageView imageView;
+        // ImageView imageView;
 
 
         // Constructor
@@ -78,7 +74,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
             textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
             textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
-            imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+            // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
         }
     }
 
