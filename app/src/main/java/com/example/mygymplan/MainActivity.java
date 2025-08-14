@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import kotlinx.coroutines.scheduling.WorkQueueKt;
+
 // Alt + Enter = Import Classes
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // RecyclerView
-    RV_MyWorkoutAdapter adapter
+    RV_MyWorkoutAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
 
@@ -48,34 +50,35 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        CheckIfHasUserData();
+
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         
 
         // Components
-        Button editActualPlanButton = (Button) findViewById(R.id.EditActualPlan);
-        Button createNewPlanButton = (Button) findViewById(R.id.CreateNewPlanButton);
+        Button editActualPlanButton = findViewById(R.id.EditActualPlan);
+        Button createNewPlanButton = findViewById(R.id.CreateNewPlanButton);
+        TextView teste = findViewById(R.id.TesteUser2);
+
 
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts2);
 
 
         // Set Values based on Received Data
-        user = new UserData;
-
-        //CheckIfHasNoPlan();
-    
-        displayedWorkouts = thisPlan.planWorkouts;
+        ThisEqualsNewPlan();
+        teste.setText(thisPlan.planName);
 
         // assert thisPlan != null;  // Test
         // planWorkouts = thisPlan.getPlanWorkouts();
 
 
         // Recycler View
-        // adapter = new RV_MyWorkoutAdapter(this, displayedWorkouts);
-       // recyclerView.setAdapter(adapter);
-       // recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //adapter = new RV_MyWorkoutAdapter(this, displayedWorkouts);
+        //recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
 
@@ -86,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
 
-                ThisIgualNewPlan();
-                ArrayList<Workout> newExerciseList = new ArrayList<Exercise>();
+                ThisEqualsNewPlan();
+                ArrayList<Exercise> newExerciseList = new ArrayList<>();
                 Workout newWorkout = new Workout(
                         0,
                         "New Workout",
@@ -95,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 Intent intent = new Intent(MainActivity.this, EditPlan.class);
+                intent.putExtra("UserData", user);
                 intent.putExtra("SelectedPlan", thisPlan);
-                // intent.putExtra("SelectedWorkout", newWorkout);
+                intent.putExtra("SelectedWorkout", newWorkout);
 
                 startActivity(intent);
             }
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        checkEmptyState();
+         checkEmptyState();
 
     }
 
@@ -139,9 +143,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void CheckIfHasNoPlan() {
-        if (user.myPlans == null) {
-            ThisIgualNewPlan();
+    private void CheckIfHasUserData() {
+        if (user == null) {
+
+            ArrayList<Plan> basePlan = new ArrayList<>();
+            ArrayList<Workout> baseWork = new ArrayList<>();
+            ArrayList<Exercise> baseExercise = new ArrayList<>();
+
+            user = new UserData("New user", basePlan, baseWork, baseExercise);
         }
         else {
             // Find Active Plan

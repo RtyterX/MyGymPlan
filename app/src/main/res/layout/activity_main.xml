@@ -63,4 +63,12 @@
         app:layout_constraintHorizontal_bias="0.741"
         app:layout_constraintStart_toEndOf="@+id/EditActualPlan" />
 
+    <TextView
+        android:id="@+id/TesteUser2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="155dp"
+        tools:layout_editor_absoluteY="84dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

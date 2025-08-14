@@ -1,9 +1,10 @@
 package com.example.mygymplan;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class UserData {
+public class UserData implements Serializable {
 
     String name;
     public ArrayList<Plan> myPlans;

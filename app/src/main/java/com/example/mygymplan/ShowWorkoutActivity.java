@@ -104,8 +104,12 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                         "0"
                 );
 
-
-                thisWorkout = new Workout();
+                ArrayList<Exercise> newExerciseList = new ArrayList<>();
+                thisWorkout = new Workout(
+                        1,
+                        "New Workout teste 3",
+                        newExerciseList
+                );
 
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
                 intent.putExtra("SelectedPlan", thisPlan);
@@ -156,10 +160,11 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
                 // Create if Workout is New
                 if (Objects.equals(NewWorkoutCompareString, "New Workout")) {
+                    ArrayList<Exercise> newExerciseList = new ArrayList<>();
                     Workout newWorkout = new Workout(
                             1,
                             wName.getText().toString(),
-                            wExercises
+                            newExerciseList
                     );
                     user.myWorkouts.add(newWorkout);
                 }
@@ -168,7 +173,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                     Workout saveWorkout = new Workout(
                             2,
                             wName.getText().toString(),
-                            wExercises
+                            displayedExercises
                     );
                     user.myWorkouts.set(i, saveWorkout);
                 }

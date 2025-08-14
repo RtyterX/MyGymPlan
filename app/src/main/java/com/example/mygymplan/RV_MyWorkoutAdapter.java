@@ -54,7 +54,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return WorkoutList.size();
+        return workoutList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

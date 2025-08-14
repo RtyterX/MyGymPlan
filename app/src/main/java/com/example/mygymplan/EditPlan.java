@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ public class EditPlan extends AppCompatActivity {
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
+        user = (UserData) intent.getSerializableExtra("UserData");
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
 
 
@@ -93,9 +95,11 @@ public class EditPlan extends AppCompatActivity {
         createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
+                ArrayList<Exercise> newExerciseList = new ArrayList<>();
                 Workout newWorkout = new Workout(
                         0,
-                        "New Workout test 2"
+                        "New Workout test 2",
+                        newExerciseList
                 );
 
                 Intent intent = new Intent(EditPlan.this, ShowWorkoutActivity.class);
@@ -114,7 +118,7 @@ public class EditPlan extends AppCompatActivity {
                     Plan newPlan = new Plan(
                             user.myPlans.size(),
                             planName.getText().toString(),
-                            thisPlanWorkouts,
+                            displayedWorkouts,
                             false
 
                     );
@@ -125,7 +129,7 @@ public class EditPlan extends AppCompatActivity {
                     Plan savePlan = new Plan(
                             i,
                             planName.getText().toString(),
-                            thisPlanWorkouts,
+                            displayedWorkouts,
                             false
                     );
                     user.myPlans.set(i, savePlan);
@@ -147,7 +151,7 @@ public class EditPlan extends AppCompatActivity {
                 Plan alteredPlan = new Plan(
                         i,
                         planName.getText().toString(),
-                        thisPlanWorkouts,
+                        displayedWorkouts,
                         false
                 );
 
@@ -168,14 +172,14 @@ public class EditPlan extends AppCompatActivity {
 
     }
 
-    private void checkEmptyState(){
-    if (displayedWorkouts.isEmpty()) {
-        recyclerView.setVisibility(View.GONE);
-        emptyView.setVisibility(View.VISIBLE);
-    }
-    else {
-        recyclerView.setVisibility(View.VISIBLE);
-        emptyView.setVisibility(View.GONE);
+    private void checkEmptyState() {
+        if (displayedWorkouts.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
 
