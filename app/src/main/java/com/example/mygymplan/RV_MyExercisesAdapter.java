@@ -1,9 +1,13 @@
 package com.example.mygymplan;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,17 +15,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAdapter.MyViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(Exercise item);
+
+    }
+
     Context context;
-    ArrayList<Exercise> exerciseList;
+    List<Exercise> exerciseList;
+    OnItemClickListener onListener;
 
 
     // Constructor
-    public RV_MyExercisesAdapter(Context context, ArrayList<Exercise> exerciseList) {
+    public RV_MyExercisesAdapter(Context context, List<Exercise> exerciseList) {
         this.context = context;
         this.exerciseList = exerciseList;
+        //this.onListener = onListener;
     }
 
     @NonNull
@@ -40,10 +52,13 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(exerciseList.get(position).geteName());
-        holder.textViewType.setText(exerciseList.get(position).geteType().toString());
+        holder.textViewName.setText(exerciseList.get(position).eName);
+        //holder.bind(exerciseList.get(position), onListener);
+        // holder.textViewType.setText(exerciseList.get(position).geteType().toString());
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -57,16 +72,29 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
         // Similar to onCreate method
 
         TextView textViewName;
-        TextView textViewType;
-        ImageView imageView;
+        //TextView textViewType;
+        //ImageView imageView;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
-            textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
+            //textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
             // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
         }
+        public void bind(Exercise item, OnItemClickListener onlistener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onlistener.onItemClick(item);
+                }
+            });
+
+        }
+
     }
+
+
 }

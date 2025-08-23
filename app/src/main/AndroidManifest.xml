@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyGymPlan">
         <activity
+            android:name=".TesteActivity"
+            android:exported="false" />
+        <activity
             android:name=".ShowWorkoutActivity"
             android:exported="false" />
         <activity

@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Components
         Button editActualPlanButton = findViewById(R.id.EditActualPlan);
         Button createNewPlanButton = findViewById(R.id.CreateNewPlanButton);
+        Button testButton = findViewById(R.id.TestButton);
         TextView teste = findViewById(R.id.TesteUser2);
 
 
@@ -83,6 +84,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         // ----- BUTTONS -----
+
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, TesteActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+
 
         // Change to Create New Workout Plan
         createNewPlanButton.setOnClickListener(new View.OnClickListener(){
@@ -110,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         editActualPlanButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                Intent intent = new Intent(MainActivity.this, EditPlan.class);
+                Intent intent = new Intent(MainActivity.this, ShowWorkoutActivity.class);
                 intent.putExtra("SelectedPlan", thisPlan);
 
                 startActivity(intent);

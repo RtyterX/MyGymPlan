@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.Objects;
 
@@ -51,19 +53,20 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
 
         // Components
-        EditText eName = findViewById(R.id.ExerciseName);
-        // ImageView eImage = findViewById(R.id.ExerciseImage);
-        EditText eDescription = findViewById(R.id.ExerciseDescription);
-        EditText eSets = findViewById(R.id.ExerciseSets);
-        EditText eReps = findViewById(R.id.ExerciseReps);
-        EditText eRest = findViewById(R.id.ExerciseRest);
-        EditText eLoad = findViewById(R.id.ExerciseLoad);
+        EditText showName = findViewById(R.id.ExerciseName);
+        // ImageView showImage = findViewById(R.id.ExerciseImage);
+       // EditText showDescription = findViewById(R.id.ExerciseDescription);
+        //EditText showSets = findViewById(R.id.ExerciseSets);
+        //EditText showReps = findViewById(R.id.ExerciseReps);
+        //EditText showRest = findViewById(R.id.ExerciseRest);
+        //EditText showLoad = findViewById(R.id.ExerciseLoad);
         Button saveExercise = findViewById(R.id.SaveExercise);
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);    // Just for Test - Going to be in Recycle View
         Button backButton = findViewById(R.id.BackButton3);               // Just for Test - Going to be in Toolbar
 
+
         // Set UI Values
-        //eName.setText(thisExercise.eName);
+        showName.setText(thisExercise.eName);
         // eImage.setText(intent.getParcelableExtra(thisExercise.eName));
         // eDescription.setText(intent.getParcelableExtra(thisExercise.eDescription));
         //eSets.setText(intent.getExtras(thisExercise.eSets));
@@ -71,7 +74,10 @@ public class ShowExerciseActivity extends AppCompatActivity {
         // eRest.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eRest)));
         // eLoad.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eLoad)));
 
-        // NewExerciseCompareString = thisExercise.eName;
+        //NewExerciseCompareString = thisExercise.eName;
+
+
+
 
         // ----- Buttons -----
 
@@ -80,67 +86,66 @@ public class ShowExerciseActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Create if Exercise is New
-                if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
-                    Exercise newExercise = new Exercise(
-                            user.myExercises.size(),
-                            eName,
-                            eDescription.getText(),
-                            eSets.getText(),
-                            eReps.getText(),
-                            eRest.getText(),
-                            eLoad.getText()
-                    );
-                    user.myExercises.add(newExercise);
-                }
-                // Save if Exercise is already created
-                else {
-                    Exercise saveExercise = new Exercise(
-                            i,
-                            eName,
-                            eDescription.getText(),
-                            eSets.getText(),
-                            eReps.getText(),
-                            eRest.getText(),
-                            eLoad.getText()
-                    );
-                    user.myExercises.set(i, saveExercise);
-                }
+                //if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
+
+                Exercise newExercise = new Exercise();
+
+                newExercise.eName = showName.getText().toString();
+                //newExercise.eDescription = showDescription.getText().toString();
+                //newExercise.eSets = Integer.parseInt(String.valueOf(showSets));
+                // newExercise.eReps = Integer.parseInt(String.valueOf(showReps));
+                //newExercise.eRest = Integer.parseInt(String.valueOf(showRest));
+                //newExercise.eLoad = Integer.parseInt(String.valueOf(showLoad));
+
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Save new Exercise
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                        ExerciseDao dao = db.exerciseDao();
+
+                        dao.insertExercise(newExercise);
+
+                    }
+
+                }).start();
+
+
+                // Update if Exercise is already created
+                // else {
+
+                // Exercise updateExercise = new Exercise();
+
+                // updateExercise.eName = showName.getText().toString();
+                // updateExercise.eDescription = showDescription.getText().toString();
+                // updateExercise.eSets = Integer.parseInt(String.valueOf(showSets));
+                // updateExercise.eReps = Integer.parseInt(String.valueOf(showReps));
+                // updateExercise.eRest = Integer.parseInt(String.valueOf(showRest));
+                // updateExercise.eLoad = Integer.parseInt(String.valueOf(showLoad));;
+
+                // try {
+                //  new Thread(new Runnable() {
+                // @Override
+                // public void run() {
+                // Save new Exercise
+                // AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Contatos").build();
+                //  ExerciseDao dao = db.exerciseDao();
+
+                //   dao.insertExercise(updateExercise);
+
 
                 // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
+                finish(); // Just for Test
 
-                startActivity(intent);
+                // Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                // intent.putExtra("SelectedPlan", thisPlan);
+                // intent.putExtra("SelectedWorkout", thisWorkout);
+
+                //startActivity(intent);
             }
         });
 
-
-        // Delete Exercise Button
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                user.myExercises.remove(i);
-
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-
-                startActivity(intent);
-            }
-        });
-
-        // Back Button
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-
-                startActivity(intent);
-            }
-        });
 
     }
 

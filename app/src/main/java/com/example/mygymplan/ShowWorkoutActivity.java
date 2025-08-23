@@ -1,16 +1,10 @@
 package com.example.mygymplan;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -20,11 +14,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
-import kotlinx.coroutines.scheduling.WorkQueueKt;
+import java.util.List;
 
 public class ShowWorkoutActivity extends AppCompatActivity {
 
@@ -37,7 +30,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
     // UI Elements
     private EditText wName;
-    ArrayList<Exercise> displayedExercises; 
+    List<Exercise> displayedExercises;
 
     // RecyclerView
     RV_MyExercisesAdapter adapter;
@@ -58,35 +51,30 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         // ----- Received Data From Another Activity -----
-        Intent intent = getIntent();
-        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
-        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
+        //Intent intent = getIntent();
+        // thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
+        // thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
         // Components
         wName = findViewById(R.id.WorkoutName);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
-        Button addExerciseButton = findViewById(R.id.AddExercise);
-        Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
         Button backButton = findViewById(R.id.BackButton2);
-        Button deleteButton = findViewById(R.id.DeleteWorkoutButton);
 
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
+
         // Set Values based on Received Data
-        displayedExercises = thisWorkout.wExercises;
-        wName.setText(thisWorkout.wName);
-        i = thisWorkout.id;
-        NewWorkoutCompareString = thisWorkout.wName;
+        // displayedExercises = new ArrayList<>();
+        //displayedExercises = thisWorkout.wExercises;
+        //wName.setText(thisWorkout.wName);
+        //i = thisWorkout.id;
+        //NewWorkoutCompareString = thisWorkout.wName;
 
 
-        // Recycler View Adapter
-        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(this, displayedExercises);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        LoadData();
 
 
         // ----- BUTTONS -----
@@ -94,15 +82,8 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         // Create New Exercise
         newExerciseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Exercise newExercise = new Exercise(
-                        1,
-                        "New Exercise",
-                        "Write your Description here...",
-                        "4",
-                        "8",
-                        "1",
-                        "0"
-                );
+                Exercise newExercise = new Exercise();
+                newExercise.eName = "New Exercise";
 
                 ArrayList<Exercise> newExerciseList = new ArrayList<>();
                 thisWorkout = new Workout(
@@ -114,133 +95,20 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
                 intent.putExtra("SelectedPlan", thisPlan);
                 intent.putExtra("SelectedWorkout", thisWorkout);
-                intent.putExtra("SelectedWorkout", newExercise);
+                intent.putExtra("SelectedExercise", newExercise);
 
                 startActivity(intent);
             }
         });
 
-
-        // Add a Already Created Exercise to Workout
-        addExerciseButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-
-                ////////////////
-                // Popup Test //
-                ////////////////
-
-                // Example of creating and showing a basic PopupWindow
-               // LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-               // View popupView = inflater2.inflate(R.layout.add_exercise_popup_layout, null); // Your custom layout for the popup
-                //PopupWindow popupWindow = new PopupWindow(popupView,
-                       // ViewGroup.LayoutParams.WRAP_CONTENT,
-                        //ViewGroup.LayoutParams.WRAP_CONTENT,
-                       // true); // true for focusable
-                // Show the popup at a specific location, e.g., centered on the screen
-                //popupWindow.showAtLocation(findViewById(R.id.activity_main), Gravity.CENTER, 0, 0);
-
-
-                //Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
-                //intent.putExtra("SelectedPlan", thisPlan);
-               // intent.putExtra("SelectedWorkout", thisWorkout);
-               // intent.putExtra("SelectedWorkout", newExercise);
-
-                //startActivity(intent);
-
-            }
-
-        });
-        // Criar um Layout add_exercise_popup_layout
-
-
-        // Save Workout
-        saveWorkoutButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                // Create if Workout is New
-                if (Objects.equals(NewWorkoutCompareString, "New Workout")) {
-                    ArrayList<Exercise> newExerciseList = new ArrayList<>();
-                    Workout newWorkout = new Workout(
-                            1,
-                            wName.getText().toString(),
-                            newExerciseList
-                    );
-                    user.myWorkouts.add(newWorkout);
-                }
-                // Save if Workout is already created
-                else {
-                    Workout saveWorkout = new Workout(
-                            2,
-                            wName.getText().toString(),
-                            displayedExercises
-                    );
-                    user.myWorkouts.set(i, saveWorkout);
-                }
-
-
-                // Change Activity
-                Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-
-                startActivity(intent);
-
-            }
-        });
-
-        // Delete Exercise Button
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                user.myWorkouts.remove(i);
-
-                ///////////////////////////////////////
-                // Carrega a Recycle View novamente //
-                //////////////////////////////////////
-
-            }
-        });
 
         // Back Button
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-
-                startActivity(intent);
+                finish();
             }
 
         });
-
-
-        // Back Button 2 - Just for Tests
-       // Button backButton2 = findViewById(R.id.BackButton2);
-       // backButton2.setOnClickListener(new View.OnClickListener() {
-           // public void onClick(View v) {
-
-               // // Example of creating and showing a basic PopupWindow
-              //  LayoutInflater inflater2 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-              //  View popupView = inflater2.inflate(R.layout.back_warning_layout, null); // Your custom layout for the popup
-               // PopupWindow popupWindow = new PopupWindow(popupView,
-                        //ViewGroup.LayoutParams.WRAP_CONTENT,
-                        //ViewGroup.LayoutParams.WRAP_CONTENT,
-                        //true); // true for focusable
-                // Show the popup at a specific location, e.g., centered on the screen
-                //popupWindow.showAtLocation(findViewById(R.id.show_workout_layout), Gravity.CENTER, 0, 0);
-
-
-                //Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-                //intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-
-                //startActivity(intent);
-            //}
-
-
-        //});
-
-
-        checkEmptyState();
 
     }
 
@@ -257,6 +125,49 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
     }
 
+    public void ShowDatabase(View view) {
+        LoadData();
+    }
+
+    public void LoadData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                ExerciseDao dao = db.exerciseDao();
+
+                displayedExercises = dao.listExercise();
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Recycler View Adapter
+                        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises);
+                        //recyclerView.setAdapter(new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises));
+
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ShowWorkoutActivity.this));
+                        checkEmptyState();
+                    }
+                });
+
+            }
+        }).start();
+
+    }
+
+    public void deleteDatabase(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                db.clearAllTables();
+                recreate();
+            }
+        }).start();
+    }
 }
 
 

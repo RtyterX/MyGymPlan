@@ -3,37 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RecycleExerciceImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="parent"
-        tools:layout_editor_absoluteY="-32dp">
+        tools:layout_editor_absoluteY="206dp">
+
+        <View
+            android:id="@+id/viewTeste"
+            android:layout_width="411dp"
+            android:layout_height="149dp"
+            android:background="#1EC1BFF8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/RecyclerExerciseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="52dp"
             android:text="Exercise Name"
-            tools:layout_editor_absoluteX="176dp"
-            tools:layout_editor_absoluteY="318dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.271"
+            app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.56" />
 
         <TextView
             android:id="@+id/RecyclerExerciseType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exercise Type"
-            tools:layout_editor_absoluteX="176dp"
-            tools:layout_editor_absoluteY="395dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.303"
+            app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.563" />
 
         <ImageView
             android:id="@+id/ImageRecyclerExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="305dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.056"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
