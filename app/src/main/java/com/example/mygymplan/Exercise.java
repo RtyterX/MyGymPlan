@@ -6,12 +6,16 @@ import android.widget.EditText;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
 
-@Entity
+@Entity(tableName = "exercises", foreignKeys =
+@ForeignKey(entity = Workout.class,
+        parentColumns = "id",
+        childColumns = "workout_Id"))
 public class Exercise implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -39,6 +43,8 @@ public class Exercise implements Serializable {
     // public WorkoutType eType;    // Later
     // public int eImage;           // Later
 
+    @ColumnInfo(name = "workout_Id")
+    public int workout_Id;
 
 
 }

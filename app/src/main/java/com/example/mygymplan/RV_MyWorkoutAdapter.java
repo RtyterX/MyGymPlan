@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,16 +15,25 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 
 public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapter.MyViewHolder>  {
 
+    public interface OnItemClickListener {
+        void onItemClick(Workout item);
+
+    }
+
     Context context;
-    ArrayList<Workout> workoutList;
+    List<Workout> workoutList;
+    OnItemClickListener onListener;
 
     // Constructor
-    public RV_MyWorkoutAdapter(Context context, ArrayList<Workout> workoutList) {
+    public RV_MyWorkoutAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener) {
         this.context = context;
         this.workoutList = workoutList;
+        this.onListener = onListener;
     }
 
     @NonNull
@@ -32,7 +42,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         // Where you inflate the Layout
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recycler_view_exercise, parent, false);
+        View view = inflater.inflate(R.layout.recycler_view_workout, parent, false);
 
         return new RV_MyWorkoutAdapter.MyViewHolder(view);
     }
@@ -42,11 +52,11 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(workoutList.get(position).getwName());
-        holder.textViewType.setText(Arrays.toString(workoutList.get(position).getTypes()));
-        holder.textViewDescription.setText(workoutList.get(position).getwDescription());
+        holder.textViewName.setText(workoutList.get(position).wName);
+        holder.bind(workoutList.get(position), onListener);
+        // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
+        //holder.textViewDescription.setText(workoutList.get(position).getwDescription());
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
-
 
     }
 
@@ -62,8 +72,8 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
         // Similar to onCreate method
 
         TextView textViewName;
-        TextView textViewType;
-        TextView textViewDescription;
+        //TextView textViewType;
+        //TextView textViewDescription;
         // ImageView imageView;
 
 
@@ -72,9 +82,20 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
-            textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
+            //textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
+            //textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
             // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+        }
+
+        public void bind(Workout item, OnItemClickListener onlistener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onlistener.onItemClick(item);
+                }
+            });
+
         }
     }
 

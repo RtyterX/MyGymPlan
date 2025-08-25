@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,13 +21,13 @@ import androidx.room.Room;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ShowWorkoutActivity extends AppCompatActivity {
 
     // Data
     public UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
-    int i;  // Id for exercise already created
     String NewWorkoutCompareString;  // Check if Workout is a New Workout
 
     // UI Elements
@@ -36,6 +38,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     RV_MyExercisesAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
+    TextView workoutId;
 
 
     @Override
@@ -51,13 +54,13 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         // ----- Received Data From Another Activity -----
-        //Intent intent = getIntent();
-        // thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
-        // thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
+        Intent intent = getIntent();
+         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
         // Components
         wName = findViewById(R.id.WorkoutName);
+        workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
         Button backButton = findViewById(R.id.BackButton2);
 
@@ -65,14 +68,10 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
-
         // Set Values based on Received Data
-        // displayedExercises = new ArrayList<>();
-        //displayedExercises = thisWorkout.wExercises;
-        //wName.setText(thisWorkout.wName);
-        //i = thisWorkout.id;
+        wName.setText(thisWorkout.wName);
+        workoutId.setText(String.valueOf(thisWorkout.id));
         //NewWorkoutCompareString = thisWorkout.wName;
-
 
         LoadData();
 
@@ -84,17 +83,9 @@ public class ShowWorkoutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Exercise newExercise = new Exercise();
                 newExercise.eName = "New Exercise";
-
-                ArrayList<Exercise> newExerciseList = new ArrayList<>();
-                thisWorkout = new Workout(
-                        1,
-                        "New Workout teste 3",
-                        newExerciseList
-                );
+                newExercise.workout_Id = thisWorkout.id;
 
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedExercise", newExercise);
 
                 startActivity(intent);
@@ -113,7 +104,6 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     }
 
     private void checkEmptyState(){
-        //if (thisWorkout.wExercises.isEmpty()) {
         if (displayedExercises.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -125,49 +115,89 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
     }
 
-    public void ShowDatabase(View view) {
-        LoadData();
-    }
-
     public void LoadData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 ExerciseDao dao = db.exerciseDao();
 
-                displayedExercises = dao.listExercise();
-
+                displayedExercises = new ArrayList<>();
+                List<Exercise>  newList = dao.listExercise();
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        // Recycler View Adapter
-                        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises);
-                        //recyclerView.setAdapter(new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises));
+                        for (Exercise e : newList) {
+                            if (e.workout_Id == thisWorkout.id) {
 
+                                displayedExercises.add(e);
+                            }
+                        }
+
+                        // Recycler View Adapter
+                        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises, new RV_MyExercisesAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Exercise item) {
+                                Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
+                                intent.putExtra("SelectedExercise", item);
+                                startActivity(intent);
+                            }
+                        });
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(ShowWorkoutActivity.this));
+
                         checkEmptyState();
                     }
                 });
-
             }
         }).start();
 
+    }
+
+
+    // -------- NOT IN USE --------
+    public void AddExercise(View view) {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        ExerciseDao dao = db.exerciseDao();
+
+        displayedExercises = dao.listExercise();
+
+
+        for (Exercise e : displayedExercises) {
+            if (e.workout_Id == thisWorkout.id) {
+                //displayedExercises.add(e);
+                wName.setText("Deu Certo" + e.workout_Id);
+            }
+        }
+
+
+    }
+
+
+    ///////////////////////////////////////////////////
+    /////////////// JUST FOR TEST ////////////////////
+    /////////////////////////////////////////////////
+
+    // ------ Database ------
+
+    public void ShowDatabase(View view) {
+        LoadData();
     }
 
     public void deleteDatabase(View view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 db.clearAllTables();
                 recreate();
             }
         }).start();
     }
+
 }
 
 

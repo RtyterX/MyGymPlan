@@ -2,24 +2,20 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-import java.util.ArrayList;
-
-import kotlinx.coroutines.scheduling.WorkQueueKt;
+import java.util.List;
 
 // Alt + Enter = Import Classes
 
@@ -28,15 +24,17 @@ public class MainActivity extends AppCompatActivity {
     // Data
     UserData user;
     Plan thisPlan;
-    ArrayList<Workout> displayedWorkouts;
+    List<Workout> displayedWorkouts;
 
     // UI
+    Button emptyButton;
 
 
     // RecyclerView
     RV_MyWorkoutAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
+    TextView planName;
 
 
     @Override
@@ -58,20 +56,16 @@ public class MainActivity extends AppCompatActivity {
         
 
         // Components
+        planName = findViewById(R.id.MyWorkoutPlanText);
         Button editActualPlanButton = findViewById(R.id.EditActualPlan);
-        Button createNewPlanButton = findViewById(R.id.CreateNewPlanButton);
         Button testButton = findViewById(R.id.TestButton);
-        TextView teste = findViewById(R.id.TesteUser2);
-
 
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts2);
+        emptyButton = findViewById(R.id.EmptyPlanButton);
 
 
         // Set Values based on Received Data
-        ThisEqualsNewPlan();
-        teste.setText(thisPlan.planName);
-
         // assert thisPlan != null;  // Test
         // planWorkouts = thisPlan.getPlanWorkouts();
 
@@ -81,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         //recyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+        LoadData();
 
 
         // ----- BUTTONS -----
@@ -101,28 +97,6 @@ public class MainActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////
 
 
-        // Change to Create New Workout Plan
-        createNewPlanButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-                ThisEqualsNewPlan();
-                ArrayList<Exercise> newExerciseList = new ArrayList<>();
-                Workout newWorkout = new Workout(
-                        0,
-                        "New Workout",
-                        newExerciseList
-                );
-
-                Intent intent = new Intent(MainActivity.this, EditPlan.class);
-                intent.putExtra("UserData", user);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", newWorkout);
-
-                startActivity(intent);
-            }
-        });
-
         // Edit Active Workout Plan
         editActualPlanButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -134,45 +108,98 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-         checkEmptyState();
 
     }
 
     public void ThisEqualsNewPlan() {
-        ArrayList<Workout> newWorkoutList = new ArrayList<Workout>();
-        thisPlan = new Plan(
-                0,
-                "Tyter é foda",
-                newWorkoutList,
-                true
-        );
 
     }
 
     private void checkEmptyState(){
-        if (thisPlan.planWorkouts.isEmpty()) {
+        if (displayedWorkouts.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
+            emptyButton.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.VISIBLE);
+            planName.setText("No Plans");
         }
         else {
             recyclerView.setVisibility(View.VISIBLE);
+            emptyButton.setVisibility(View.GONE);
             emptyView.setVisibility(View.GONE);
+            planName.setText("Tyter é foda");
         }
     }
 
     private void CheckIfHasUserData() {
-        if (user == null) {
 
-            ArrayList<Plan> basePlan = new ArrayList<>();
-            ArrayList<Workout> baseWork = new ArrayList<>();
-            ArrayList<Exercise> baseExercise = new ArrayList<>();
+    }
 
-            user = new UserData("New user", basePlan, baseWork, baseExercise);
-        }
-        else {
-            // Find Active Plan
-            // thisPlan
-        }
+
+    public void LoadData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+
+                displayedWorkouts = dao.listWorkouts();
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Recycler View Adapter
+                        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(MainActivity.this, displayedWorkouts, new RV_MyWorkoutAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Workout item) {
+                                Intent intent = new Intent(MainActivity.this, ShowWorkoutActivity.class);
+
+                                intent.putExtra("SelectedWorkout", item);
+                                startActivity(intent);
+                            }
+                        });
+
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                        checkEmptyState();
+                    }
+                });
+
+            }
+        }).start();
+
+    }
+
+
+    public void NewWorkout(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Create New Workout DataBase
+                Workout newWorkout = new Workout();
+                newWorkout.wName = "New Workout 2";
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+
+                dao.insertWorkout(newWorkout);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Change Activity
+                        Intent intent = new Intent(MainActivity.this, ShowWorkoutActivity.class);
+                        intent.putExtra("SelectedWorkout", newWorkout);
+
+                        startActivity(intent);
+                    }
+                });
+
+            }
+        }).start();
+
     }
 
 }

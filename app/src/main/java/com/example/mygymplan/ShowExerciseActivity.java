@@ -44,22 +44,20 @@ public class ShowExerciseActivity extends AppCompatActivity {
             return insets;
         });
 
+
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
-        // thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
-        //i = thisExercise.id;
 
 
         // Components
         EditText showName = findViewById(R.id.ExerciseName);
         // ImageView showImage = findViewById(R.id.ExerciseImage);
-       // EditText showDescription = findViewById(R.id.ExerciseDescription);
-        //EditText showSets = findViewById(R.id.ExerciseSets);
-        //EditText showReps = findViewById(R.id.ExerciseReps);
-        //EditText showRest = findViewById(R.id.ExerciseRest);
-        //EditText showLoad = findViewById(R.id.ExerciseLoad);
+        // EditText showDescription = findViewById(R.id.ExerciseDescription);
+        // EditText showSets = findViewById(R.id.ExerciseSets);
+        // EditText showReps = findViewById(R.id.ExerciseReps);
+        // EditText showRest = findViewById(R.id.ExerciseRest);
+        // EditText showLoad = findViewById(R.id.ExerciseLoad);
         Button saveExercise = findViewById(R.id.SaveExercise);
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);    // Just for Test - Going to be in Recycle View
         Button backButton = findViewById(R.id.BackButton3);               // Just for Test - Going to be in Toolbar
@@ -77,8 +75,6 @@ public class ShowExerciseActivity extends AppCompatActivity {
         //NewExerciseCompareString = thisExercise.eName;
 
 
-
-
         // ----- Buttons -----
 
         // Save New Exercise
@@ -88,24 +84,23 @@ public class ShowExerciseActivity extends AppCompatActivity {
                 // Create if Exercise is New
                 //if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
 
-                Exercise newExercise = new Exercise();
+                // Exercise newExercise = new Exercise();
 
-                newExercise.eName = showName.getText().toString();
+                thisExercise.eName = showName.getText().toString();
                 //newExercise.eDescription = showDescription.getText().toString();
                 //newExercise.eSets = Integer.parseInt(String.valueOf(showSets));
                 // newExercise.eReps = Integer.parseInt(String.valueOf(showReps));
                 //newExercise.eRest = Integer.parseInt(String.valueOf(showRest));
                 //newExercise.eLoad = Integer.parseInt(String.valueOf(showLoad));
 
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         // Save new Exercise
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         ExerciseDao dao = db.exerciseDao();
 
-                        dao.insertExercise(newExercise);
+                        dao.insertExercise(thisExercise);
 
                     }
 

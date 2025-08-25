@@ -77,9 +77,9 @@ public class EditPlan extends AppCompatActivity {
 
 
         // Recycler View
-        RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, displayedWorkouts);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //RV_MyWorkoutAdapter adapter = new RV_MyWorkoutAdapter(this, displayedWorkouts);
+        //recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         // ---- BUTTONS ----
@@ -95,16 +95,10 @@ public class EditPlan extends AppCompatActivity {
         createNewWorkoutButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                ArrayList<Exercise> newExerciseList = new ArrayList<>();
-                Workout newWorkout = new Workout(
-                        0,
-                        "New Workout test 2",
-                        newExerciseList
-                );
 
                 Intent intent = new Intent(EditPlan.this, ShowWorkoutActivity.class);
                 intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", newWorkout);
+                //intent.putExtra("SelectedWorkout", newWorkout);
                 startActivity(intent);
 
             }

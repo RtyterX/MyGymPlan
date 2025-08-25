@@ -20,8 +20,8 @@
         android:id="@+id/WorkoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="68dp"
         android:ems="10"
         android:inputType="text"
         android:text="New Name"
@@ -41,6 +41,7 @@
             android:id="@+id/AddExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="AddExercise"
             android:text="Add Exercise"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/SaveWorkout"
@@ -72,14 +73,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecycleViewWorkouts"
-        android:layout_width="410dp"
-        android:layout_height="396dp"
+        android:layout_width="388dp"
+        android:layout_height="470dp"
+        android:layout_marginTop="21dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.615"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.799" />
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutName"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/ShowDatabaseValues"
@@ -114,5 +116,17 @@
         app:layout_constraintStart_toEndOf="@+id/BackButton2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/WorkoutIdText"
+        android:layout_width="84dp"
+        android:layout_height="31dp"
+        android:text="Workout Id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.902"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.097" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,5 +60,13 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <Button
+            android:id="@+id/DeleteExerciseRV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            tools:layout_editor_absoluteX="298dp"
+            tools:layout_editor_absoluteY="51dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

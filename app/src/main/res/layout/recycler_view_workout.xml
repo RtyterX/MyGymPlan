@@ -6,6 +6,18 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
+    <View
+        android:id="@+id/viewTeste2"
+        android:layout_width="399dp"
+        android:layout_height="148dp"
+        android:background="#1EC1BFF8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <ImageView
         android:id="@+id/RecyclerWorkoutImage"
         android:layout_width="wrap_content"
@@ -23,30 +35,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Workout Name"
-        app:layout_constraintBottom_toTopOf="@+id/RecyclerWorkoutDescription"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.214"
+        app:layout_constraintHorizontal_bias="0.22"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.183" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Workout Enum"
-        app:layout_constraintBottom_toTopOf="@+id/RecyclerWorkoutDescription"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.183" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutDescription"
         android:layout_width="191dp"
         android:layout_height="59dp"
-        android:layout_marginEnd="32dp"
         android:text="Descrição: aushaushaushaushaushaushaushaushaushauashuas"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.84" />
 </androidx.constraintlayout.widget.ConstraintLayout>

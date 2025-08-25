@@ -9,19 +9,18 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface ExerciseDao {
+public interface WorkoutDao {
 
-    @Query("SELECT * FROM exercises")
-    List<Exercise> listExercise();
+    @Query("SELECT * FROM workouts")
+    List<Workout> listWorkouts();
 
     @Insert
-    void insertExercise(Exercise... exercises);
+    void insertWorkout(Workout... workouts);
 
     @Update
-    void updateExercise(Exercise... exercise);
+    void updateWorkout(Workout... workout);
 
     @Delete
-    void deleteExercise(Exercise exercise);
-
+    void deleteWorkout(Workout workout);
 
 }

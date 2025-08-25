@@ -1,5 +1,6 @@
 package com.example.mygymplan;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,8 @@ import java.util.List;
 
 public class TesteActivity extends AppCompatActivity {
 
+    Workout thisWorkout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,10 @@ public class TesteActivity extends AppCompatActivity {
 
         Button createNewExercise = findViewById(R.id.CreateNewExercise1);
         Button backButton = findViewById(R.id.BackTestButton);
+
+        // ----- Received Data From Another Activity -----
+        Intent intent = getIntent();
+        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
         createNewExercise.setOnClickListener(new View.OnClickListener() {
@@ -68,24 +75,40 @@ public class TesteActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Exercises").build();
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 ExerciseDao dao = db.exerciseDao();
 
-                List<Exercise> exercises = dao.listExercise();
+                List<Exercise> list = dao.listExercise();
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        for (Exercise e : exercises) {
-                            TextView t = new TextView(TesteActivity.this);
-                            t.setText(e.eName);
+                        for (Exercise e : list) {
+                            if (thisWorkout.id == e.workout_Id) {
+                                TextView t = new TextView(TesteActivity.this);
+                                t.setText(e.eName);
 
-                            lnl.addView(t);
+                                lnl.addView(t);
+
+                            }
                         }
                     }
                 });
             }
         }).start();
 
+    }
+
+    public void DeleteDataBase(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Context context = getApplicationContext();    // Or your activity context
+                context.deleteDatabase("workout");   // Just Change the Name
+
+                //recreate();
+            }
+        }).start();
     }
 }

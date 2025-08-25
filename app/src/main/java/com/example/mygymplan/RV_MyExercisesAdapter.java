@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAdapter.MyViewHolder> {
@@ -30,10 +29,10 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
 
     // Constructor
-    public RV_MyExercisesAdapter(Context context, List<Exercise> exerciseList) {
+    public RV_MyExercisesAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener) {
         this.context = context;
         this.exerciseList = exerciseList;
-        //this.onListener = onListener;
+        this.onListener = onListener;
     }
 
     @NonNull
@@ -53,7 +52,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
         // Based on the position of the Recycler View
 
         holder.textViewName.setText(exerciseList.get(position).eName);
-        //holder.bind(exerciseList.get(position), onListener);
+        holder.bind(exerciseList.get(position), onListener);
         // holder.textViewType.setText(exerciseList.get(position).geteType().toString());
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
