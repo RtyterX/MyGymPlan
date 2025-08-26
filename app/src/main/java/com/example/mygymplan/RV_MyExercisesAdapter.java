@@ -53,6 +53,9 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
         holder.textViewName.setText(exerciseList.get(position).eName);
         holder.bind(exerciseList.get(position), onListener);
+        holder.deletebutton.setOnClickListener(v -> {
+            exerciseList.deleteExercise(exerciseList.get(position));
+        };
         // holder.textViewType.setText(exerciseList.get(position).geteType().toString());
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
@@ -73,6 +76,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
         TextView textViewName;
         //TextView textViewType;
         //ImageView imageView;
+        Button deleteButton;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
@@ -81,6 +85,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
             //textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
             // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
+            deleteButton = itemView.findViewById(R.id.DeleteExerciseButton)
         }
         public void bind(Exercise item, OnItemClickListener onlistener) {
 
