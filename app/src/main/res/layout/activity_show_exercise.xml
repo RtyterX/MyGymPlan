@@ -11,7 +11,8 @@
         android:id="@+id/BackButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="280dp"
+        android:onClick="deleteButton"
         android:text="Back Button"
         app:layout_constraintEnd_toStartOf="@+id/SavePlanButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,24 +20,27 @@
 
     <EditText
         android:id="@+id/ExerciseName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="257dp"
+        android:layout_height="123dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="text"
-        android:text="New Exercise Name"
         android:paddingLeft="30dp"
         android:paddingTop="70dp"
+        android:text="New Exercise Name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ExerciseImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="127dp"
         android:paddingTop="110dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ExerciseName"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button

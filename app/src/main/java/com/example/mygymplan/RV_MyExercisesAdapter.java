@@ -2,17 +2,20 @@ package com.example.mygymplan;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
     public interface OnItemClickListener {
         void onItemClick(Exercise item);
+        void deletebuttonClick(Exercise item);
 
     }
 
@@ -53,9 +57,8 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
         holder.textViewName.setText(exerciseList.get(position).eName);
         holder.bind(exerciseList.get(position), onListener);
-        holder.deletebutton.setOnClickListener(v -> {
-            exerciseList.deleteExercise(exerciseList.get(position));
-        };
+        //holder.bind2(exerciseList.get(position), onListener);
+
         // holder.textViewType.setText(exerciseList.get(position).geteType().toString());
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
@@ -85,7 +88,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
             //textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
             // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
-            deleteButton = itemView.findViewById(R.id.DeleteExerciseButton)
+            deleteButton = itemView.findViewById(R.id.DeleteExerciseRV);
         }
         public void bind(Exercise item, OnItemClickListener onlistener) {
 
@@ -96,7 +99,23 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
                 }
             });
 
+
         }
+
+        public void bind2(Exercise item, OnItemClickListener onlistener) {
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //AppDatabase db = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "workouts").build();
+                    //ExerciseDao dao = db.exerciseDao();
+
+                    onlistener.deletebuttonClick(item);
+                }
+            });
+        }
+
+
 
     }
 

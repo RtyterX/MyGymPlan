@@ -22,6 +22,4 @@ public interface ExerciseDao {
 
     @Delete
     void deleteExercise(Exercise exercise);
-
-
 }

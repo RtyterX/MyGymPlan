@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TesteActivity extends AppCompatActivity {
@@ -105,7 +104,7 @@ public class TesteActivity extends AppCompatActivity {
             public void run() {
 
                 Context context = getApplicationContext();    // Or your activity context
-                context.deleteDatabase("workout");   // Just Change the Name
+                context.deleteDatabase("workouts");   // Just Change the Name
 
                 //recreate();
             }

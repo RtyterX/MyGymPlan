@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -144,6 +142,14 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                                 intent.putExtra("SelectedExercise", item);
                                 startActivity(intent);
                             }
+
+                            @Override
+                            public void deletebuttonClick(Exercise item) {
+                                Exercise deletedExercise = item;
+                                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                                ExerciseDao dao = db.exerciseDao();
+                                dao.deleteExercise(deletedExercise);
+                            }
                         });
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(ShowWorkoutActivity.this));
@@ -161,17 +167,9 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     public void AddExercise(View view) {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
+        WorkoutDao dao2 = db.workoutDao();
 
-        displayedExercises = dao.listExercise();
-
-
-        for (Exercise e : displayedExercises) {
-            if (e.workout_Id == thisWorkout.id) {
-                //displayedExercises.add(e);
-                wName.setText("Deu Certo" + e.workout_Id);
-            }
-        }
+       dao2.deleteWorkout(thisWorkout);
 
 
     }

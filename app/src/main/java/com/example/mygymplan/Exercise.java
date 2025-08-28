@@ -24,20 +24,20 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "name")
     public String eName;
 
-    //@ColumnInfo(name = "description")
-   // public String eDescription;
+    @ColumnInfo(name = "description")
+    public String eDescription;
 
-    //@ColumnInfo(name = "sets")
-    //public int eSets;
+    @ColumnInfo(name = "sets")
+    public int eSets;
 
-    //@ColumnInfo(name = "reps")
-    //public int eReps;
+    @ColumnInfo(name = "reps")
+    public int eReps;
 
-    //@ColumnInfo(name = "rest")
-    //public int eRest; // Time
+    @ColumnInfo(name = "rest")
+    public int eRest; // Time
 
-    //@ColumnInfo(name = "load")
-   // public int eLoad;
+    @ColumnInfo(name = "load")
+    public int eLoad;
 
 
     // public WorkoutType eType;    // Later
@@ -45,6 +45,7 @@ public class Exercise implements Serializable {
 
     @ColumnInfo(name = "workout_Id")
     public int workout_Id;
+
 
 
 }
