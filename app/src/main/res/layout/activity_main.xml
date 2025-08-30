@@ -28,17 +28,17 @@
         app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintVertical_bias="0.142" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecycleViewWorkouts"
-        android:layout_width="409dp"
-        android:layout_height="580dp"
+        android:layout_width="403dp"
+        android:layout_height="512dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.496">
+        app:layout_constraintVertical_bias="0.694">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -61,17 +61,17 @@
         android:text="TestButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts"
-        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintHorizontal_bias="0.958"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintVertical_bias="0.134" />
 
     <Button
         android:id="@+id/EmptyPlanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="NewWorkout"
-        android:text="Create New Workout Plan"
+        android:text="Create From Scratch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -18,9 +18,8 @@ import java.util.Objects;
 public class ShowExerciseActivity extends AppCompatActivity {
 
     // Data
-    Workout thisWorkout;
-    Exercise thisExercise;
-
+    Workout thisWorkout;                // Know which workout to show when user goes back to workout activity
+    Exercise thisExercise;              // Used to save Exercise data
     String NewExerciseCompareString;    // Used to check if Exercise is new or not
 
 
@@ -59,10 +58,11 @@ public class ShowExerciseActivity extends AppCompatActivity {
         showName.setText(thisExercise.eName);
         // showImage.setText(intent.getParcelableExtra(thisExercise.eName));
         showDescription.setText(thisExercise.eDescription);
-        showSets.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eSets)));
-        showReps.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eReps)));
-        showRest.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eRest)));
-        showLoad.setText(intent.getParcelableExtra(String.valueOf((int) thisExercise.eLoad)));
+        showSets.setText(String.valueOf(thisExercise.eSets));
+        showReps.setText(String.valueOf(thisExercise.eReps));
+        showRest.setText(String.valueOf(thisExercise.eRest));
+        showLoad.setText(String.valueOf(thisExercise.eLoad));
+
 
         // Just to Know if it's a New Exercise or Not
         NewExerciseCompareString = thisExercise.eName;
@@ -78,17 +78,13 @@ public class ShowExerciseActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                thisExercise.eName = showName.getText().toString();
-                thisExercise.eDescription = showDescription.getText().toString();
-                //thisExercise.eSets = showSets.);
-                //thisExercise.eReps = Integer.parseInt(String.valueOf(showReps));
-               // thisExercise.eRest = Integer.parseInt(String.valueOf(showRest));
-               // thisExercise.eLoad = Integer.parseInt(String.valueOf(showLoad));
-
-                        thisExercise.eSets = 1;
-                        thisExercise.eReps = 1;
-                        thisExercise.eRest = 1;
-                        thisExercise.eLoad = 1;
+                        // Get Exercise Value
+                        thisExercise.eName = showName.getText().toString();
+                        thisExercise.eDescription = showDescription.getText().toString();
+                        thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
+                        thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
+                        thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
+                        thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
 
                         // Database
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -142,8 +138,8 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     }
 
-
     public void deleteButton(View view) {
         finish();
     }
+
 }

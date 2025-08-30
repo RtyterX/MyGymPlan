@@ -2,7 +2,6 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
@@ -10,12 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ public class EditPlan extends AppCompatActivity {
     public boolean isActive;
 
     // Recycler View
-    RV_MyWorkoutAdapter adapter;
+    WorkoutRVAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
 

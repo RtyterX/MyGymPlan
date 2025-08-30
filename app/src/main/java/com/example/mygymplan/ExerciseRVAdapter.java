@@ -1,25 +1,18 @@
 package com.example.mygymplan;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import java.util.List;
 
-public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAdapter.MyViewHolder> {
+public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.MyViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Exercise item);
@@ -33,7 +26,7 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
 
     // Constructor
-    public RV_MyExercisesAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener) {
+    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener) {
         this.context = context;
         this.exerciseList = exerciseList;
         this.onListener = onListener;
@@ -41,17 +34,17 @@ public class RV_MyExercisesAdapter extends RecyclerView.Adapter<RV_MyExercisesAd
 
     @NonNull
     @Override
-    public RV_MyExercisesAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ExerciseRVAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Where you inflate the Layout
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_exercise, parent, false);
 
-        return new RV_MyExercisesAdapter.MyViewHolder(view);
+        return new ExerciseRVAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RV_MyExercisesAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ExerciseRVAdapter.MyViewHolder holder, int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 

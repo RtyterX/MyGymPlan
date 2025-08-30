@@ -18,25 +18,26 @@ import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ShowWorkoutActivity extends AppCompatActivity {
 
     // Data
-    public UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
-    String NewWorkoutCompareString;  // Check if Workout is a New Workout
+    String NewWorkoutCompareString;   // Check if Workout is a New Workout
 
     // UI Elements
-    private EditText wName;
-    List<Exercise> displayedExercises;
+    private EditText showName;
+    List<Exercise> displayedExercises;  //
+    TextView workoutId;   //  Jut for Tests
 
     // RecyclerView
-    RV_MyExercisesAdapter adapter;
+    ExerciseRVAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
-    TextView workoutId;
+
 
 
     @Override
@@ -53,13 +54,14 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
+        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
         // Components
-        wName = findViewById(R.id.WorkoutName);
+        showName = findViewById(R.id.WorkoutName);
         workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
+        Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
         Button backButton = findViewById(R.id.BackButton2);
 
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
@@ -67,9 +69,11 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         // Set Values based on Received Data
-        wName.setText(thisWorkout.wName);
-        workoutId.setText(String.valueOf(thisWorkout.id));
-        //NewWorkoutCompareString = thisWorkout.wName;
+        showName.setText(thisWorkout.wName);
+        workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
+
+        NewWorkoutCompareString = thisWorkout.wName;
+
 
         LoadData();
 
@@ -79,14 +83,61 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         // Create New Exercise
         newExerciseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Exercise newExercise = new Exercise();
-                newExercise.eName = "New Exercise";
-                newExercise.workout_Id = thisWorkout.id;
 
+                Exercise newExercise = new Exercise();
+
+                // New Exercise default values
+                newExercise.workout_Id = thisWorkout.id;
+                newExercise.eName = "New Exercise";
+                newExercise.eDescription = "Description Here...";
+                newExercise.eSets = 4;
+                newExercise.eReps = 8;
+                newExercise.eRest = 1;
+                newExercise.eLoad = 1;
+
+                // Change Activity
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
                 intent.putExtra("SelectedExercise", newExercise);
 
                 startActivity(intent);
+            }
+        });
+
+        // Save or Update Workout
+        saveWorkoutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // Get Workout Values
+                        thisWorkout.wName = showName.getText().toString();
+
+                        // Database
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                        WorkoutDao dao = db.workoutDao();
+
+                        // Create if Workout is New
+                        if (Objects.equals(NewWorkoutCompareString, "New Workout")) {
+                            // Save new Workout
+                            dao.insertWorkout(thisWorkout);
+                        }
+                        // Update if Workout is already created
+                        else {
+                            // Save new Workout
+                           dao.updateWorkout(thisWorkout);
+                        }
+
+                    }
+
+                }).start();
+
+                // Change to Main Activity
+                Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
+
+                startActivity(intent);
+
             }
         });
 
@@ -96,10 +147,10 @@ public class ShowWorkoutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-
         });
 
     }
+
 
     private void checkEmptyState(){
         if (displayedExercises.isEmpty()) {
@@ -135,7 +186,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                         }
 
                         // Recycler View Adapter
-                        RV_MyExercisesAdapter adapter = new RV_MyExercisesAdapter(ShowWorkoutActivity.this, displayedExercises, new RV_MyExercisesAdapter.OnItemClickListener() {
+                        ExerciseRVAdapter adapter = new ExerciseRVAdapter(ShowWorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Exercise item) {
                                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
@@ -173,6 +224,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
     }
+
 
 
     ///////////////////////////////////////////////////

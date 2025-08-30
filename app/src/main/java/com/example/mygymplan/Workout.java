@@ -15,11 +15,10 @@ public class Workout implements Serializable {
 
     @ColumnInfo(name = "name")
     public String wName;
-    //public int wImage;
-    //public String wDescription;
-    //public WorkoutType[] types;
-    //public ArrayList<Exercise> wExercises;
-    //public Boolean active;
 
+    @ColumnInfo(name = "description")
+    public String wDescription;
+
+    //public int wImage;
 
 }

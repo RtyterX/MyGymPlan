@@ -4,21 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
-public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapter.MyViewHolder>  {
+public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyViewHolder>  {
 
     public interface OnItemClickListener {
         void onItemClick(Workout item);
@@ -30,7 +24,7 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
     OnItemClickListener onListener;
 
     // Constructor
-    public RV_MyWorkoutAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener) {
+    public WorkoutRVAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener) {
         this.context = context;
         this.workoutList = workoutList;
         this.onListener = onListener;
@@ -38,17 +32,17 @@ public class RV_MyWorkoutAdapter extends RecyclerView.Adapter<RV_MyWorkoutAdapte
 
     @NonNull
     @Override
-    public RV_MyWorkoutAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public WorkoutRVAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Where you inflate the Layout
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_workout, parent, false);
 
-        return new RV_MyWorkoutAdapter.MyViewHolder(view);
+        return new WorkoutRVAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RV_MyWorkoutAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WorkoutRVAdapter.MyViewHolder holder, int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 

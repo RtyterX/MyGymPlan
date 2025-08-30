@@ -60,7 +60,9 @@ public class TesteActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(TesteActivity.this, MainActivity.class);
+
+                startActivity(intent);
             }
         });
     }
