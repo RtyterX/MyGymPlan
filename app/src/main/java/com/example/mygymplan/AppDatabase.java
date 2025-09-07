@@ -3,10 +3,16 @@ package com.example.mygymplan;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Exercise.class, Workout.class}, version = 1)
+@Database(entities = {UserData.class, Workout.class, Exercise.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract ExerciseDao exerciseDao();
+    public abstract  UserDataDao userDataDao();
+
     public abstract WorkoutDao workoutDao();
+
+    public abstract ExerciseDao exerciseDao();
+
+
+
 
 }

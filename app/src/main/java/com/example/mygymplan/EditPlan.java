@@ -105,25 +105,13 @@ public class EditPlan extends AppCompatActivity {
         savePlanButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 // Create if Workout is New
-                if (Objects.equals(NewPlanCompareString, "New Plan")) {
-                    Plan newPlan = new Plan(
-                            user.myPlans.size(),
-                            planName.getText().toString(),
-                            displayedWorkouts,
-                            false
-
-                    );
-                    user.myPlans.add(newPlan);
+                if (Objects.equals(NewPlanCompareString, "New Plan")) {// Create new Plan from 0
+                   // user.myPlans.add(newPlan);
                 }
                 // Save if Workout is already created
                 else {
-                    Plan savePlan = new Plan(
-                            i,
-                            planName.getText().toString(),
-                            displayedWorkouts,
-                            false
-                    );
-                    user.myPlans.set(i, savePlan);
+                    // Update Plan
+
                 }
 
 

@@ -1,40 +1,59 @@
 package com.example.mygymplan;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
+
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 // Alt + Enter = Import Classes
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // Data
     UserData user;
     Plan thisPlan;
     List<Workout> displayedWorkouts;
 
+
     // UI
     TextView planName;
     Button emptyButton;
     Button testButton;
+    DrawerLayout drawerLayout;
+
+    NavigationView navigationView;
 
     // RecyclerView
     WorkoutRVAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
+
+    TextView count;
 
 
     @Override
@@ -57,10 +76,25 @@ public class MainActivity extends AppCompatActivity {
         // Components
         planName = findViewById(R.id.MyWorkoutPlanText);
         Button editActualPlanButton = findViewById(R.id.EditActualPlan);
-        testButton = findViewById(R.id.TestButton);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts2);
         emptyButton = findViewById(R.id.EmptyPlanButton);
+        count = findViewById(R.id.RVCount);
+
+
+        //  Drawer Layout
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.DrawerLayout);
+        navigationView = findViewById(R.id.NavView);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(toogle);
+        toogle.syncState();
+
+        testButton = navigationView.findViewById(R.id.TestButton);
+
 
 
         // Set Values based on Received Data
@@ -72,17 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // ----- BUTTONS -----
-
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, TesteActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
 
         // Edit Active Workout Plan
         editActualPlanButton.setOnClickListener(new View.OnClickListener(){
@@ -113,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 WorkoutDao dao = db.workoutDao();
 
-                dao.insertWorkout(newWorkout);
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -136,30 +157,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void CheckIfHasUserData() {
 
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        UserDataDao dao = db.userDataDao();
+
+        List<UserData> user = dao.listUserData();
+
+        if (user.isEmpty())
+        {
+            // Open New User Window
+        }
+
     }
 
     private void CheckEmptyState(){
         if (displayedWorkouts.isEmpty()) {
+            // Hide all usable Workout Buttons
             recyclerView.setVisibility(View.GONE);
-            emptyButton.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.VISIBLE);
             Button editActualPlanButton = findViewById(R.id.EditActualPlan);
             editActualPlanButton.setVisibility(View.GONE);
             Button newWorkout = findViewById(R.id.NewWorkout);
             newWorkout.setVisibility(View.GONE);
-            planName.setText("No Plans");
+            // Show Message and Create new Button
+            emptyButton.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
+            planName.setText("No Plans");            // Just for Tests
         }
         else {
+            // Show Recycle View
             recyclerView.setVisibility(View.VISIBLE);
+            // Hide Empty UI
             emptyButton.setVisibility(View.GONE);
             emptyView.setVisibility(View.GONE);
-            planName.setText("Tyter é foda");
+            planName.setText("Tyter é foda");        // Just for Tests
         }
     }
 
 
     public void LoadData() {
         new Thread(new Runnable() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
 
@@ -171,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        CheckWorkoutLimit();
 
                         //  Set Recycler View Adapter
                         WorkoutRVAdapter adapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
@@ -189,11 +227,77 @@ public class MainActivity extends AppCompatActivity {
 
                         CheckEmptyState();
                     }
+
                 });
 
             }
         }).start();
 
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+
+        if (menuItem.getItemId() == R.id.nav_settings) {
+            // Open Settings
+        }
+
+        if (menuItem.getItemId() == R.id.nav_info) {
+            // Open a Popup talking about the app
+            // -------------------------------------------------------
+            // Inflate Activity with a new View
+            View popupView = View.inflate(this, R.layout.popup_warning, null);
+
+            // Popup View UI Content
+            TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
+            Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+            Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+            // Set height and width as WRAP_CONTENT
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+            // Create the New View
+            PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+            // Set Text Warning
+            popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
+
+            // Close Buttons
+            confirmButton.setVisibility(View.GONE);
+            closeButton.setOnClickListener(v -> {
+                popupWindow.dismiss();
+            });
+
+        }
+
+        if (menuItem.getItemId() == R.id.TestButton) {
+
+            Intent intent = new Intent(this, TesteActivity.class);
+            startActivity(intent);
+
+        }
+
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    private void CheckWorkoutLimit() {
+        count.setText(String.valueOf(displayedWorkouts.size()) + "/10");
+
+        if (displayedWorkouts.size() >= 10)
+        {
+            Button newWorkout = findViewById(R.id.NewWorkout);
+            newWorkout.setVisibility(View.GONE);
+        }
+    }
+
 
 }

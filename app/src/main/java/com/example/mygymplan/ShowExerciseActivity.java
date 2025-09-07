@@ -2,10 +2,13 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -28,7 +31,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_show_exercise);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.testePopup), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -101,38 +104,31 @@ public class ShowExerciseActivity extends AppCompatActivity {
                             dao.updateExercise(thisExercise);
                         }
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                // Change Activity
+                                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                                intent.putExtra("SelectedWorkout", thisWorkout);
+
+                                startActivity(intent);
+
+                            }
+
+                        });
+
                     }
 
                 }).start();
 
-                // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-
-                startActivity(intent);
             }
         });
 
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        ExerciseDao dao = db.exerciseDao();
-                        dao.deleteExercise(thisExercise);
-                    }
-                }).start();
-
-                // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-
-                startActivity(intent);
-
+                showPopup();
             }
         });
 
@@ -140,6 +136,57 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     public void deleteButton(View view) {
         finish();
+    }
+
+    private void showPopup() {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(this, R.layout.popup_warning, null);
+
+        // Popup View UI Content
+        TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+        // Set height and width as WRAP_CONTENT
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+        // Create the New View
+        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // Set Text Warning
+        popupWarning.setText("Voce confirma que vai deletar?");
+
+        // Set Buttons
+        confirmButton.setOnClickListener(v -> {
+            deleteExercise();
+        });
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+
+    }
+
+    private void deleteExercise() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+                dao.deleteExercise(thisExercise);
+
+                // Change Activity
+                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                intent.putExtra("SelectedWorkout", thisWorkout);
+
+                startActivity(intent);
+            }
+
+        }).start();
+
     }
 
 }
