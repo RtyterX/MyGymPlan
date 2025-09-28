@@ -2,28 +2,41 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import com.example.mygymplan.Adapters.ExerciseRVAdapter;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class ShowWorkoutActivity extends AppCompatActivity {
+public class ShowWorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // Data
+    UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
     String NewWorkoutCompareString;   // Check if Workout is a New Workout
@@ -37,6 +50,12 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     ExerciseRVAdapter adapter;
     RecyclerView recyclerView;
     TextView emptyView;
+
+
+    // Drawer NaviBar
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Button testButton;
 
 
 
@@ -55,6 +74,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
+        user = (UserData) intent.getSerializableExtra("SelectedUser");
 
 
         // Components
@@ -62,17 +82,35 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
         Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
-        Button backButton = findViewById(R.id.BackButton2);
+        //Button backButton = findViewById(R.id.BackButton2);
+        TextView showDescription = findViewById(R.id.WorkoutDescription);
 
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
-        // Set Values based on Received Data
-        showName.setText(thisWorkout.wName);
-        workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
+        //  Drawer Layout
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.DrawerLayout);
+        navigationView = findViewById(R.id.NavView);
+        navigationView.setNavigationItemSelectedListener(this);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
+        // Just for Tests
+        testButton = navigationView.findViewById(R.id.TestButton);
+
+
+        // -------------------------------------------------------------------
+
+
+        // Set Values based on Received Data
         NewWorkoutCompareString = thisWorkout.wName;
+        showName.setText(thisWorkout.wName);
+        showDescription.setText(thisWorkout.wDescription);
+        workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
 
 
         LoadData();
@@ -113,6 +151,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
                         // Get Workout Values
                         thisWorkout.wName = showName.getText().toString();
+                        thisWorkout.wDescription = showDescription.getText().toString();
 
                         // Database
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -143,11 +182,11 @@ public class ShowWorkoutActivity extends AppCompatActivity {
 
 
         // Back Button
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+       // backButton.setOnClickListener(new View.OnClickListener() {
+           // public void onClick(View v) {
+               // finish();
+          //  }
+       // });
 
     }
 
@@ -194,6 +233,7 @@ public class ShowWorkoutActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
 
+
                             @Override
                             public void deletebuttonClick(Exercise item) {
                                 Exercise deletedExercise = item;
@@ -226,7 +266,6 @@ public class ShowWorkoutActivity extends AppCompatActivity {
     }
 
 
-
     ///////////////////////////////////////////////////
     /////////////// JUST FOR TEST ////////////////////
     /////////////////////////////////////////////////
@@ -248,6 +287,58 @@ public class ShowWorkoutActivity extends AppCompatActivity {
         }).start();
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+
+        if (menuItem.getItemId() == R.id.nav_settings) {
+            // Open Settings
+        }
+
+        if (menuItem.getItemId() == R.id.nav_info) {
+            // Open a Popup talking about the app
+            // -------------------------------------------------------
+            // Inflate Activity with a new View
+            View popupView = View.inflate(this, R.layout.popup_warning, null);
+
+            // Popup View UI Content
+            TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
+            Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+            Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+            // Set height and width as WRAP_CONTENT
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+            // Create the New View
+            PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+            // Set Text Warning
+            popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
+
+            // Close Buttons
+            confirmButton.setVisibility(View.GONE);
+            closeButton.setOnClickListener(v -> {
+                popupWindow.dismiss();
+            });
+
+        }
+
+        if (menuItem.getItemId() == R.id.TestButton) {
+
+            Intent intent = new Intent(this, TesteActivity.class);
+            startActivity(intent);
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
 }
 
 

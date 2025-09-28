@@ -2,72 +2,121 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/DeleteExerciseRVButton"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/RecycleExerciceImage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="parent"
-        tools:layout_editor_absoluteY="284dp">
+        android:layout_width="412dp"
+        android:layout_height="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <View
             android:id="@+id/viewTeste"
-            android:layout_width="411dp"
-            android:layout_height="149dp"
+            android:layout_width="412dp"
+            android:layout_height="87dp"
             android:background="#1EC1BFF8"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/RecyclerExerciseName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="52dp"
-            android:text="Exercise Name"
+        <ImageButton
+            android:id="@+id/ChangeOrderExercise"
+            android:layout_width="30dp"
+            android:layout_height="55dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.271"
-            app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
+            app:layout_constraintStart_toStartOf="@+id/viewTeste"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.56" />
+            app:srcCompat="@drawable/bug" />
 
-        <TextView
-            android:id="@+id/RecyclerExerciseType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Exercise Type"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout6"
+            android:layout_width="58dp"
+            android:layout_height="62dp"
+            android:layout_marginStart="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.303"
-            app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.563" />
+            app:layout_constraintStart_toEndOf="@+id/constraintLayout7"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/RecyclerExerciseSets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sets"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:text="X"
+                app:layout_constraintBottom_toTopOf="@+id/RecyclerExerciseReps"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RecyclerExerciseSets" />
+
+            <TextView
+                android:id="@+id/RecyclerExerciseReps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reps"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/ImageRecyclerExercise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.056"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ChangeOrderExercise"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <Button
-            android:id="@+id/DeleteExerciseRV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            app:layout_constraintBottom_toBottomOf="@+id/viewTeste"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout7"
+            android:layout_width="111dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="1dp"
+            app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
+            tools:layout_editor_absoluteY="7dp">
+
+            <TextView
+                android:id="@+id/RecyclerExerciseName"
+                android:layout_width="109dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="4dp"
+                android:text="Exercise Name"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/RecyclerExerciseType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Exercise Type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RecyclerExerciseName" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/DeleteExerciseRVButton"
+            android:layout_width="39dp"
+            android:layout_height="55dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/delete_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

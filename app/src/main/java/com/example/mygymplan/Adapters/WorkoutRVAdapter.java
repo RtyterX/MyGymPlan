@@ -1,4 +1,4 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mygymplan.R;
+import com.example.mygymplan.Workout;
 
 import java.util.List;
 
@@ -47,9 +50,10 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // Based on the position of the Recycler View
 
         holder.textViewName.setText(workoutList.get(position).wName);
+        holder.textViewDescription.setText(workoutList.get(position).wDescription);
         holder.bind(workoutList.get(position), onListener);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
-        //holder.textViewDescription.setText(workoutList.get(position).getwDescription());
+
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
     }
@@ -66,8 +70,8 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // Similar to onCreate method
 
         TextView textViewName;
+        TextView textViewDescription;
         //TextView textViewType;
-        //TextView textViewDescription;
         // ImageView imageView;
 
 
@@ -76,8 +80,8 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
+            textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
             //textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            //textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
             // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
         }
 

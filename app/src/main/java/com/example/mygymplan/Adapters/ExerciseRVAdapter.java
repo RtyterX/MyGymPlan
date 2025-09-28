@@ -1,14 +1,17 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mygymplan.Exercise;
+import com.example.mygymplan.R;
 
 import java.util.List;
 
@@ -48,14 +51,19 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
+        // Text Views
         holder.textViewName.setText(exerciseList.get(position).eName);
+        holder.textViewType.setText(exerciseList.get(position).eType.toString());
+        holder.textViewSets.setText(exerciseList.get(position).eSets);
+        holder.textViewReps.setText(exerciseList.get(position).eReps);
+
+        // Delete Button
         holder.bind(exerciseList.get(position), onListener);
         //holder.bind2(exerciseList.get(position), onListener);
 
-        // holder.textViewType.setText(exerciseList.get(position).geteType().toString());
+        // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
     }
-
 
 
     @Override
@@ -70,18 +78,23 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // Similar to onCreate method
 
         TextView textViewName;
-        //TextView textViewType;
+        TextView textViewType;
+        TextView textViewSets;
+        TextView textViewReps;
+
         //ImageView imageView;
-        Button deleteButton;
+        ImageButton deleteButton;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
-            //textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
+            textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
             // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
-            deleteButton = itemView.findViewById(R.id.DeleteExerciseRV);
+            textViewSets = itemView.findViewById(R.id.RecyclerExerciseSets);
+            textViewReps = itemView.findViewById(R.id.RecyclerExerciseReps);
+            deleteButton = itemView.findViewById(R.id.DeleteExerciseRVButton);
         }
         public void bind(Exercise item, OnItemClickListener onlistener) {
 

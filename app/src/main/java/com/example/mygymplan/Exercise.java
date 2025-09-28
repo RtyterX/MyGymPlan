@@ -39,13 +39,14 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "load")
     public int eLoad;
 
+    @ColumnInfo(name = "type")
+    public WorkoutType eType;    // Enum
 
-    // public WorkoutType eType;    // Later
+    //@ColumnInfo(name = "image")
     // public int eImage;           // Later
 
     @ColumnInfo(name = "workout_Id")
     public int workout_Id;
-
 
 
 }

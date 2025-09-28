@@ -67,39 +67,6 @@ public class TesteActivity extends AppCompatActivity {
         });
     }
 
-
-    public void show(View view) {
-
-        LinearLayout lnl = findViewById(R.id.lnl);
-        lnl.removeAllViews();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
-
-                List<Exercise> list = dao.listExercise();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Exercise e : list) {
-                            if (thisWorkout.id == e.workout_Id) {
-                                TextView t = new TextView(TesteActivity.this);
-                                t.setText(e.eName);
-
-                                lnl.addView(t);
-
-                            }
-                        }
-                    }
-                });
-            }
-        }).start();
-
-    }
-
     public void DeleteDataBase(View view) {
         new Thread(new Runnable() {
             @Override

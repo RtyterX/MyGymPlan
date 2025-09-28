@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mygymplan.Adapters.WorkoutRVAdapter;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -70,7 +72,7 @@ public class EditPlan extends AppCompatActivity {
         planName.setText(thisPlan.planName);
         i = thisPlan.id;
         NewPlanCompareString = thisPlan.planName;
-        displayedWorkouts = thisPlan.planWorkouts;
+
 
 
         // Recycler View
@@ -127,22 +129,7 @@ public class EditPlan extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                Plan alteredPlan = new Plan(
-                        i,
-                        planName.getText().toString(),
-                        displayedWorkouts,
-                        false
-                );
 
-                if (Objects.equals(thisPlan, alteredPlan)) {
-
-                    Intent intent = new Intent(EditPlan.this, MainActivity.class);
-                    intent.putExtra("SelectedPlan", (Parcelable) thisPlan);
-                    startActivity(intent);
-                }
-                else {
-                    // Show Warning
-                }
             }
         });
 

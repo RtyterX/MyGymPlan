@@ -2,14 +2,23 @@ package com.example.mygymplan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,9 +30,25 @@ import java.util.Objects;
 public class ShowExerciseActivity extends AppCompatActivity {
 
     // Data
-    Workout thisWorkout;                // Know which workout to show when user goes back to workout activity
-    Exercise thisExercise;              // Used to save Exercise data
-    String NewExerciseCompareString;    // Used to check if Exercise is new or not
+    Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
+    Exercise thisExercise;                 // Used to save Exercise data
+    String NewExerciseCompareString;       // Used to check if Exercise is new or not
+
+
+    // ------------------------------------
+    // ------------ Enum ------------------
+    // ------------------------------------
+    String[] types = {
+            "Chest",
+            "Back",
+            "Shoulders",
+            "Arms",
+            "Legs",
+            "Biceps",
+            "Triceps"};
+
+    AutoCompleteTextView autoComplete;
+    ArrayAdapter<String> adapterItem;
 
 
     @Override
@@ -53,25 +78,51 @@ public class ShowExerciseActivity extends AppCompatActivity {
         EditText showRest = findViewById(R.id.ExerciseRest);
         EditText showLoad = findViewById(R.id.ExerciseLoad);
         Button saveExercise = findViewById(R.id.SaveExercise);
+        autoComplete = findViewById(R.id.AutoCompleteEnumList);           // Enum Dropdown Menu
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);    // Just for Test - Going to be in Recycle View
         Button backButton = findViewById(R.id.BackButton3);               // Just for Test - Going to be in Toolbar
+        ImageView gallery = findViewById(R.id.ExerciseImage);
 
 
         // Set UI Values
-        showName.setText(thisExercise.eName);
-        // showImage.setText(intent.getParcelableExtra(thisExercise.eName));
-        showDescription.setText(thisExercise.eDescription);
-        showSets.setText(String.valueOf(thisExercise.eSets));
-        showReps.setText(String.valueOf(thisExercise.eReps));
-        showRest.setText(String.valueOf(thisExercise.eRest));
-        showLoad.setText(String.valueOf(thisExercise.eLoad));
+        NewExerciseCompareString = thisExercise.eName;                   // Just to Know if it's a New Exercise or Not
+        // If Exercise isn't New...
+        if (!Objects.equals(NewExerciseCompareString, "New Exercise")) {
+            // Show already storage Values
+            showName.setText(thisExercise.eName);
+            showDescription.setText(thisExercise.eDescription);
+            showSets.setText(String.valueOf(thisExercise.eSets));
+            showReps.setText(String.valueOf(thisExercise.eReps));
+            showRest.setText(String.valueOf(thisExercise.eRest));
+            showLoad.setText(String.valueOf(thisExercise.eLoad));
+            autoComplete.setText(thisExercise.eType.toString());
+            // showImage.setText(intent.getParcelableExtra(thisExercise.eName));
+        }
 
 
-        // Just to Know if it's a New Exercise or Not
-        NewExerciseCompareString = thisExercise.eName;
+        // Dropdown Menu
+        adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, types);
+        autoComplete.setAdapter(adapterItem);
+        autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(ShowExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
+                ApplyWorkoutType(item);
+            }
+        });
 
 
-        // ----- Buttons -----
+        // ------------------- Buttons -------------------
+
+
+        gallery.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 3);
+            }
+        });
 
         // Save New Exercise
         saveExercise.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +152,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
                         // Update if Exercise is already created
                         else {
                             // Save new Exercise
-                            dao.updateExercise(thisExercise);
+                           // dao.updateExercise(thisExercise);
                         }
 
                         runOnUiThread(new Runnable() {
@@ -188,5 +239,30 @@ public class ShowExerciseActivity extends AppCompatActivity {
         }).start();
 
     }
+
+
+    private void ApplyWorkoutType(String item){
+        switch(item)  {
+            case "Chest":
+                thisExercise.eType = WorkoutType.Chest;
+                break;
+            case "Legs":
+                thisExercise.eType = WorkoutType.Legs;
+                break;
+
+
+        }
+    }
+
+    public void SelectImage(View view) {
+
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+  
+    }
+
 
 }

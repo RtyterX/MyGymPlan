@@ -9,16 +9,18 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface UserDataDao {
-    @Query("SELECT * FROM user")
-    List<UserData> listUserData();
+public interface PlanDao {
+
+    @Query("SELECT * FROM plans")
+    List<Plan> listPlans();
 
     @Insert
-    void insertUser(UserData... UserData);
+    void insertPlan(Plan... plans);
 
     @Update
-    void updateUser(UserData... UserData);
+    void updatePlan(Plan... plan);
 
     @Delete
-    void deleteUser(UserData UserData);
+    void deletePlan(Plan plan);
+
 }

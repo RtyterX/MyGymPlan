@@ -2,58 +2,32 @@ package com.example.mygymplan;
 
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
+@Entity(tableName = "plans")
 public class Plan implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
     public int id;
+
+    @ColumnInfo(name = "name")
     public String planName;
+
+    @ColumnInfo(name = "description")
+    public String planDescription;
+
+    @ColumnInfo(name = "author")
+    public String author;
+
+    @ColumnInfo(name = "active")
     public Boolean active;
-    public ArrayList<Workout> planWorkouts;
 
-    // ---- Constructor ----
+    @ColumnInfo(name = "pro")
+    public Boolean pro;
 
-    public Plan(int id, String planName, ArrayList<Workout> planWorkouts, Boolean active) {
-        this.id = id;
-        this.planName = planName;
-        this.planWorkouts = planWorkouts;
-        this.active = active;
-    }
-
-
-    // ---- Getters and Setters ----
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getPlanName() {
-        return planName;
-    }
-
-    public void setPlanName(String planName) {
-        this.planName = planName;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public ArrayList<Workout> getPlanWorkouts() {
-        return planWorkouts;
-    }
-
-    public void setPlanWorkouts(ArrayList<Workout> planWorkouts) {
-        this.planWorkouts = planWorkouts;
-    }
 }
