@@ -30,16 +30,49 @@ public class WelcomePage extends AppCompatActivity {
 
 
         // Components
-        Button start = findViewById(R.id.LetsStartButton);
         TextView text = findViewById(R.id.WecomeText);
+        Button start = findViewById(R.id.LetsStartButton);
+        Button skip = findViewById(R.id.SkipWelcomeButton);
 
 
-        // Button
+        // Buttons
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent intent = new Intent(WelcomePage.this, WelcomePage2.class);
                 startActivity(intent);
+            }
+
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                UserData user = new UserData();
+                user.name = "No Name";
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // Save New User in Database
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                        UserDataDao dao = db.userDataDao();
+                        dao.insertUser(user);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Intent intent = new Intent(WelcomePage.this, FirstPage.class);
+                                intent.putExtra("SelectedUser", user);
+                                startActivity(intent);
+
+                            }
+                        });
+                    }
+
+                }).start();
             }
 
         });

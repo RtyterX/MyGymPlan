@@ -11,18 +11,18 @@
     tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ShowWorkoutActivity">
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ShowWorkoutActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
             android:layout_width="413dp"
             android:layout_height="60dp"
             android:background="?attr/colorPrimary"
-            android:textColor="@color/white"
             android:minHeight="?attr/actionBarSize"
+            android:textColor="@color/white"
             android:theme="@style/ToolbarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,51 +40,51 @@
                 android:id="@+id/DescripWText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="8dp"
                 android:text="Description"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.193"
                 app:layout_constraintStart_toEndOf="@+id/WorkoutName"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/WorkoutDescription"
-                android:layout_width="174dp"
-                android:layout_height="42dp"
+                android:layout_width="199dp"
+                android:layout_height="43dp"
+                android:layout_marginStart="20dp"
                 android:ems="10"
                 android:inputType="text"
                 android:text="Description Here"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.516"
                 app:layout_constraintStart_toEndOf="@+id/WorkoutName" />
 
             <EditText
                 android:id="@+id/WorkoutName"
                 android:layout_width="176dp"
                 android:layout_height="39dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:ems="10"
                 android:inputType="text"
                 android:text="New Name"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+                app:layout_constraintTop_toBottomOf="@+id/WorkoutIdText" />
 
             <TextView
                 android:id="@+id/WorkoutIdText"
-                android:layout_width="25dp"
-                android:layout_height="29dp"
+                android:layout_width="34dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="4dp"
                 android:text="Workout Id"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/WorkoutName" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="410dp"
-            android:layout_height="511dp"
-            android:layout_marginTop="19dp"
+            android:layout_width="407dp"
+            android:layout_height="532dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -107,6 +107,8 @@
                 android:id="@+id/ShowDatabaseValues"
                 android:layout_width="73dp"
                 android:layout_height="31dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
                 android:onClick="ShowDatabase"
                 android:text="Reload"
                 android:textSize="8sp"
@@ -118,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
                 android:text="New Exercise"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

@@ -5,9 +5,11 @@ public enum WorkoutType {
     Chest,
     Back,
     Shoulder,
-    Bicesp,
-    Triceps,
     Legs,
+    Arms,
+    Biceps,
+    Triceps,
+
     FullBody,
     UpperBody,
 

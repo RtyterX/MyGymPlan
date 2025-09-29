@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
     public interface OnItemClickListener {
         void onItemClick(Exercise item);
-        void deletebuttonClick(Exercise item);
 
     }
 
@@ -37,32 +37,31 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
     @NonNull
     @Override
-    public ExerciseRVAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Where you inflate the Layout
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_exercise, parent, false);
 
-        return new ExerciseRVAdapter.MyViewHolder(view);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExerciseRVAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
         // Text Views
         holder.textViewName.setText(exerciseList.get(position).eName);
         holder.textViewType.setText(exerciseList.get(position).eType.toString());
-        holder.textViewSets.setText(exerciseList.get(position).eSets);
-        holder.textViewReps.setText(exerciseList.get(position).eReps);
-
-        // Delete Button
-        holder.bind(exerciseList.get(position), onListener);
-        //holder.bind2(exerciseList.get(position), onListener);
+        holder.textViewSets.setText(String.valueOf(exerciseList.get(position).eSets));
+        holder.textViewReps.setText(String.valueOf(exerciseList.get(position).eReps));
 
         // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
+
+        // On Item Click
+        holder.bind(exerciseList.get(position), onListener);
     }
 
 
@@ -81,9 +80,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewType;
         TextView textViewSets;
         TextView textViewReps;
-
-        //ImageView imageView;
-        ImageButton deleteButton;
+        ImageView imageView;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
@@ -91,10 +88,9 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
             textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
-            // imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
+            imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
             textViewSets = itemView.findViewById(R.id.RecyclerExerciseSets);
             textViewReps = itemView.findViewById(R.id.RecyclerExerciseReps);
-            deleteButton = itemView.findViewById(R.id.DeleteExerciseRVButton);
         }
         public void bind(Exercise item, OnItemClickListener onlistener) {
 
@@ -108,22 +104,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
         }
 
-        public void bind2(Exercise item, OnItemClickListener onlistener) {
-
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //AppDatabase db = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "workouts").build();
-                    //ExerciseDao dao = db.exerciseDao();
-
-                    onlistener.deletebuttonClick(item);
-                }
-            });
-        }
-
-
 
     }
-
 
 }

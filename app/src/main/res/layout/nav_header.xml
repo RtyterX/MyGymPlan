@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="User Photo"
         android:src="@drawable/nav_info"
+        android:background="@color/blue1"
         android:visibility="visible" />
 
     <TextView

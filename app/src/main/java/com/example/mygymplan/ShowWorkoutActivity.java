@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import kotlinx.coroutines.scheduling.WorkQueueKt;
+
 
 public class ShowWorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -77,19 +79,18 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         user = (UserData) intent.getSerializableExtra("SelectedUser");
 
 
-        // Components
+        // --- Components ---
         showName = findViewById(R.id.WorkoutName);
         workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
         Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
         //Button backButton = findViewById(R.id.BackButton2);
         TextView showDescription = findViewById(R.id.WorkoutDescription);
-
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
-        //  Drawer Layout
+        // --- Drawer Layout  ---
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.DrawerLayout);
@@ -99,24 +100,30 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Just for Tests
+        // --- Just for Tests ---
         testButton = navigationView.findViewById(R.id.TestButton);
+
 
 
         // -------------------------------------------------------------------
 
-
-        // Set Values based on Received Data
+        //  ---  Set Values based on Received Data  ---
         NewWorkoutCompareString = thisWorkout.wName;
         showName.setText(thisWorkout.wName);
         showDescription.setText(thisWorkout.wDescription);
         workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
 
 
+
+        // -------------------------------------------------------------------
+
         LoadData();
 
+        // -------------------------------------------------------------------
 
-        // ----- BUTTONS -----
+
+
+        // ------------ BUTTONS ------------
 
         // Create New Exercise
         newExerciseButton.setOnClickListener(new View.OnClickListener() {
@@ -136,10 +143,12 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
                 // Change Activity
                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
                 intent.putExtra("SelectedExercise", newExercise);
-
+                intent.putExtra("SelectedWorkout", thisWorkout);
+                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });
+
 
         // Save or Update Workout
         saveWorkoutButton.setOnClickListener(new View.OnClickListener() {
@@ -173,8 +182,8 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
                 }).start();
 
                 // Change to Main Activity
-                Intent intent = new Intent(ShowWorkoutActivity.this, MainActivity.class);
-
+                Intent intent = new Intent(ShowWorkoutActivity.this, FirstPage.class);
+                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
 
             }
@@ -189,6 +198,8 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
        // });
 
     }
+
+    // -------------------------------------------------------------------
 
 
     private void checkEmptyState(){
@@ -229,17 +240,10 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
                             @Override
                             public void onItemClick(Exercise item) {
                                 Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
+                                intent.putExtra("SelectedUser", user);
+                                intent.putExtra("SelectedWorkout", thisWorkout);
                                 intent.putExtra("SelectedExercise", item);
                                 startActivity(intent);
-                            }
-
-
-                            @Override
-                            public void deletebuttonClick(Exercise item) {
-                                Exercise deletedExercise = item;
-                                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                                ExerciseDao dao = db.exerciseDao();
-                                dao.deleteExercise(deletedExercise);
                             }
                         });
                         recyclerView.setAdapter(adapter);

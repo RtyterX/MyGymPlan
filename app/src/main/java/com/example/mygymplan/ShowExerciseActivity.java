@@ -1,6 +1,7 @@
 package com.example.mygymplan;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Gravity;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +30,20 @@ import java.util.Objects;
 public class ShowExerciseActivity extends AppCompatActivity {
 
     // Data
+    UserData user;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
     String NewExerciseCompareString;       // Used to check if Exercise is new or not
+    AutoCompleteTextView autoComplete;
+    ArrayAdapter<String> adapterItem;
+
+
+    // For Image Selection
+    ImageView exerciseImage;
+
+    // constant to compare
+    // the activity result code
+    int SELECT_PICTURE = 200;
 
 
     // ------------------------------------
@@ -41,14 +52,12 @@ public class ShowExerciseActivity extends AppCompatActivity {
     String[] types = {
             "Chest",
             "Back",
-            "Shoulders",
+            "Shoulder",
             "Arms",
             "Legs",
             "Biceps",
             "Triceps"};
 
-    AutoCompleteTextView autoComplete;
-    ArrayAdapter<String> adapterItem;
 
 
     @Override
@@ -65,27 +74,30 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
+        user = (UserData) intent.getSerializableExtra("SelectedUser");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
 
 
-        // Components
+        // --- Components ---
         EditText showName = findViewById(R.id.ExerciseName);
-        //ImageView showImage = findViewById(R.id.ExerciseImage);
         EditText showDescription = findViewById(R.id.ExerciseDescription);
         EditText showSets = findViewById(R.id.ExerciseSets);
         EditText showReps = findViewById(R.id.ExerciseReps);
         EditText showRest = findViewById(R.id.ExerciseRest);
         EditText showLoad = findViewById(R.id.ExerciseLoad);
+        // Enum Dropdown Menu
+        autoComplete = findViewById(R.id.AutoCompleteEnumList);
+        // Image
+        exerciseImage = findViewById(R.id.ExerciseImage);
+        // Buttons
         Button saveExercise = findViewById(R.id.SaveExercise);
-        autoComplete = findViewById(R.id.AutoCompleteEnumList);           // Enum Dropdown Menu
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);    // Just for Test - Going to be in Recycle View
-        Button backButton = findViewById(R.id.BackButton3);               // Just for Test - Going to be in Toolbar
-        ImageView gallery = findViewById(R.id.ExerciseImage);
+        Button backButton = findViewById(R.id.BackButton3);
 
 
-        // Set UI Values
-        NewExerciseCompareString = thisExercise.eName;                   // Just to Know if it's a New Exercise or Not
+        // --- Set UI Values ---
+        NewExerciseCompareString = thisExercise.eName;                   // Just to check if it's a New Exercise or Not
         // If Exercise isn't New...
         if (!Objects.equals(NewExerciseCompareString, "New Exercise")) {
             // Show already storage Values
@@ -100,7 +112,10 @@ public class ShowExerciseActivity extends AppCompatActivity {
         }
 
 
-        // Dropdown Menu
+        // ------------------------------------------------------
+        // ------------------ Dropdown Menu ---------------------
+        // ------------------------------------------------------
+
         adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, types);
         autoComplete.setAdapter(adapterItem);
         autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -108,21 +123,23 @@ public class ShowExerciseActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 Toast.makeText(ShowExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
-                ApplyWorkoutType(item);
+                ApplyExerciseType(item);
             }
         });
 
 
-        // ------------------- Buttons -------------------
+        // ------------------------------------------------------
+        // -------------------- Buttons -------------------------
+        // ------------------------------------------------------
 
-
-        gallery.setOnClickListener(new View.OnClickListener(){
+        exerciseImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 3);
             }
         });
+
 
         // Save New Exercise
         saveExercise.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +149,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        // Get Exercise Value
+                        // Get Exercise Values
                         thisExercise.eName = showName.getText().toString();
                         thisExercise.eDescription = showDescription.getText().toString();
                         thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
@@ -140,38 +157,32 @@ public class ShowExerciseActivity extends AppCompatActivity {
                         thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
                         thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
 
-                        // Database
+                        // Access Database
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         ExerciseDao dao = db.exerciseDao();
 
+                        // ------------------------------------------------------------------------
                         // Create if Exercise is New
-                        if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
-                            // Save new Exercise
-                            dao.insertExercise(thisExercise);
-                        }
+                         if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
+                             // Save new Exercise
+                             dao.insertExercise(thisExercise);
+                         }
                         // Update if Exercise is already created
-                        else {
-                            // Save new Exercise
-                           // dao.updateExercise(thisExercise);
-                        }
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                // Change Activity
-                                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
-                                intent.putExtra("SelectedWorkout", thisWorkout);
-
-                                startActivity(intent);
-
-                            }
-
-                        });
-
+                         else {
+                             // Save new Exercise
+                             dao.updateExercise(thisExercise);
+                         }
+                        // ------------------------------------------------------------------------
                     }
 
                 }).start();
+
+                // Change Activity
+                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                intent.putExtra("SelectedWorkout", thisWorkout);
+                intent.putExtra("SelectedUser", user);
+
+                startActivity(intent);
 
             }
         });
@@ -185,9 +196,10 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     }
 
-    public void deleteButton(View view) {
-        finish();
-    }
+
+    // ------------------------------------------------------
+    // ---------- Delete Exercise Popup  --------------------
+    // ------------------------------------------------------
 
     private void showPopup() {
         // Inflate Activity with a new View
@@ -232,6 +244,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
                 // Change Activity
                 Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
                 intent.putExtra("SelectedWorkout", thisWorkout);
+                intent.putExtra("SelectedUser", user);
 
                 startActivity(intent);
             }
@@ -240,20 +253,40 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     }
 
+    // ----------------------------------------------------------
+    // ---------- Switch to Change Exercise type ----------------
+    // ----------------------------------------------------------
 
-    private void ApplyWorkoutType(String item){
+    private void ApplyExerciseType(String item){
         switch(item)  {
             case "Chest":
                 thisExercise.eType = WorkoutType.Chest;
                 break;
+            case "Back":
+                thisExercise.eType = WorkoutType.Back;
+                break;
+            case "Shoulder":
+                thisExercise.eType = WorkoutType.Shoulder;
+                break;
+            case "Arms":
+                thisExercise.eType = WorkoutType.Arms;
+                break;
+            case "Biceps":
+                thisExercise.eType = WorkoutType.Biceps;
+                break;
+            case "Triceps":
+                thisExercise.eType = WorkoutType.Triceps;
+                break;
             case "Legs":
                 thisExercise.eType = WorkoutType.Legs;
                 break;
-
-
         }
     }
 
+
+    // ----------------------------------------------------------
+    // ---------- Select Image From Gallery Test ----------------
+    // ----------------------------------------------------------
     public void SelectImage(View view) {
 
 
@@ -261,8 +294,24 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+
+            // compare the resultCode with the
+            // SELECT_PICTURE constant
+            if (requestCode == SELECT_PICTURE) {
+                // Get the url of the image from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // update the preview image in the
+                    // layout
+                    exerciseImage.setImageURI(
+                            selectedImageUri);
+                }
+            }
+        }
   
     }
+
 
 
 }

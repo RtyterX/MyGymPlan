@@ -14,7 +14,6 @@ import com.example.mygymplan.Workout;
 
 import java.util.List;
 
-
 public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyViewHolder>  {
 
     public interface OnItemClickListener {
@@ -51,11 +50,12 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
         holder.textViewName.setText(workoutList.get(position).wName);
         holder.textViewDescription.setText(workoutList.get(position).wDescription);
-        holder.bind(workoutList.get(position), onListener);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
+        // On Item Click
+        holder.bind(workoutList.get(position), onListener);
     }
 
     @Override

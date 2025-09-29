@@ -29,6 +29,7 @@ import androidx.room.Room;
 import com.example.mygymplan.Adapters.WorkoutRVAdapter;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FirstPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,7 +43,8 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
 
     // UI
     TextView planName;
-    Button emptyButton;
+    Button emptyPlanButton;
+    Button emptyWorkoutButton;
 
 
     // RecyclerView
@@ -82,7 +84,7 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
         Button ChangePlanButton = findViewById(R.id.ChangePlan);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts2);
-        emptyButton = findViewById(R.id.EmptyPlanButton);
+        emptyPlanButton = findViewById(R.id.EmptyPlanButton);
         count = findViewById(R.id.RVCount);
 
 
@@ -181,10 +183,10 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
     // ------------- Check if user Already has Workouts --------------------
     // ---------------------------------------------------------------------
 
-    private void CheckEmptyState(){
-        if (displayedWorkouts.isEmpty()) {
+    private void ChangeEmptyState(){
+        if (thisPlan == null) {
             recyclerView.setVisibility(View.GONE);
-            emptyButton.setVisibility(View.VISIBLE);
+            emptyPlanButton.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.VISIBLE);
             Button editActualPlanButton = findViewById(R.id.ChangePlan);
             editActualPlanButton.setVisibility(View.GONE);
@@ -194,10 +196,32 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
             planName.setText("No Plans");
         }
         else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyButton.setVisibility(View.GONE);
-            emptyView.setVisibility(View.GONE);
-            planName.setText("Tyter é foda");
+            if (displayedWorkouts.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyPlanButton.setVisibility(View.VISIBLE);
+                emptyPlanButton.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+                Button editActualPlanButton = findViewById(R.id.ChangePlan);
+                editActualPlanButton.setVisibility(View.GONE);
+                Button newWorkout = findViewById(R.id.NewWorkout);
+                newWorkout.setVisibility(View.GONE);
+                count.setVisibility(View.GONE);
+                emptyWorkoutButton = findViewById(R.id.EmptyPlanButton);
+                emptyWorkoutButton.setText("Create New Workout");
+                emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NewWorkout(emptyWorkoutButton);
+                    }
+                });
+            }
+            else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyPlanButton.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+                CheckWorkoutLimit();
+            }
+            planName.setText(thisPlan.planName);
         }
     }
 
@@ -229,23 +253,42 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void run() {
 
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                WorkoutDao dao = db.workoutDao();
+                List<Plan> plansList = new ArrayList<>();
 
-                displayedWorkouts = dao.listWorkouts();
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                PlanDao dao = db.planDao();
+
+                plansList = dao.listPlans();
+
+                for(Plan item : plansList){
+                    if (item.active == true) {
+                        thisPlan = item;
+                    }
+                }
+
+                displayedWorkouts = new ArrayList<>();
+                List<Workout> workoutsList = new ArrayList<>();
+
+                WorkoutDao daoW = db.workoutDao();
+                workoutsList = daoW.listWorkouts();
+
+                for(Workout item : workoutsList){
+                    if (item.plan_Id == thisPlan.id) {
+                        displayedWorkouts.add(item);
+                    }
+                }
+
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        CheckWorkoutLimit();
 
                         //  Set Recycler View Adapter
                         WorkoutRVAdapter adapter = new WorkoutRVAdapter(FirstPage.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Workout item) {
                                 Intent intent = new Intent(FirstPage.this, ShowWorkoutActivity.class);
-
+                                intent.putExtra("SelectedUser", user);
                                 intent.putExtra("SelectedWorkout", item);
                                 startActivity(intent);
                             }
@@ -255,7 +298,8 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(FirstPage.this));
 
-                        CheckEmptyState();
+
+                        ChangeEmptyState();
                     }
 
                 });
@@ -290,7 +334,9 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
 
                 // Create New Workout DataBase
                 Workout newWorkout = new Workout();
-                newWorkout.wName = "New Workout";
+                newWorkout.wName = "New Plan Workout";
+                newWorkout.wDescription = "New Plan Description";
+                newWorkout.plan_Id = thisPlan.id;
 
                 WorkoutDao dao2 = db.workoutDao();
                 dao2.insertWorkout(newWorkout);
@@ -299,7 +345,8 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
                     @Override
                     public void run() {
                         // Change Activity
-                        Intent intent = new Intent(FirstPage.this, MainActivity.class);
+                        Intent intent = new Intent(FirstPage.this, FirstPage.class);
+                        intent.putExtra("SelectedUser", user);
                         intent.putExtra("SelectedPlan", newPlan);
 
                         startActivity(intent);
@@ -324,6 +371,7 @@ public class FirstPage extends AppCompatActivity implements NavigationView.OnNav
                 // Create New Workout DataBase
                 Workout newWorkout = new Workout();
                 newWorkout.wName = "New Workout";
+                newWorkout.plan_Id = thisPlan.id;
 
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 WorkoutDao dao = db.workoutDao();
