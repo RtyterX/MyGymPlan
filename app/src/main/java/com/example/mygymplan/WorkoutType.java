@@ -9,9 +9,7 @@ public enum WorkoutType {
     Arms,
     Biceps,
     Triceps,
-
     FullBody,
     UpperBody,
-
-
+    NA
 }

@@ -1,6 +1,7 @@
 package com.example.mygymplan;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class WelcomePage2 extends AppCompatActivity {
             return insets;
         });
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Components
         EditText newUseName = findViewById(R.id.NewUserName);

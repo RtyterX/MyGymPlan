@@ -39,20 +39,21 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecycleViewWorkouts"
-            android:layout_width="356dp"
-            android:layout_height="626dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="371dp"
+            android:layout_height="693dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.51"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintHorizontal_bias="0.432"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ChangePlan">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button
             android:id="@+id/ChangePlan"
-            android:layout_width="123dp"
-            android:layout_height="43dp"
+            android:layout_width="130dp"
+            android:layout_height="47dp"
             android:layout_marginEnd="8dp"
+            android:onClick="ChangePlan"
             android:text="Change Plan"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,11 +78,10 @@
             android:id="@+id/NewWorkout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="40dp"
             android:onClick="NewWorkout"
             android:text="New Workout"
-            app:layout_constraintBottom_toBottomOf="@+id/RecycleViewWorkouts"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts" />
 
         <androidx.appcompat.widget.Toolbar
@@ -98,14 +98,24 @@
 
         <TextView
             android:id="@+id/RVCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="24dp"
             android:background="@color/white"
             android:text="Count"
             android:textColor="@color/black"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts"
-            app:layout_constraintTop_toTopOf="@+id/RecycleViewWorkouts" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts" />
+
+        <Button
+            android:id="@+id/NewPlanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:onClick="CreateFromScratch"
+            android:text="New Plan"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

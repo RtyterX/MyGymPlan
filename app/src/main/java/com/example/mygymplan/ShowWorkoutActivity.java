@@ -1,6 +1,7 @@
 package com.example.mygymplan;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -72,6 +73,8 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
             return insets;
         });
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
@@ -93,6 +96,7 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         // --- Drawer Layout  ---
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setIcon(R.drawable.mygymplan_logo);                  // Set Logo on Toolbar
         drawerLayout = findViewById(R.id.DrawerLayout);
         navigationView = findViewById(R.id.NavView);
         navigationView.setNavigationItemSelectedListener(this);
@@ -273,12 +277,6 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
     ///////////////////////////////////////////////////
     /////////////// JUST FOR TEST ////////////////////
     /////////////////////////////////////////////////
-
-    // ------ Database ------
-
-    public void ShowDatabase(View view) {
-        LoadData();
-    }
 
     public void deleteDatabase(View view) {
         new Thread(new Runnable() {

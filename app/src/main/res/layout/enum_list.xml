@@ -6,6 +6,8 @@
     android:ellipsize="end"
     android:maxLines="1"
     android:textAppearance="@style/Theme.MyGymPlan"
+    android:textSize="16sp"
+    android:textColor="@color/black"
     >
 
 </TextView>

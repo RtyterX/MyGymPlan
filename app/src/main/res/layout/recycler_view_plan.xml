@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/RecyclerPlanTitle"
+            android:id="@+id/RecyclerPlanName"
             android:layout_width="55dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
@@ -68,7 +68,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage"
-            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanTitle"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName"
             app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

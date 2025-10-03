@@ -8,9 +8,10 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/mygymplan_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/mygymplan_logo"
+        android:roundIcon="@drawable/logo_fundoazul"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyGymPlan">
+        android:theme="@style/Theme.MyGymPlan"
+        >
         <activity
             android:name=".WelcomePage5"
             android:exported="false" />

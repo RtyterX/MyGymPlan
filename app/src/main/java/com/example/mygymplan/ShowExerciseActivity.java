@@ -1,6 +1,7 @@
 package com.example.mygymplan;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -71,6 +72,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
             return insets;
         });
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
@@ -157,6 +159,21 @@ public class ShowExerciseActivity extends AppCompatActivity {
                         thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
                         thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
 
+                        //----------------------------------------------
+                        //-------------- NEED MORES TESTS --------------
+                        //----------------------------------------------
+                        // ------ If Variable has not values -----
+                        if (thisExercise.eName.isEmpty()) {
+                            thisExercise.eName = "New Exercise";
+                        }
+                        if (thisExercise.eDescription.isEmpty()) {
+                            thisExercise.eDescription = "";
+                        }
+                        //if (thisExercise.eSets == Integer.parseInt(null)) {
+                           // thisExercise.eSets = 1;
+                       // }
+
+
                         // Access Database
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         ExerciseDao dao = db.exerciseDao();
@@ -184,6 +201,18 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
                 startActivity(intent);
 
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Change Activity
+                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                intent.putExtra("SelectedWorkout", thisWorkout);
+                intent.putExtra("SelectedUser", user);
+
+                startActivity(intent);
             }
         });
 

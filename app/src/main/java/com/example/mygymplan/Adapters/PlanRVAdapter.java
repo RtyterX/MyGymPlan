@@ -9,60 +9,60 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mygymplan.Plan;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Workout;
 
 import java.util.List;
 
-public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyViewHolder>  {
-
+public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Adapters.PlanRVAdapter.MyViewHolder>  {
     public interface OnItemClickListener {
-        void onItemClick(Workout item);
-
+        void onItemClick(Plan item);
     }
 
     Context context;
-    List<Workout> workoutList;
+    List<Plan> planList;
     OnItemClickListener onListener;
 
+
     // Constructor
-    public WorkoutRVAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener) {
+    public PlanRVAdapter(Context context, List<Plan> planList, OnItemClickListener onListener) {
         this.context = context;
-        this.workoutList = workoutList;
+        this.planList = planList;
         this.onListener = onListener;
     }
 
     @NonNull
     @Override
-    public WorkoutRVAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlanRVAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         // Where you inflate the Layout
-
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recycler_view_workout, parent, false);
+        View view = inflater.inflate(R.layout.recycler_view_plan, parent, false);
 
-        return new WorkoutRVAdapter.MyViewHolder(view);
+        return new PlanRVAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkoutRVAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlanRVAdapter.MyViewHolder holder, int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(workoutList.get(position).wName);
-        holder.textViewDescription.setText(workoutList.get(position).wDescription);
-        holder.textViewType.setText(workoutList.get(position).wType.toString());
+        holder.textViewName.setText(planList.get(position).planName);
+        holder.textViewDescription.setText(planList.get(position).planDescription);
+        // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
         // On Item Click
-        holder.bind(workoutList.get(position), onListener);
+        holder.bind(planList.get(position), onListener);
     }
 
     @Override
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
 
-        return workoutList.size();
+        return planList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -71,7 +71,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
         TextView textViewName;
         TextView textViewDescription;
-        TextView textViewType;
+        //TextView textViewType;
         // ImageView imageView;
 
 
@@ -79,13 +79,13 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
-            textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
-            textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
+            textViewName = itemView.findViewById(R.id.RecyclerPlanName);
+            textViewDescription = itemView.findViewById(R.id.RecyclerPlanDescrip);
+            //textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
             // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
         }
 
-        public void bind(Workout item, OnItemClickListener onlistener) {
+        public void bind(Plan item, OnItemClickListener onlistener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

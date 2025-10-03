@@ -4,65 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <View
         android:id="@+id/viewTeste2"
-        android:layout_width="399dp"
-        android:layout_height="148dp"
+        android:layout_width="408dp"
+        android:layout_height="97dp"
         android:background="#1EC1BFF8"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/RecyclerWorkoutImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="105dp"
+        android:layout_height="91dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/RecyclerWorkoutDescription"
-        app:layout_constraintHorizontal_bias="0.234"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/viewTeste2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Workout Name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.22"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.183" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Workout Enum"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutName"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.183" />
+        app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
+        app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutName" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutDescription"
         android:layout_width="191dp"
-        android:layout_height="59dp"
-        android:text="Descrição: aushaushaushaushaushaushaushaushaushauashuas"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.838"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.84" />
+        android:layout_height="75dp"
+        android:text="Descrição: Teste here"
+        app:layout_constraintBottom_toBottomOf="@+id/viewTeste2"
+        app:layout_constraintEnd_toEndOf="@+id/viewTeste2"
+        app:layout_constraintTop_toTopOf="@+id/viewTeste2"
+        app:layout_constraintVertical_bias="0.545" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

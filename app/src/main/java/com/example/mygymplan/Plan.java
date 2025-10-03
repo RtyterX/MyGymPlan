@@ -5,9 +5,11 @@ import android.os.Parcelable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.Room;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "plans")
 public class Plan implements Serializable {
@@ -29,5 +31,6 @@ public class Plan implements Serializable {
 
     @ColumnInfo(name = "pro")
     public Boolean pro;
+
 
 }
