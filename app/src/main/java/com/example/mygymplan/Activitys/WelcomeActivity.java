@@ -1,11 +1,10 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,7 +14,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
-public class WelcomePage extends AppCompatActivity {
+import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
+import com.example.mygymplan.Database.UserDataDao;
+
+public class WelcomeActivity extends AppCompatActivity {
 
 
     @Override
@@ -29,6 +33,7 @@ public class WelcomePage extends AppCompatActivity {
             return insets;
         });
 
+        // Can't Rotate the Screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
@@ -42,7 +47,7 @@ public class WelcomePage extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent intent = new Intent(WelcomePage.this, WelcomePage2.class);
+                Intent intent = new Intent(WelcomeActivity.this, WelcomePage2.class);
                 startActivity(intent);
             }
 
@@ -67,7 +72,7 @@ public class WelcomePage extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                Intent intent = new Intent(WelcomePage.this, FirstPage.class);
+                                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                                 intent.putExtra("SelectedUser", user);
                                 startActivity(intent);
 

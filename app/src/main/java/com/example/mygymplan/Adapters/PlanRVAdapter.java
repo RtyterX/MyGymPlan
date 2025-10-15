@@ -9,9 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mygymplan.Plan;
+import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Workout;
 
 import java.util.List;
 

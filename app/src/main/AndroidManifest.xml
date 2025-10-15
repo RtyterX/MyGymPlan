@@ -6,44 +6,37 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/mygymplan_logo"
+        android:icon="@drawable/mygymplan_logo_fundoazul"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo_fundoazul"
+        android:roundIcon="@drawable/mygymplan_logo_fundoazul"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyGymPlan"
-        >
+        android:theme="@style/Theme.MyGymPlan">
         <activity
-            android:name=".WelcomePage5"
+            android:name=".Activitys.WelcomePage5"
             android:exported="false" />
         <activity
-            android:name=".WelcomePage4"
+            android:name=".Activitys.WelcomePage4"
             android:exported="false" />
         <activity
-            android:name=".WelcomePage3"
+            android:name=".Activitys.WelcomePage3"
             android:exported="false" />
         <activity
-            android:name=".WelcomePage2"
+            android:name=".Activitys.WelcomePage2"
             android:exported="false" />
         <activity
-            android:name=".FirstPage"
+            android:name=".Activitys.WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomePage"
+            android:name=".Activitys.TesteActivity"
             android:exported="false" />
         <activity
-            android:name=".TesteActivity"
+            android:name=".Activitys.WorkoutActivity"
             android:exported="false" />
         <activity
-            android:name=".ShowWorkoutActivity"
+            android:name=".Activitys.ExerciseActivity"
             android:exported="false" />
         <activity
-            android:name=".EditPlan"
-            android:exported="false" />
-        <activity
-            android:name=".ShowExerciseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".Activitys.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

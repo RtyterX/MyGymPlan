@@ -5,7 +5,7 @@
     android:id="@+id/testePopup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShowExerciseActivity">
+    tools:context=".Activitys.ExerciseActivity">
 
     <Button
         android:id="@+id/BackButton3"
@@ -20,14 +20,16 @@
 
     <EditText
         android:id="@+id/ExerciseName"
-        android:layout_width="225dp"
-        android:layout_height="36dp"
+        android:layout_width="324dp"
+        android:layout_height="48dp"
         android:layout_marginTop="72dp"
         android:ems="10"
+        android:hint="New Exercise Name"
         android:inputType="text"
         android:paddingLeft="30dp"
         android:paddingTop="2dp"
-        android:hint="New Exercise Name"
+        android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,6 +61,7 @@
             android:clickable="true"
             android:onClick="SelectImage"
             android:paddingTop="10dp"
+            android:contentDescription="ExerciseImage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,31 +71,58 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="404dp"
-        android:layout_height="130dp"
+        android:layout_width="403dp"
+        android:layout_height="143dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ExerciseDescription">
 
+
         <EditText
             android:id="@+id/ExerciseRest"
-            android:layout_width="75dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="28dp"
+            android:layout_width="72dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="56dp"
             android:ems="10"
             android:hint="Ex: 1min"
             android:inputType="time"
+            android:autofillHints="4"
+            android:textSize="20sp"
+            android:backgroundTint="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ExerciseSets"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.038" />
+
+        <EditText
+            android:id="@+id/ExerciseSets"
+            android:layout_width="35dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="56dp"
+            android:ems="10"
+            android:hint="Ex: 4"
+            android:autofillHints="4"
+            android:textSize="20sp"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:backgroundTint="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/SetsTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sets"
+            app:layout_constraintStart_toStartOf="@+id/ExerciseSets"
+            app:layout_constraintTop_toTopOf="@+id/ExerciseSets" />
+
+        <TextView
+            android:id="@+id/RestTitleText"
             android:layout_width="67dp"
             android:layout_height="18dp"
-            android:text="Rest Time"
+            android:text="Rest"
             app:layout_constraintStart_toStartOf="@+id/ExerciseRest"
             app:layout_constraintTop_toTopOf="@+id/ExerciseRest" />
 
@@ -100,17 +130,18 @@
             android:id="@+id/ExerciseLoad"
             android:layout_width="67dp"
             android:layout_height="54dp"
-            android:layout_marginEnd="88dp"
+            android:layout_marginEnd="76dp"
             android:ems="10"
             android:hint="Ex: 1kg"
             android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:autofillHints="4"
+            android:textSize="20sp"
+            android:backgroundTint="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ExerciseReps"
-            app:layout_constraintVertical_bias="0.333" />
+            app:layout_constraintTop_toBottomOf="@+id/ExerciseReps" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/LoadTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Load"
@@ -121,51 +152,122 @@
             android:id="@+id/ExerciseReps"
             android:layout_width="68dp"
             android:layout_height="54dp"
-            android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="Ex: 8"
             android:inputType="time"
+            android:autofillHints="4"
+            android:textSize="20sp"
+            android:backgroundTint="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.625"
             app:layout_constraintStart_toEndOf="@+id/ExerciseSets"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/RepsTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reps"
             app:layout_constraintStart_toStartOf="@+id/ExerciseReps"
             app:layout_constraintTop_toTopOf="@+id/ExerciseReps" />
 
-        <EditText
-            android:id="@+id/ExerciseSets"
-            android:layout_width="75dp"
+        <ImageButton
+            android:id="@+id/SetsMinusButton"
+            android:layout_width="39dp"
             android:layout_height="54dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="Ex: 4"
-            android:inputType="number"
-            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/minus_icon"
+            android:onClick="SetsMinus"
+            app:layout_constraintEnd_toStartOf="@+id/ExerciseSets"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sets"
-            app:layout_constraintStart_toStartOf="@+id/ExerciseSets"
-            app:layout_constraintTop_toTopOf="@+id/ExerciseSets" />
+        <ImageButton
+            android:id="@+id/SetsPlusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:onClick="SetsPlus"
+            app:layout_constraintStart_toEndOf="@+id/ExerciseSets"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/plus_icon" />
+
+        <ImageButton
+            android:id="@+id/RestMinusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="RestMinus"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/minus_icon"
+            app:layout_constraintEnd_toStartOf="@+id/ExerciseRest"
+            app:layout_constraintTop_toBottomOf="@+id/SetsMinusButton" />
+
+        <ImageButton
+            android:id="@+id/RestPlusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="RestPlus"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/plus_icon"
+            app:layout_constraintStart_toEndOf="@+id/ExerciseRest"
+            app:layout_constraintTop_toBottomOf="@+id/SetsPlusButton" />
+
+        <ImageButton
+            android:id="@+id/RepsPlusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="RepsPlus"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/plus_icon"
+            app:layout_constraintStart_toEndOf="@+id/ExerciseReps"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/RepsMinusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="RepsMinus"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/minus_icon"
+            app:layout_constraintEnd_toStartOf="@+id/ExerciseReps"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/LoadPlusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="LoadPlus"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/plus_icon"
+            app:layout_constraintStart_toEndOf="@+id/ExerciseLoad"
+            app:layout_constraintTop_toBottomOf="@+id/RepsPlusButton" />
+
+        <ImageButton
+            android:id="@+id/LoadMinusButton"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:onClick="LoadMinus"
+            app:layout_constraintEnd_toStartOf="@+id/ExerciseLoad"
+            app:layout_constraintTop_toBottomOf="@+id/RepsMinusButton"
+            app:srcCompat="@drawable/minus_icon" />
+
 
         <Button
             android:id="@+id/ChangeKgToLb"
-            android:layout_width="76dp"
-            android:layout_height="33dp"
+            android:layout_width="68dp"
+            android:layout_height="32dp"
             android:text="Kg-Lb"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="7sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -242,12 +344,22 @@
     <EditText
         android:id="@+id/ExerciseDescription"
         android:layout_width="375dp"
-        android:layout_height="102dp"
+        android:layout_height="84dp"
         android:ems="10"
-        android:inputType="text"
         android:hint="Description Here..."
+        android:inputType="text"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+
+    <TextView
+        android:id="@+id/DescriptionTitleText"
+        android:layout_width="120dp"
+        android:layout_height="28dp"
+        android:text="Description:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/ExerciseDescription"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
 
 

@@ -1,4 +1,4 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Enums;
 
 public enum WorkoutType {
 

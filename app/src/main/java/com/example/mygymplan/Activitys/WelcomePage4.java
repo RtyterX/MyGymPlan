@@ -1,17 +1,19 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
 
 public class WelcomePage4 extends AppCompatActivity {
 

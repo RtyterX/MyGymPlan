@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.R;
-import com.example.mygymplan.Workout;
+import com.example.mygymplan.Entitys.Workout;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     Context context;
     List<Workout> workoutList;
     OnItemClickListener onListener;
+
 
     // Constructor
     public WorkoutRVAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener) {

@@ -1,4 +1,4 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
 
 public class WelcomePage2 extends AppCompatActivity {
 
@@ -57,7 +60,7 @@ public class WelcomePage2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(WelcomePage2.this, WelcomePage.class);
+                Intent intent = new Intent(WelcomePage2.this, WelcomeActivity.class);
                 startActivity(intent);
             }
         });

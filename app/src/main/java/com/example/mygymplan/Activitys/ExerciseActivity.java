@@ -1,4 +1,4 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,18 +26,33 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
+import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Entitys.Exercise;
+import com.example.mygymplan.Database.ExerciseDao;
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
+import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Enums.WorkoutType;
+
 import java.util.Objects;
 
-public class ShowExerciseActivity extends AppCompatActivity {
+public class ExerciseActivity extends AppCompatActivity {
 
     // Data
     UserData user;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
     String NewExerciseCompareString;       // Used to check if Exercise is new or not
+
+    // UI Variables
+    EditText showSets;
+    EditText showReps;
+    EditText showRest;
+    EditText showLoad;
+
+    // Workout Type Selector
     AutoCompleteTextView autoComplete;
     ArrayAdapter<String> adapterItem;
-
 
     // For Image Selection
     ImageView exerciseImage;
@@ -45,7 +60,6 @@ public class ShowExerciseActivity extends AppCompatActivity {
     // constant to compare
     // the activity result code
     int SELECT_PICTURE = 200;
-
 
     // ------------------------------------
     // ------------ Enum ------------------
@@ -60,7 +74,6 @@ public class ShowExerciseActivity extends AppCompatActivity {
             "Triceps"};
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +85,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Can't Rotate the Screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // ----- Received Data From Another Activity -----
@@ -84,10 +98,10 @@ public class ShowExerciseActivity extends AppCompatActivity {
         // --- Components ---
         EditText showName = findViewById(R.id.ExerciseName);
         EditText showDescription = findViewById(R.id.ExerciseDescription);
-        EditText showSets = findViewById(R.id.ExerciseSets);
-        EditText showReps = findViewById(R.id.ExerciseReps);
-        EditText showRest = findViewById(R.id.ExerciseRest);
-        EditText showLoad = findViewById(R.id.ExerciseLoad);
+        showSets = findViewById(R.id.ExerciseSets);
+        showReps = findViewById(R.id.ExerciseReps);
+        showRest = findViewById(R.id.ExerciseRest);
+        showLoad = findViewById(R.id.ExerciseLoad);
         // Enum Dropdown Menu
         autoComplete = findViewById(R.id.AutoCompleteEnumList);
         // Image
@@ -124,7 +138,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(ShowExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
                 ApplyExerciseType(item);
             }
         });
@@ -147,32 +161,31 @@ public class ShowExerciseActivity extends AppCompatActivity {
         saveExercise.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                // Get Exercise Values
+                thisExercise.eName = showName.getText().toString();
+                thisExercise.eDescription = showDescription.getText().toString();
+                thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
+                thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
+                thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
+                thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+
+                //----------------------------------------------
+                //-------------- NEED MORES TESTS --------------
+                //----------------------------------------------
+                // ------ If Variable has not values -----
+                if (thisExercise.eName.isEmpty()) {
+                    thisExercise.eName = "New Exercise";
+                }
+                if (thisExercise.eDescription.isEmpty()) {
+                    thisExercise.eDescription = "";
+                }
+                //if (thisExercise.eSets == Integer.parseInt(null)) {
+                // thisExercise.eSets = 1;
+                // }
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        // Get Exercise Values
-                        thisExercise.eName = showName.getText().toString();
-                        thisExercise.eDescription = showDescription.getText().toString();
-                        thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
-                        thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
-                        thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
-                        thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
-
-                        //----------------------------------------------
-                        //-------------- NEED MORES TESTS --------------
-                        //----------------------------------------------
-                        // ------ If Variable has not values -----
-                        if (thisExercise.eName.isEmpty()) {
-                            thisExercise.eName = "New Exercise";
-                        }
-                        if (thisExercise.eDescription.isEmpty()) {
-                            thisExercise.eDescription = "";
-                        }
-                        //if (thisExercise.eSets == Integer.parseInt(null)) {
-                           // thisExercise.eSets = 1;
-                       // }
-
 
                         // Access Database
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -195,12 +208,11 @@ public class ShowExerciseActivity extends AppCompatActivity {
                 }).start();
 
                 // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
                 intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedUser", user);
 
                 startActivity(intent);
-
             }
         });
 
@@ -208,7 +220,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
                 intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedUser", user);
 
@@ -224,6 +236,14 @@ public class ShowExerciseActivity extends AppCompatActivity {
         });
 
     }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------
+    // ------------------------------------------ BUTTONS ------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------
+
+
 
 
     // ------------------------------------------------------
@@ -252,7 +272,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
         // Set Buttons
         confirmButton.setOnClickListener(v -> {
-            deleteExercise();
+            DeleteExercise();
         });
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
@@ -260,7 +280,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
 
     }
 
-    private void deleteExercise() {
+    private void DeleteExercise() {
 
         new Thread(new Runnable() {
             @Override
@@ -271,7 +291,7 @@ public class ShowExerciseActivity extends AppCompatActivity {
                 dao.deleteExercise(thisExercise);
 
                 // Change Activity
-                Intent intent = new Intent(ShowExerciseActivity.this, ShowWorkoutActivity.class);
+                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
                 intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedUser", user);
 
@@ -281,6 +301,79 @@ public class ShowExerciseActivity extends AppCompatActivity {
         }).start();
 
     }
+
+
+    // ----------------------------------------
+    // -------------- Plus/Minus --------------
+    // ----------------------------------------
+    //region Plus/Minus Functions
+    public void SetsMinus(View view) {
+        if (thisExercise.eSets > 1) {
+            thisExercise.eSets -= 1;
+            showSets.setText(String.valueOf(thisExercise.eSets));
+        }
+    }
+
+    public void SetsPlus(View view) {
+        if (thisExercise.eSets < 10) {
+            thisExercise.eSets += 1;
+            showSets.setText(String.valueOf(thisExercise.eSets));
+        }
+    }
+
+    public void RepsMinus(View view) {
+        if (thisExercise.eReps > 1) {
+            thisExercise.eReps -= 1;
+            showReps.setText(String.valueOf(thisExercise.eReps));
+        }
+    }
+
+    public void RepsPlus(View view) {
+        if (thisExercise.eReps < 100) {
+            thisExercise.eReps += 1;
+            showReps.setText(String.valueOf(thisExercise.eReps));
+        }
+    }
+
+    public void RestMinus(View view) {
+        if (thisExercise.eRest > 1) {
+            thisExercise.eRest -= 1;
+            showRest.setText(String.valueOf(thisExercise.eRest));
+        }
+    }
+
+    public void RestPlus(View view) {
+        if (thisExercise.eRest < 100) {
+            thisExercise.eRest += 1;
+            showRest.setText(String.valueOf(thisExercise.eRest));
+        }
+    }
+
+    public void LoadMinus(View view) {
+        if (thisExercise.eLoad > 1) {
+            thisExercise.eLoad -= 1;
+            showLoad.setText(String.valueOf(thisExercise.eLoad));
+        }
+        else if (thisExercise.eLoad == 1) {
+            showLoad.setText("-");
+            thisExercise.eLoad -= 1;
+        }
+    }
+
+    public void LoadPlus(View view) {
+        if (thisExercise.eLoad < 1000) {
+            thisExercise.eLoad += 1;
+            showLoad.setText(String.valueOf(thisExercise.eLoad));
+        }
+    }
+    //endregion
+
+
+    // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
+    // ------------------------- FUNCTIONS -------------------------------
+    // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
 
     // ----------------------------------------------------------
     // ---------- Switch to Change Exercise type ----------------
@@ -340,7 +433,5 @@ public class ShowExerciseActivity extends AppCompatActivity {
         }
   
     }
-
-
 
 }

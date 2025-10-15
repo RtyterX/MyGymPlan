@@ -1,21 +1,20 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.room.Room;
 
-import java.util.List;
+import com.example.mygymplan.Entitys.Exercise;
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.Workout;
 
 public class TesteActivity extends AppCompatActivity {
 
@@ -48,7 +47,7 @@ public class TesteActivity extends AppCompatActivity {
                 Exercise newExercise = new Exercise();
                 newExercise.eName = "New Exercise";
 
-                Intent intent = new Intent(TesteActivity.this, ShowExerciseActivity.class);
+                Intent intent = new Intent(TesteActivity.this, ExerciseActivity.class);
                 intent.putExtra("SelectedExercise", newExercise);
 
                 startActivity(intent);
@@ -79,4 +78,6 @@ public class TesteActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+
 }

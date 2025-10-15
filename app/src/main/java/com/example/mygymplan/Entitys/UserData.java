@@ -1,13 +1,10 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Entitys;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 @Entity(tableName = "user")
@@ -17,16 +14,16 @@ public class UserData implements Serializable {
     public int id;
 
     @ColumnInfo(name = "name")
-    String name;
+    public String name;
 
     @ColumnInfo(name = "email")
-    String email;
+    public String email;
 
     @ColumnInfo(name = "bodyType")
-    int bodyType;
+    public int bodyType;
 
     @ColumnInfo(name = "pro")
-    boolean isPro;
+    public boolean isPro;
 
 
     // ----------- FUTURE IDEAS ------------

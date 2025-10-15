@@ -1,4 +1,4 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -27,16 +26,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.mygymplan.Adapters.ExerciseRVAdapter;
+import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Entitys.Exercise;
+import com.example.mygymplan.Database.ExerciseDao;
+import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
+import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Database.WorkoutDao;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import kotlinx.coroutines.scheduling.WorkQueueKt;
 
 
-public class ShowWorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // Data
     UserData user;
@@ -45,7 +49,7 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
     String NewWorkoutCompareString;   // Check if Workout is a New Workout
 
     // UI Elements
-    private EditText showName;
+    TextView showName;
     List<Exercise> displayedExercises;  //
     TextView workoutId;   //  Jut for Tests
 
@@ -54,12 +58,10 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
     RecyclerView recyclerView;
     TextView emptyView;
 
-
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Button testButton;
-
 
 
     @Override
@@ -73,22 +75,22 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
             return insets;
         });
 
+        // Can't Rotate the Screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         user = (UserData) intent.getSerializableExtra("SelectedUser");
+        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
+        thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
         // --- Components ---
         showName = findViewById(R.id.WorkoutName);
         workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
-        Button saveWorkoutButton = findViewById(R.id.SaveWorkout);
-        //Button backButton = findViewById(R.id.BackButton2);
-        TextView showDescription = findViewById(R.id.WorkoutDescription);
+        Button backButton = findViewById(R.id.BackButtonWorkout);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
@@ -108,23 +110,16 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         testButton = navigationView.findViewById(R.id.TestButton);
 
 
-
         // -------------------------------------------------------------------
-
         //  ---  Set Values based on Received Data  ---
         NewWorkoutCompareString = thisWorkout.wName;
         showName.setText(thisWorkout.wName);
-        showDescription.setText(thisWorkout.wDescription);
         workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
 
 
-
         // -------------------------------------------------------------------
-
         LoadData();
-
         // -------------------------------------------------------------------
-
 
 
         // ------------ BUTTONS ------------
@@ -139,13 +134,13 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
                 newExercise.workout_Id = thisWorkout.id;
                 newExercise.eName = "New Exercise";
                 newExercise.eDescription = "Description Here...";
-                newExercise.eSets = 4;
-                newExercise.eReps = 8;
-                newExercise.eRest = 1;
-                newExercise.eLoad = 1;
+                newExercise.eSets = 0;
+                newExercise.eReps = 0;
+                newExercise.eRest = 0;
+                newExercise.eLoad = 0;
 
                 // Change Activity
-                Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
+                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
                 intent.putExtra("SelectedExercise", newExercise);
                 intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedUser", user);
@@ -154,110 +149,16 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         });
 
 
-        // Save or Update Workout
-        saveWorkoutButton.setOnClickListener(new View.OnClickListener() {
+        // Back Button
+        backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // Get Workout Values
-                        thisWorkout.wName = showName.getText().toString();
-                        thisWorkout.wDescription = showDescription.getText().toString();
-
-                        // Database
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        WorkoutDao dao = db.workoutDao();
-
-                        // Create if Workout is New
-                        if (Objects.equals(NewWorkoutCompareString, "New Workout")) {
-                            // Save new Workout
-                            dao.insertWorkout(thisWorkout);
-                        }
-                        // Update if Workout is already created
-                        else {
-                            // Save new Workout
-                           dao.updateWorkout(thisWorkout);
-                        }
-
-                    }
-
-                }).start();
-
                 // Change to Main Activity
-                Intent intent = new Intent(ShowWorkoutActivity.this, FirstPage.class);
+                Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
                 intent.putExtra("SelectedUser", user);
+                intent.putExtra("SelectedPlan", thisPlan);
                 startActivity(intent);
-
             }
         });
-
-
-        // Back Button
-       // backButton.setOnClickListener(new View.OnClickListener() {
-           // public void onClick(View v) {
-               // finish();
-          //  }
-       // });
-
-    }
-
-    // -------------------------------------------------------------------
-
-
-    private void checkEmptyState(){
-        if (displayedExercises.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
-
-    }
-
-    public void LoadData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
-
-                displayedExercises = new ArrayList<>();
-                List<Exercise>  newList = dao.listExercise();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Exercise e : newList) {
-                            if (e.workout_Id == thisWorkout.id) {
-
-                                displayedExercises.add(e);
-                            }
-                        }
-
-                        // Recycler View Adapter
-                        ExerciseRVAdapter adapter = new ExerciseRVAdapter(ShowWorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Exercise item) {
-                                Intent intent = new Intent(ShowWorkoutActivity.this, ShowExerciseActivity.class);
-                                intent.putExtra("SelectedUser", user);
-                                intent.putExtra("SelectedWorkout", thisWorkout);
-                                intent.putExtra("SelectedExercise", item);
-                                startActivity(intent);
-                            }
-                        });
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(ShowWorkoutActivity.this));
-
-                        checkEmptyState();
-                    }
-                });
-            }
-        }).start();
 
     }
 
@@ -268,8 +169,7 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         WorkoutDao dao2 = db.workoutDao();
 
-       dao2.deleteWorkout(thisWorkout);
-
+        dao2.deleteWorkout(thisWorkout);
 
     }
 
@@ -277,7 +177,6 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
     ///////////////////////////////////////////////////
     /////////////// JUST FOR TEST ////////////////////
     /////////////////////////////////////////////////
-
     public void deleteDatabase(View view) {
         new Thread(new Runnable() {
             @Override
@@ -291,18 +190,20 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // --------------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-
+        // --------------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
             // Open Settings
         }
-
+        // --------------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {
+            // ------------------------------------
             // Open a Popup talking about the app
-            // -------------------------------------------------------
+            // ------------------------------------
             // Inflate Activity with a new View
             View popupView = View.inflate(this, R.layout.popup_warning, null);
 
@@ -329,18 +230,89 @@ public class ShowWorkoutActivity extends AppCompatActivity implements Navigation
             });
 
         }
-
+        // --------------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.TestButton) {
 
             Intent intent = new Intent(this, TesteActivity.class);
             startActivity(intent);
 
         }
+        // --------------------------------------------------------------------------------
 
         drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
+
+
+    // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
+    // ------------------------- FUNCTIONS -------------------------------
+    // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
+
+    // --------------------------------------------
+    // ----------- Load Data and display ----------
+    // ------------- on Recycler View -------------
+    // --------------------------------------------
+    public void LoadData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
+                displayedExercises = new ArrayList<>();
+                List<Exercise>  newList = dao.listExercise();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Exercise e : newList) {
+                            if (e.workout_Id == thisWorkout.id) {
+
+                                displayedExercises.add(e);
+                            }
+                        }
+
+                        // Recycler View Adapter
+                        ExerciseRVAdapter adapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Exercise item) {
+                                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
+                                intent.putExtra("SelectedUser", user);
+                                intent.putExtra("SelectedWorkout", thisWorkout);
+                                intent.putExtra("SelectedExercise", item);
+                                startActivity(intent);
+                            }
+                        });
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+
+                        ChangeUIVisibility();
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    // ----------------------------------------------
+    // ------- Change UI Elements Visibility --------
+    // ------- Based On Recycler View State ---------
+    // ----------------------------------------------
+    private void ChangeUIVisibility() {
+        if (displayedExercises.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
+    }
+
 }
 
 

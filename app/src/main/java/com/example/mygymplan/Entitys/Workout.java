@@ -1,11 +1,12 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Entitys;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.mygymplan.Enums.WorkoutType;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 
 @Entity(tableName = "workouts")
 public class Workout implements Serializable {

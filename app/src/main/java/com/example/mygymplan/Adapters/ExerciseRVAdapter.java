@@ -4,14 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mygymplan.Exercise;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
     public interface OnItemClickListener {
         void onItemClick(Exercise item);
-
     }
 
     Context context;
@@ -56,6 +54,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewType.setText(exerciseList.get(position).eType.toString());
         holder.textViewSets.setText(String.valueOf(exerciseList.get(position).eSets));
         holder.textViewReps.setText(String.valueOf(exerciseList.get(position).eReps));
+        holder.textViewRest.setText(String.valueOf(exerciseList.get(position).eRest));
+        holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
 
         // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
@@ -68,7 +68,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
     @Override
     public int getItemCount() {
         // The Recycle view just want to know how many items you want to display
-
         return exerciseList.size();
     }
 
@@ -80,6 +79,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewType;
         TextView textViewSets;
         TextView textViewReps;
+        TextView textViewRest;
+        TextView textViewLoad;
         ImageView imageView;
 
         // Constructor
@@ -91,6 +92,9 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
             textViewSets = itemView.findViewById(R.id.RecyclerExerciseSets);
             textViewReps = itemView.findViewById(R.id.RecyclerExerciseReps);
+            textViewRest = itemView.findViewById(R.id.RecyclerExerciseRest);
+            textViewLoad = itemView.findViewById(R.id.RecyclerExerciseLoad);
+
         }
         public void bind(Exercise item, OnItemClickListener onlistener) {
 
@@ -101,9 +105,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
                 }
             });
 
-
         }
-
 
     }
 

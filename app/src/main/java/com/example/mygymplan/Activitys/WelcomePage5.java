@@ -1,11 +1,10 @@
-package com.example.mygymplan;
+package com.example.mygymplan.Activitys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +12,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
+
+import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.R;
+import com.example.mygymplan.Entitys.UserData;
+import com.example.mygymplan.Database.UserDataDao;
 
 public class WelcomePage5 extends AppCompatActivity {
 
@@ -62,7 +66,7 @@ public class WelcomePage5 extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                Intent intent = new Intent(WelcomePage5.this, FirstPage.class);
+                                Intent intent = new Intent(WelcomePage5.this, MainActivity.class);
                                 intent.putExtra("SelectedUser", user);
                                 startActivity(intent);
 

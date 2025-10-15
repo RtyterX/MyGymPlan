@@ -1,15 +1,10 @@
-package com.example.mygymplan;
-
-import android.os.Parcelable;
+package com.example.mygymplan.Entitys;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.Room;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(tableName = "plans")
 public class Plan implements Serializable {

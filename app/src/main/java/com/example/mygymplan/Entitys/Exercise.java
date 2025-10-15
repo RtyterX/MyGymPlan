@@ -1,13 +1,11 @@
-package com.example.mygymplan;
-
-import android.provider.MediaStore;
-import android.text.Editable;
-import android.widget.EditText;
+package com.example.mygymplan.Entitys;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+
+import com.example.mygymplan.Enums.WorkoutType;
 
 import java.io.Serializable;
 
