@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.mygymplan.Adapters.ExerciseRVAdapter;
+import com.example.mygymplan.Adapters.WorkoutRVAdapterHorizontal;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Database.ExerciseDao;
@@ -51,11 +52,13 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // UI Elements
     TextView showName;
     List<Exercise> displayedExercises;  //
+    List<Workout> displayedWorkouts;  //
     TextView workoutId;   //  Jut for Tests
 
     // RecyclerView
     ExerciseRVAdapter adapter;
     RecyclerView recyclerView;
+    RecyclerView recyclerViewHorizontal;
     TextView emptyView;
 
     // Drawer NaviBar
@@ -92,6 +95,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
         Button backButton = findViewById(R.id.BackButtonWorkout);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
+        recyclerViewHorizontal = findViewById(R.id.RecyclerView2);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
@@ -113,7 +117,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // -------------------------------------------------------------------
         //  ---  Set Values based on Received Data  ---
         NewWorkoutCompareString = thisWorkout.wName;
-        showName.setText(thisWorkout.wName);
+        showName.setText(thisPlan.planName);
         workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
 
 
@@ -265,29 +269,56 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 displayedExercises = new ArrayList<>();
                 List<Exercise>  newList = dao.listExercise();
 
+                displayedWorkouts = new ArrayList<>();
+                WorkoutDao daoW = db.workoutDao();
+                List<Workout> workoutList = new ArrayList<>();
+                 workoutList = daoW.listWorkouts();
+
+                if (!workoutList.isEmpty()) {
+
+                    for (Workout item : workoutList) {
+                        if (item.plan_Id == thisPlan.id) {
+                            displayedWorkouts.add(item);
+                        }
+                    }
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Exercise e : newList) {
                             if (e.workout_Id == thisWorkout.id) {
-
                                 displayedExercises.add(e);
                             }
                         }
 
                         // Recycler View Adapter
-                        ExerciseRVAdapter adapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                        ExerciseRVAdapter exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Exercise item) {
                                 Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
                                 intent.putExtra("SelectedUser", user);
+                                intent.putExtra("SelectedPlan", thisPlan);
                                 intent.putExtra("SelectedWorkout", thisWorkout);
                                 intent.putExtra("SelectedExercise", item);
                                 startActivity(intent);
                             }
                         });
-                        recyclerView.setAdapter(adapter);
+                        recyclerView.setAdapter(exerciseAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+
+
+                        // -------- Recycler View Horizontal --------
+
+                        WorkoutRVAdapterHorizontal workoutAdapter = new WorkoutRVAdapterHorizontal(WorkoutActivity.this, displayedWorkouts, new WorkoutRVAdapterHorizontal.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Workout item) {
+
+                            }
+                        });
+                        //displayedWorkouts
+                        recyclerViewHorizontal.setAdapter(workoutAdapter);
+                        recyclerViewHorizontal.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
                         ChangeUIVisibility();
                     }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import com.example.mygymplan.Enums.WorkoutType;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 @Entity(tableName = "workouts")
 public class Workout implements Serializable {
@@ -25,6 +26,9 @@ public class Workout implements Serializable {
 
     // @ColumnInfo(name = "image")
     // public int wImage;
+
+    @ColumnInfo(name = "lastModified")
+    public String lastModified;
 
     @ColumnInfo(name = "plan_Id")
     public  int plan_Id;

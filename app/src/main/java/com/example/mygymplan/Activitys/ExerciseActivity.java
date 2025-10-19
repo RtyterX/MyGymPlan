@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -29,6 +32,7 @@ import androidx.room.Room;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Database.ExerciseDao;
+import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
@@ -40,11 +44,14 @@ public class ExerciseActivity extends AppCompatActivity {
 
     // Data
     UserData user;
+    Plan thisPlan;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
     String NewExerciseCompareString;       // Used to check if Exercise is new or not
 
     // UI Variables
+    EditText showName;
+    EditText showDescription;
     EditText showSets;
     EditText showReps;
     EditText showRest;
@@ -91,13 +98,14 @@ public class ExerciseActivity extends AppCompatActivity {
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
         user = (UserData) intent.getSerializableExtra("SelectedUser");
+        thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
 
 
         // --- Components ---
-        EditText showName = findViewById(R.id.ExerciseName);
-        EditText showDescription = findViewById(R.id.ExerciseDescription);
+        showName = findViewById(R.id.ExerciseName);
+        showDescription = findViewById(R.id.ExerciseDescription);
         showSets = findViewById(R.id.ExerciseSets);
         showReps = findViewById(R.id.ExerciseReps);
         showRest = findViewById(R.id.ExerciseRest);
@@ -161,51 +169,7 @@ public class ExerciseActivity extends AppCompatActivity {
         saveExercise.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                // Get Exercise Values
-                thisExercise.eName = showName.getText().toString();
-                thisExercise.eDescription = showDescription.getText().toString();
-                thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
-                thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
-                thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
-                thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
-
-                //----------------------------------------------
-                //-------------- NEED MORES TESTS --------------
-                //----------------------------------------------
-                // ------ If Variable has not values -----
-                if (thisExercise.eName.isEmpty()) {
-                    thisExercise.eName = "New Exercise";
-                }
-                if (thisExercise.eDescription.isEmpty()) {
-                    thisExercise.eDescription = "";
-                }
-                //if (thisExercise.eSets == Integer.parseInt(null)) {
-                // thisExercise.eSets = 1;
-                // }
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // Access Database
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        ExerciseDao dao = db.exerciseDao();
-
-                        // ------------------------------------------------------------------------
-                        // Create if Exercise is New
-                         if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
-                             // Save new Exercise
-                             dao.insertExercise(thisExercise);
-                         }
-                        // Update if Exercise is already created
-                         else {
-                             // Save new Exercise
-                             dao.updateExercise(thisExercise);
-                         }
-                        // ------------------------------------------------------------------------
-                    }
-
-                }).start();
+                SaveExerciseValues();
 
                 // Change Activity
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
@@ -219,10 +183,14 @@ public class ExerciseActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SaveExerciseValues();
+
                 // Change Activity
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedWorkout", thisWorkout);
                 intent.putExtra("SelectedUser", user);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
 
                 startActivity(intent);
             }
@@ -235,7 +203,30 @@ public class ExerciseActivity extends AppCompatActivity {
             }
         });
 
+        // -------------------------------------------
+        // ----------- BackPress Button --------------
+        // -------------------------------------------
+
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                SaveExerciseValues();
+
+                // Change Activity
+                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
+                intent.putExtra("SelectedUser", user);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", thisWorkout);
+
+                startActivity(intent);
+            }
+        };
+
+
     }
+
+
 
     // ---------------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------------
@@ -303,6 +294,9 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
 
+
+
+
     // ----------------------------------------
     // -------------- Plus/Minus --------------
     // ----------------------------------------
@@ -310,6 +304,10 @@ public class ExerciseActivity extends AppCompatActivity {
     public void SetsMinus(View view) {
         if (thisExercise.eSets > 1) {
             thisExercise.eSets -= 1;
+            showSets.setText(String.valueOf(thisExercise.eSets));
+        }
+        else if (thisExercise.eSets == 0) {
+            thisExercise.eSets = 1;
             showSets.setText(String.valueOf(thisExercise.eSets));
         }
     }
@@ -326,6 +324,10 @@ public class ExerciseActivity extends AppCompatActivity {
             thisExercise.eReps -= 1;
             showReps.setText(String.valueOf(thisExercise.eReps));
         }
+        else if (thisExercise.eReps == 0) {
+            thisExercise.eReps = 1;
+            showReps.setText(String.valueOf(thisExercise.eReps));
+        }
     }
 
     public void RepsPlus(View view) {
@@ -338,6 +340,10 @@ public class ExerciseActivity extends AppCompatActivity {
     public void RestMinus(View view) {
         if (thisExercise.eRest > 1) {
             thisExercise.eRest -= 1;
+            showRest.setText(String.valueOf(thisExercise.eRest));
+        }
+        else if (thisExercise.eRest == 0) {
+            thisExercise.eRest = 1;
             showRest.setText(String.valueOf(thisExercise.eRest));
         }
     }
@@ -353,10 +359,9 @@ public class ExerciseActivity extends AppCompatActivity {
         if (thisExercise.eLoad > 1) {
             thisExercise.eLoad -= 1;
             showLoad.setText(String.valueOf(thisExercise.eLoad));
-        }
-        else if (thisExercise.eLoad == 1) {
+        } else if (thisExercise.eLoad < 1) {
+            thisExercise.eLoad = 0 ;
             showLoad.setText("-");
-            thisExercise.eLoad -= 1;
         }
     }
 
@@ -369,11 +374,65 @@ public class ExerciseActivity extends AppCompatActivity {
     //endregion
 
 
+
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
     // ------------------------- FUNCTIONS -------------------------------
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
+
+    // -------------------------------------------------------
+    // --------------- Save Values in Database ---------------
+    // -------------------------------------------------------
+    public void SaveExerciseValues() {
+
+        // Get Exercise Values
+        thisExercise.eName = showName.getText().toString();
+        thisExercise.eDescription = showDescription.getText().toString();
+        thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
+        thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
+        thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
+        thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+
+        //----------------------------------------------
+        //-------------- NEED MORES TESTS --------------
+        //----------------------------------------------
+        // ------ If Variable has not values -----
+        if (thisExercise.eName.isEmpty()) {
+            thisExercise.eName = "New Exercise";
+        }
+        if (thisExercise.eDescription.isEmpty()) {
+            thisExercise.eDescription = "";
+        }
+        //if (thisExercise.eSets == Integer.parseInt(null)) {
+        // thisExercise.eSets = 1;
+        // }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Access Database
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
+                // ------------------------------------------------------------------------
+                // Create if Exercise is New
+                if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
+                    // Save new Exercise
+                    dao.insertExercise(thisExercise);
+                }
+                // Update if Exercise is already created
+                else {
+                    // Save new Exercise
+                    dao.updateExercise(thisExercise);
+                }
+                // ------------------------------------------------------------------------
+            }
+
+        }).start();
+    }
+
 
     // ----------------------------------------------------------
     // ---------- Switch to Change Exercise type ----------------

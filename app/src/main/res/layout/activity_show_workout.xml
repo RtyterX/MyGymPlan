@@ -51,7 +51,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Workout Name"
-                android:textSize="22sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="26sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,42 +62,27 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="396dp"
-            android:layout_height="627dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecycleViewWorkouts"
+            android:layout_width="388dp"
+            android:layout_height="617dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerView2">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/RecycleViewWorkouts"
-                android:layout_width="392dp"
-                android:layout_height="642dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        </androidx.recyclerview.widget.RecyclerView>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/EmptyRVWorkouts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginEnd="61dp"
-                android:text="VOCE AINDA NAO TEM NENHUM EXERCISE"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts"
-                app:layout_constraintHorizontal_bias="0.37"
-                app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts"
-                app:layout_constraintTop_toTopOf="@+id/RecycleViewWorkouts" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/EmptyRVWorkouts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="144dp"
+            android:text="VOCE AINDA NAO TEM NENHUM EXERCISE"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts"
+            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts"
+            app:layout_constraintTop_toTopOf="@+id/RecycleViewWorkouts" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -105,28 +93,38 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
+                android:id="@+id/CreateNewExercise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="72dp"
+                android:text="New Exercise"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
                 android:id="@+id/AddExercise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
                 android:onClick="AddExercise"
                 android:text="Add Exercise"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/CreateNewExercise"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/CreateNewExercise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="36dp"
-                android:text="New Exercise"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.428"/>
-
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/HelpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="55dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintBottom_toBottomOf="@id/main"
+            app:layout_constraintEnd_toEndOf="@id/main"
+            app:srcCompat="@drawable/plan_help_icon" />
 
         <Button
             android:id="@+id/BackButtonWorkout"
@@ -137,6 +135,14 @@
             android:text="Back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView2"
+            android:layout_width="336dp"
+            android:layout_height="58dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

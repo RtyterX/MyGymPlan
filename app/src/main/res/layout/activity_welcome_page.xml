@@ -3,36 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/createuserbg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/createuserbg"
-    tools:context=".Activitys.WelcomeActivity">
+    tools:context=".Activitys.WelcomeActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
 
     <TextView
-        android:id="@+id/WecomeText"
+        android:id="@+id/WelcomeText2"
         android:layout_width="224dp"
         android:layout_height="132dp"
-        android:layout_marginTop="4dp"
         android:fontFamily="sans-serif"
+        android:text="Welcome to My Gym Plan, here you can make your on plans e share with your friends"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="normal|bold"
+        android:textStyle="bold"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MyGymPlanLogo"
-        tools:text="Welcome to My Gym Plan, here you can make your on plans e share with your friends" />
+        app:layout_constraintTop_toBottomOf="@+id/MyGymPlanLogo" />
 
     <ImageView
         android:id="@+id/MyGymPlanLogo"
-        android:layout_width="124dp"
-        android:layout_height="82dp"
-        android:layout_marginTop="124dp"
+        android:layout_width="222dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/mygymplan_logo" />
+        app:srcCompat="@drawable/mygymplan_logo" />
 
     <Button
         android:id="@+id/LetsStartButton"
@@ -57,4 +59,4 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

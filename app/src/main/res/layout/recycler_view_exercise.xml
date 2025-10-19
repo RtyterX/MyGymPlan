@@ -86,6 +86,8 @@
             android:layout_height="21dp"
             android:layout_marginTop="28dp"
             android:text="Exercise Name"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/ImageRecyclerExercise"
             app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise" />

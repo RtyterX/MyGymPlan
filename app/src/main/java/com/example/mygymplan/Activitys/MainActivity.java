@@ -45,6 +45,8 @@ import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
-        View popupView = View.inflate(this, R.layout.new_plan_popup, null);
+        View popupView = View.inflate(this, R.layout.popup_new_plan, null);
 
         // Popup View UI Content
         EditText newPlanName = popupView.findViewById(R.id.NewPlanName);
@@ -227,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
-        View popupView = View.inflate(this, R.layout.new_workout_popup, null);
+        View popupView = View.inflate(this, R.layout.popup_new_workout, null);
 
         // --- Popup View UI Content ---
         // Values
@@ -314,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // --- Inflate Activity with a new View ---
-        View popupView = View.inflate(this, R.layout.change_plan, null);
+        View popupView = View.inflate(this, R.layout.popup_change_plan, null);
 
         // --- Popup View UI Content ---
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
@@ -369,12 +371,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------------ Back Button Teste ------------------
     // -------------------------------------------------------
 
-    OnBackPressedDispatcher teste;
 
-    public OnBackPressedDispatcher getTeste() {
-        startActivity(new Intent(this, MainActivity.class));
-        return teste;
-    }
 
 
     // ------------------------------------------------------
@@ -501,6 +498,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onItemClick(Workout item) {
                         Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
                         intent.putExtra("SelectedUser", user);
+                        intent.putExtra("SelectedPlan", thisPlan);
                         intent.putExtra("SelectedWorkout", item);
                         startActivity(intent);
                     }
@@ -535,6 +533,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
     private void ChangeUIVisibility() {
+        Button newWorkout = findViewById(R.id.NewWorkout);
+        Button editActualPlanButton = findViewById(R.id.ChangePlan);
+        Button ActivePlanButton = findViewById(R.id.SetActiveButton2);
+        Button newPlan = findViewById(R.id.NewPlanButton);
+        emptyWorkoutButton = findViewById(R.id.EmptyButton);
+
         // -------------------
         // ----- NO PLAN -----
         // -------------------
@@ -544,12 +548,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             emptyButton.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.VISIBLE);
             // -- Buttons --
-            Button editActualPlanButton = findViewById(R.id.ChangePlan);
             editActualPlanButton.setVisibility(View.GONE);
-            Button ActivePlanButton = findViewById(R.id.SetActiveButton2);
             ActivePlanButton.setVisibility(View.GONE);
-            Button newWorkout = findViewById(R.id.NewWorkout);
             newWorkout.setVisibility(View.GONE);
+            newPlan.setVisibility(View.GONE);
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
             // -- Plan Name --
@@ -564,9 +566,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 emptyButton.setVisibility(View.VISIBLE);
                 emptyText.setVisibility(View.VISIBLE);
                 // -- Buttons --
-                Button newWorkout = findViewById(R.id.NewWorkout);
                 newWorkout.setVisibility(View.GONE);
-                emptyWorkoutButton = findViewById(R.id.EmptyButton);
                 emptyWorkoutButton.setText("Create New Workout");
                 emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -637,7 +637,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
     // -----------------------------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------- CHANGE TO SERVICE --------------------------------------------------------
@@ -652,6 +651,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
 
+                LocalDate local = LocalDate.now();
+
                 // Create New Workout DataBase
                 Plan newPlan = new Plan();
                 newPlan.planName = name;
@@ -659,6 +660,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 newPlan.pro = false;
                 newPlan.author = user.name;
                 newPlan.active = isActiveOrNot;
+                newPlan.createdDate = local.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+
 
                 ///////////////////////////////////////////////////////////////////////////
                 ///////////////////////////////////////////////////////////////////////////

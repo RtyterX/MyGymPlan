@@ -38,7 +38,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         // Components
-        TextView text = findViewById(R.id.WecomeText);
         Button start = findViewById(R.id.LetsStartButton);
         Button skip = findViewById(R.id.SkipWelcomeButton);
 
