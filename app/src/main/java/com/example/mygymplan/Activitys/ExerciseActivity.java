@@ -38,6 +38,8 @@ import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class ExerciseActivity extends AppCompatActivity {
@@ -386,6 +388,8 @@ public class ExerciseActivity extends AppCompatActivity {
     // -------------------------------------------------------
     public void SaveExerciseValues() {
 
+        LocalDate date = LocalDate.now();
+
         // Get Exercise Values
         thisExercise.eName = showName.getText().toString();
         thisExercise.eDescription = showDescription.getText().toString();
@@ -393,6 +397,7 @@ public class ExerciseActivity extends AppCompatActivity {
         thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
         thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
         thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+        thisExercise.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
 
         //----------------------------------------------
         //-------------- NEED MORES TESTS --------------

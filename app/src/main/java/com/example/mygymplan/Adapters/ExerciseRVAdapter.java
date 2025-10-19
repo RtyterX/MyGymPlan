@@ -56,6 +56,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewReps.setText(String.valueOf(exerciseList.get(position).eReps));
         holder.textViewRest.setText(String.valueOf(exerciseList.get(position).eRest));
         holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
+        holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
 
         // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
@@ -74,13 +75,13 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
-
         TextView textViewName;
         TextView textViewType;
         TextView textViewSets;
         TextView textViewReps;
         TextView textViewRest;
         TextView textViewLoad;
+        TextView textViewLastMod;
         ImageView imageView;
 
         // Constructor
@@ -89,13 +90,15 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
             textViewName = itemView.findViewById(R.id.RecyclerExerciseName);
             textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
-            imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
             textViewSets = itemView.findViewById(R.id.RecyclerExerciseSets);
             textViewReps = itemView.findViewById(R.id.RecyclerExerciseReps);
             textViewRest = itemView.findViewById(R.id.RecyclerExerciseRest);
             textViewLoad = itemView.findViewById(R.id.RecyclerExerciseLoad);
+            textViewLastMod = itemView.findViewById(R.id.LastModifiedExercise);
+            imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
 
         }
+
         public void bind(Exercise item, OnItemClickListener onlistener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {

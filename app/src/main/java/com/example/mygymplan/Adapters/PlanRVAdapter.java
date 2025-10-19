@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         holder.textViewName.setText(planList.get(position).planName);
         holder.textViewDescription.setText(planList.get(position).planDescription);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
+        holder.textViewCreatedDate.setText(planList.get(position).createdDate);
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
@@ -67,11 +69,11 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
-
         TextView textViewName;
         TextView textViewDescription;
+        TextView textViewCreatedDate;
         //TextView textViewType;
-        // ImageView imageView;
+        ImageView imageView;
 
 
         // Constructor
@@ -81,7 +83,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             textViewName = itemView.findViewById(R.id.RecyclerPlanName);
             textViewDescription = itemView.findViewById(R.id.RecyclerPlanDescrip);
             //textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+            imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
         }
 
         public void bind(Plan item, OnItemClickListener onlistener) {

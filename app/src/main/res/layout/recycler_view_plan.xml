@@ -38,10 +38,10 @@
         <TextView
             android:id="@+id/RecyclerPlanDescrip"
             android:layout_width="174dp"
-            android:layout_height="93dp"
+            android:layout_height="78dp"
             android:layout_marginTop="4dp"
-            android:maxLines="4"
             android:ellipsize="end"
+            android:maxLines="4"
             android:text="Desciption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,5 +75,27 @@
             app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName"
             app:layout_constraintVertical_bias="0.0" />
 
+        <TextView
+            android:id="@+id/CreatedDateTitle"
+            android:layout_width="60dp"
+            android:layout_height="14dp"
+            android:text="Create Date: "
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
+            app:layout_constraintEnd_toStartOf="@+id/CreatedDatePlan"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanDescrip" />
+
+        <TextView
+            android:id="@+id/CreatedDatePlan"
+            android:layout_width="45dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="4dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanDescrip" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

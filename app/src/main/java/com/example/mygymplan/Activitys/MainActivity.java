@@ -534,7 +534,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ----------------------------------------------
     private void ChangeUIVisibility() {
         Button newWorkout = findViewById(R.id.NewWorkout);
-        Button editActualPlanButton = findViewById(R.id.ChangePlan);
         Button ActivePlanButton = findViewById(R.id.SetActiveButton2);
         Button newPlan = findViewById(R.id.NewPlanButton);
         emptyWorkoutButton = findViewById(R.id.EmptyButton);
@@ -548,14 +547,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             emptyButton.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.VISIBLE);
             // -- Buttons --
-            editActualPlanButton.setVisibility(View.GONE);
             ActivePlanButton.setVisibility(View.GONE);
             newWorkout.setVisibility(View.GONE);
             newPlan.setVisibility(View.GONE);
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
             // -- Plan Name --
-            planName.setText("No Plans");
+            planName.setText("No Plan");
         } else {
             // ----------------------
             // ----- NO WORKOUT -----
@@ -651,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
 
-                LocalDate local = LocalDate.now();
+                LocalDate date = LocalDate.now();
 
                 // Create New Workout DataBase
                 Plan newPlan = new Plan();
@@ -660,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 newPlan.pro = false;
                 newPlan.author = user.name;
                 newPlan.active = isActiveOrNot;
-                newPlan.createdDate = local.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+                newPlan.createdDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
 
                 ///////////////////////////////////////////////////////////////////////////
@@ -698,6 +696,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         newWorkout.wName = name;
         newWorkout.wDescription = description;
         newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
+
+        LocalDate date = LocalDate.now();
+        newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
 
         // Access Database
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();

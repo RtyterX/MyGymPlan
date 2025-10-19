@@ -165,6 +165,27 @@
             app:layout_constraintEnd_toStartOf="@+id/RecyclerExerciseLoad"
             app:srcCompat="@drawable/load_icon" />
 
+        <TextView
+            android:id="@+id/LastModifiedExercise"
+            android:layout_width="49dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVExercise" />
+
+        <TextView
+            android:id="@+id/lastModifiedTitle"
+            android:layout_width="49dp"
+            android:layout_height="14dp"
+            android:layout_marginBottom="4dp"
+            android:text="LastMod: "
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
+            app:layout_constraintEnd_toStartOf="@+id/LastModifiedExercise" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         holder.textViewName.setText(workoutList.get(position).wName);
         holder.textViewDescription.setText(workoutList.get(position).wDescription);
         holder.textViewType.setText(workoutList.get(position).wType.toString());
+        holder.textViewLastMod.setText(workoutList.get(position).lastModified);
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
@@ -69,11 +71,11 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
-
         TextView textViewName;
         TextView textViewDescription;
         TextView textViewType;
-        // ImageView imageView;
+        TextView textViewLastMod;
+        ImageView imageView;
 
 
         // Constructor
@@ -83,7 +85,8 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
             textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
             textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            // imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+            textViewLastMod = itemView.findViewById(R.id.LastModifiedWorkout);
+            imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
         }
 
         public void bind(Workout item, OnItemClickListener onlistener) {

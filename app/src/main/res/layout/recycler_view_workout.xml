@@ -13,6 +13,7 @@
         android:layout_height="97dp"
         android:background="#1EC1BFF8"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -54,16 +55,16 @@
 
     <TextView
         android:id="@+id/RecyclerWorkoutDescription"
-        android:layout_width="155dp"
-        android:layout_height="73dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="153dp"
+        android:layout_height="69dp"
+        android:layout_marginEnd="10dp"
+        android:maxLines="4"
         android:text="Descrição: Teste here"
         android:textSize="14sp"
-        android:maxLines="4"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintVertical_bias="0.521" />
+        app:layout_constraintVertical_bias="0.428" />
 
     <TextView
         android:id="@+id/WorkoutDuration"
@@ -77,5 +78,24 @@
         app:layout_constraintHorizontal_bias="0.37"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutType" />
+
+    <TextView
+        android:id="@+id/LastModifiedWorkout"
+        android:layout_width="45dp"
+        android:layout_height="14dp"
+        android:layout_marginEnd="10dp"
+        android:text="TextView"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
+
+    <TextView
+        android:id="@+id/lastModifiedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LastMod: "
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/LastModifiedWorkout"
+        app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
