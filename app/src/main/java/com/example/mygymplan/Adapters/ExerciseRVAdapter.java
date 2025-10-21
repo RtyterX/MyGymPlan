@@ -1,9 +1,12 @@
 package com.example.mygymplan.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ExerciseService;
 
 import java.util.List;
 
@@ -45,9 +49,11 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
+
+        ExerciseService exerciseService = new ExerciseService();
 
         // Text Views
         holder.textViewName.setText(exerciseList.get(position).eName);
@@ -57,6 +63,12 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewRest.setText(String.valueOf(exerciseList.get(position).eRest));
         holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
         holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
+        holder.buttonDeleteExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exerciseService.deleteExercise(context,exerciseList.get(position));
+            }
+        });
 
         // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
@@ -82,6 +94,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewRest;
         TextView textViewLoad;
         TextView textViewLastMod;
+        ImageButton buttonDeleteExercise;
         ImageView imageView;
 
         // Constructor
@@ -95,7 +108,9 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             textViewRest = itemView.findViewById(R.id.RecyclerExerciseRest);
             textViewLoad = itemView.findViewById(R.id.RecyclerExerciseLoad);
             textViewLastMod = itemView.findViewById(R.id.LastModifiedExercise);
+            buttonDeleteExercise = itemView.findViewById(R.id.DeleteWorkoutIcon);
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
+
 
         }
 

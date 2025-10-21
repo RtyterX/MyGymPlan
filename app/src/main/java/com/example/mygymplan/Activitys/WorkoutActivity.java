@@ -91,7 +91,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         // --- Components ---
         showName = findViewById(R.id.WorkoutName);
-        workoutId = findViewById(R.id.WorkoutIdText);
         Button newExerciseButton = findViewById(R.id.CreateNewExercise);
         Button backButton = findViewById(R.id.BackButtonWorkout);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
@@ -115,15 +114,15 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
 
         // -------------------------------------------------------------------
-        //  ---  Set Values based on Received Data  ---
+        // ---  Set Values based on Received Data  ---
         NewWorkoutCompareString = thisWorkout.wName;
         showName.setText(thisPlan.planName);
-        workoutId.setText(String.valueOf(thisWorkout.id));      // Just for Teste
 
 
         // -------------------------------------------------------------------
+        // ---  Load Data Recycler View on Create the Activity  ---
         LoadData();
-        // -------------------------------------------------------------------
+
 
 
         // ------------ BUTTONS ------------
@@ -136,7 +135,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
                 // New Exercise default values
                 newExercise.workout_Id = thisWorkout.id;
-                newExercise.eName = "New Exercise";
+                newExercise.eName = "1";
                 newExercise.eDescription = "Description Here...";
                 newExercise.eSets = 0;
                 newExercise.eReps = 0;
@@ -177,20 +176,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
     }
 
-
-    ///////////////////////////////////////////////////
-    /////////////// JUST FOR TEST ////////////////////
-    /////////////////////////////////////////////////
-    public void deleteDatabase(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                db.clearAllTables();
-                recreate();
-            }
-        }).start();
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -313,7 +298,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         WorkoutRVAdapterHorizontal workoutAdapter = new WorkoutRVAdapterHorizontal(WorkoutActivity.this, displayedWorkouts, new WorkoutRVAdapterHorizontal.OnItemClickListener() {
                             @Override
                             public void onItemClick(Workout item) {
-
+                                UpdateRecyclerView(item);
+                                showName.setText(item.wName);           // Just for Tests
                             }
                         });
                         //displayedWorkouts
@@ -327,6 +313,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         }).start();
 
     }
+
 
     // ----------------------------------------------
     // ------- Change UI Elements Visibility --------
@@ -344,6 +331,55 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
     }
 
+
+    // ----------------------------------------------
+    // ------------ Reload Recycler View ------------
+    // ----------------------------------------------
+    public void UpdateRecyclerView(Workout workout) {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        ExerciseDao dao = db.exerciseDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                displayedExercises = new ArrayList<>();
+                List<Exercise>  newList = dao.listExercise();
+
+                for (Exercise e : newList) {
+                    if (e.workout_Id == workout.id) {
+                        displayedExercises.add(e);
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        ExerciseRVAdapter exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Exercise item) {
+                                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
+                                intent.putExtra("SelectedUser", user);
+                                intent.putExtra("SelectedPlan", thisPlan);
+                                intent.putExtra("SelectedWorkout", thisWorkout);
+                                intent.putExtra("SelectedExercise", item);
+                                startActivity(intent);
+                            }
+                        });
+                        recyclerView.setAdapter(exerciseAdapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+
+                        ChangeUIVisibility();
+                    }
+
+                });
+
+            }
+
+        }).start();
+
+    }
+
 }
-
-

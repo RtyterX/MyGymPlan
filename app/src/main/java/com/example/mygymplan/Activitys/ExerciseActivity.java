@@ -20,23 +20,18 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
-import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.room.Room;
 
-import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Entitys.Exercise;
-import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
-import com.example.mygymplan.Enums.WorkoutType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +45,8 @@ public class ExerciseActivity extends AppCompatActivity {
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
     String NewExerciseCompareString;       // Used to check if Exercise is new or not
+
+    ExerciseService exerciseService = new ExerciseService();
 
     // UI Variables
     EditText showName;
@@ -125,7 +122,7 @@ public class ExerciseActivity extends AppCompatActivity {
         // --- Set UI Values ---
         NewExerciseCompareString = thisExercise.eName;                   // Just to check if it's a New Exercise or Not
         // If Exercise isn't New...
-        if (!Objects.equals(NewExerciseCompareString, "New Exercise")) {
+        if (!Objects.equals(NewExerciseCompareString, "1")) {
             // Show already storage Values
             showName.setText(thisExercise.eName);
             showDescription.setText(thisExercise.eDescription);
@@ -149,7 +146,8 @@ public class ExerciseActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 Toast.makeText(ExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
-                ApplyExerciseType(item);
+
+                exerciseService.ApplyExerciseType(thisExercise, item);
             }
         });
 
@@ -167,43 +165,63 @@ public class ExerciseActivity extends AppCompatActivity {
         });
 
 
-        // Save New Exercise
+        // -------------------------------------------
+        // ------------- Save Exercise ---------------
+        // -------------------------------------------
+
         saveExercise.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 SaveExerciseValues();
 
-                // Change Activity
-                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-                intent.putExtra("SelectedUser", user);
-
-                startActivity(intent);
+                // ------------------
+                ChangeActivity();
             }
         });
+
+
+
+        // -------------------------------------------
+        // ------------- Delete Button ---------------
+        // -------------------------------------------
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                DeleteWarning();
+
+            }
+        });
+
+
+
+        // -------------------------------------------
+        // ------------- Back Button -----------------
+        // -------------------------------------------
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // -----------------------------
+                // If not new, Save Exercise
+                // -----------------------------
+                if (!Objects.equals(NewExerciseCompareString, "1")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                SaveExerciseValues();
+                            SaveExerciseValues();
 
-                // Change Activity
-                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedUser", user);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
+                        }
+                    }).start();
+                }
 
-                startActivity(intent);
+                // ------------------
+                ChangeActivity();
             }
         });
 
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showPopup();
-            }
-        });
 
         // -------------------------------------------
         // ----------- BackPress Button --------------
@@ -213,15 +231,20 @@ public class ExerciseActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                SaveExerciseValues();
 
-                // Change Activity
-                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedUser", user);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", thisWorkout);
+                if (!Objects.equals(NewExerciseCompareString, "1")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                startActivity(intent);
+                            SaveExerciseValues();
+
+                        }
+                    }).start();
+                }
+
+                // ------------------
+                ChangeActivity();
             }
         };
 
@@ -237,13 +260,11 @@ public class ExerciseActivity extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------------
 
 
-
-
     // ------------------------------------------------------
     // ---------- Delete Exercise Popup  --------------------
     // ------------------------------------------------------
 
-    private void showPopup() {
+    private void DeleteWarning() {
         // Inflate Activity with a new View
         View popupView = View.inflate(this, R.layout.popup_warning, null);
 
@@ -252,12 +273,8 @@ public class ExerciseActivity extends AppCompatActivity {
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
 
-        // Set height and width as WRAP_CONTENT
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-
         // Create the New View
-        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
         // Set Text Warning
@@ -265,37 +282,14 @@ public class ExerciseActivity extends AppCompatActivity {
 
         // Set Buttons
         confirmButton.setOnClickListener(v -> {
-            DeleteExercise();
+            exerciseService.deleteExercise(getApplicationContext(), thisExercise);
+            ChangeActivity();
         });
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });
 
     }
-
-    private void DeleteExercise() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
-                dao.deleteExercise(thisExercise);
-
-                // Change Activity
-                Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-                intent.putExtra("SelectedUser", user);
-
-                startActivity(intent);
-            }
-
-        }).start();
-
-    }
-
-
 
 
 
@@ -413,60 +407,33 @@ public class ExerciseActivity extends AppCompatActivity {
         // thisExercise.eSets = 1;
         // }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                // Access Database
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
-
-                // ------------------------------------------------------------------------
-                // Create if Exercise is New
-                if (Objects.equals(NewExerciseCompareString, "New Exercise")) {
-                    // Save new Exercise
-                    dao.insertExercise(thisExercise);
-                }
-                // Update if Exercise is already created
-                else {
-                    // Save new Exercise
-                    dao.updateExercise(thisExercise);
-                }
-                // ------------------------------------------------------------------------
-            }
-
-        }).start();
+        // ------------------------------------------------------------------------
+        // Create if Exercise is New
+        if (Objects.equals(NewExerciseCompareString, "1")) {
+            // Save new Exercise
+            exerciseService.addExercise(getApplicationContext(), thisExercise);
+        }
+        // Update if Exercise is already created
+        else {
+            // Save new Exercise
+            exerciseService.saveExercise(getApplicationContext(), thisExercise);
+        }
+        // ------------------------------------------------------------------------
     }
 
 
     // ----------------------------------------------------------
-    // ---------- Switch to Change Exercise type ----------------
+    // ---------------- Change Activity Back  -------------------
     // ----------------------------------------------------------
+    private void ChangeActivity() {
 
-    private void ApplyExerciseType(String item){
-        switch(item)  {
-            case "Chest":
-                thisExercise.eType = WorkoutType.Chest;
-                break;
-            case "Back":
-                thisExercise.eType = WorkoutType.Back;
-                break;
-            case "Shoulder":
-                thisExercise.eType = WorkoutType.Shoulder;
-                break;
-            case "Arms":
-                thisExercise.eType = WorkoutType.Arms;
-                break;
-            case "Biceps":
-                thisExercise.eType = WorkoutType.Biceps;
-                break;
-            case "Triceps":
-                thisExercise.eType = WorkoutType.Triceps;
-                break;
-            case "Legs":
-                thisExercise.eType = WorkoutType.Legs;
-                break;
-        }
+        Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
+        intent.putExtra("SelectedUser", user);
+        intent.putExtra("SelectedPlan", thisPlan);
+        intent.putExtra("SelectedWorkout", thisWorkout);
+
+        startActivity(intent);
     }
 
 

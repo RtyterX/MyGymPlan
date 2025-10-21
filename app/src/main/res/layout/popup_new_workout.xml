@@ -56,7 +56,7 @@
             android:id="@+id/NewWorkoutDescription"
             android:layout_width="315dp"
             android:layout_height="82dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="52dp"
             android:background="@drawable/welcome_input"
             android:ems="10"
             android:gravity="start"
@@ -64,8 +64,8 @@
             android:inputType="textMultiLine"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.651"
+            app:layout_constraintEnd_toEndOf="@+id/NewWorkoutNameText"
+            app:layout_constraintHorizontal_bias="0.657"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/NewWorkoutName" />
 
@@ -130,7 +130,7 @@
             android:id="@+id/textInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="318dp"
-            android:layout_height="65dp"
+            android:layout_height="56dp"
             android:hint="Workout Type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.625"
@@ -144,6 +144,45 @@
                 android:layout_height="51dp"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/NameWorkoutWarning"
+            android:layout_width="307dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:text="Name Cant be Null. Choose a name with: more than 3 charaters"
+            android:textColor="#BA0202"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintTop_toBottomOf="@+id/NewWorkoutName" />
+
+        <TextView
+            android:id="@+id/DescriptionWorkoutWarning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Description can be Null, but need to be more than 5 characters"
+            android:textColor="#BA0202"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintTop_toBottomOf="@+id/NewWorkoutDescription" />
+
+        <TextView
+            android:id="@+id/TypeWorkoutWarning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Choose a Type"
+            android:textColor="#BA0202"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

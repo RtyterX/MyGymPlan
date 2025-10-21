@@ -1,18 +1,30 @@
 package com.example.mygymplan.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Database.ExerciseDao;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Services.ExerciseService;
+import com.example.mygymplan.Services.WorkoutDuration;
+import com.example.mygymplan.Services.WorkoutService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyViewHolder>  {
@@ -25,6 +37,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     Context context;
     List<Workout> workoutList;
     OnItemClickListener onListener;
+    List<Exercise> listExercises = new ArrayList<>();
 
 
     // Constructor
@@ -46,9 +59,10 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkoutRVAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WorkoutRVAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
+        WorkoutDuration workoutDuration = new WorkoutDuration();    // needs to be here to work properly
 
         holder.textViewName.setText(workoutList.get(position).wName);
         holder.textViewDescription.setText(workoutList.get(position).wDescription);
@@ -59,6 +73,21 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
         // On Item Click
         holder.bind(workoutList.get(position), onListener);
+
+        // Calculate Workout Duration Time
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
+                listExercises = dao.listExercise();
+
+                holder.textViewDuration.setText(workoutDuration.CalculateDurationTime(workoutList.get(position), listExercises));
+
+            }
+        }).start();
     }
 
     @Override
@@ -74,6 +103,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         TextView textViewName;
         TextView textViewDescription;
         TextView textViewType;
+        TextView textViewDuration;
         TextView textViewLastMod;
         ImageView imageView;
 
@@ -87,6 +117,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
             textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
             textViewLastMod = itemView.findViewById(R.id.LastModifiedWorkout);
             imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+            textViewDuration = itemView.findViewById(R.id.WorkoutDurationTime);
         }
 
         public void bind(Workout item, OnItemClickListener onlistener) {

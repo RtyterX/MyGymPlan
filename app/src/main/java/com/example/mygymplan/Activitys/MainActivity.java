@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.widget.Toolbar;
 
 
@@ -43,6 +42,7 @@ import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.WorkoutService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.LocalDate;
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.NavView);                               // Find Navigation View
         navigationView.setNavigationItemSelectedListener(this);                    // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.app_name, R.string.app_name);      // Set ActionBar Toggle
+                drawerLayout, toolbar, R.string.app_name, R.string.app_name);              // Set ActionBar Toggle
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -233,11 +233,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // --- Popup View UI Content ---
         // Values
+
         EditText newWorkoutName = popupView.findViewById(R.id.NewWorkoutName);
         EditText newWorkoutDescription = popupView.findViewById(R.id.NewWorkoutDescription);
         // Warnings
-        TextView nameWarning = popupView.findViewById(R.id.NewWorkoutName);
-        TextView descriptionWarning = popupView.findViewById(R.id.NewWorkoutDescription);
+        TextView nameWarning = popupView.findViewById(R.id.NameWorkoutWarning);
+        TextView descriptionWarning = popupView.findViewById(R.id.DescriptionWorkoutWarning);
+        TextView typeWarning = popupView.findViewById(R.id.TypeWorkoutWarning);
         // Buttons
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
@@ -258,41 +260,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 String item = parent.getItemAtPosition(position).toString();
-                // Apply Type
-                switch (item) {
-                    case "Chest":
-                        newWorkout.wType = WorkoutType.Chest;
-                        break;
-                    case "Back":
-                        newWorkout.wType = WorkoutType.Back;
-                        break;
-                    case "Shoulder":
-                        newWorkout.wType = WorkoutType.Shoulder;
-                        break;
-                    case "Arms":
-                        newWorkout.wType = WorkoutType.Arms;
-                        break;
-                    case "Biceps":
-                        newWorkout.wType = WorkoutType.Biceps;
-                        break;
-                    case "Triceps":
-                        newWorkout.wType = WorkoutType.Triceps;
-                        break;
-                    case "Legs":
-                        newWorkout.wType = WorkoutType.Legs;
-                        break;
-                }
+
+                WorkoutService workoutService = new WorkoutService();
+                workoutService.ApplyWorkoutType(newWorkout, item);
+
             }
         });
 
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
-            if (newWorkoutName.getText().toString().isEmpty()) {
-                nameWarning.setVisibility(View.VISIBLE);
-            } else if (newWorkoutDescription.getText().toString().isEmpty()) {
-                descriptionWarning.setVisibility(View.VISIBLE);
-            } else {
+
+            boolean canCreate = false;
+
+            if (!canCreate) {
+                // ---------------------------------------------------------
+                if (newWorkoutName.getText().toString().isEmpty() || newWorkoutName.getText().toString().length() >= 3) {
+                    nameWarning.setVisibility(View.VISIBLE);
+                    // ---------------------------------------------------------
+                    if (!newWorkoutDescription.getText().toString().isEmpty() || newWorkoutDescription.getText().toString().length() >= 5) {
+                        descriptionWarning.setVisibility(View.VISIBLE);
+                    }
+                    // ---------------------------------------------------------
+                    if (newWorkout.wType == null) {
+                        typeWarning.setVisibility(View.VISIBLE);
+                    }
+                }
+
+
+                else {
+                    nameWarning.setVisibility(View.GONE);
+                    descriptionWarning.setVisibility(View.GONE);
+                    typeWarning.setVisibility(View.GONE);
+
+                    canCreate = true;
+                }
+
+            }
+
+
+            if (canCreate) {
                 // Inset New Workout in Database
                 CreateNewWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType);
                 ReloadRecyclerView();
