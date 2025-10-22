@@ -32,6 +32,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     public interface OnItemClickListener {
         void onItemClick(Workout item);
 
+        void onItemLongClick(Workout item);
     }
 
     Context context;
@@ -128,6 +129,15 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
                     onlistener.onItemClick(item);
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onlistener.onItemLongClick(item);
+                    return true;
+                }
+            });
+
 
         }
     }

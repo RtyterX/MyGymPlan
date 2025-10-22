@@ -345,24 +345,21 @@
             android:id="@+id/SaveExercise"
             android:layout_width="177dp"
             android:layout_height="49dp"
-            android:layout_marginStart="3dp"
-            android:text="Save New Exercise"
+            android:text="Save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.529"
             app:layout_constraintStart_toEndOf="@+id/DeleteExerciseButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/DeleteExerciseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Delete Exercise"
+            android:layout_width="177dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="3dp"
+            android:text="Delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.542" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

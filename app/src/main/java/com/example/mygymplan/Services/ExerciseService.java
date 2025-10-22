@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
+import com.example.mygymplan.Activitys.ExerciseActivity;
 import com.example.mygymplan.Activitys.MainActivity;
 import com.example.mygymplan.Activitys.WelcomeActivity;
 import com.example.mygymplan.Activitys.WorkoutActivity;
@@ -75,6 +76,17 @@ public class ExerciseService extends AppCompatActivity {
         }).start();
 
     }
+
+    public void changeExerciseOrder(Context context, Exercise exercise1, Exercise exercise2) {
+
+        int change = exercise1.order;
+        exercise1.order = exercise2.order;
+        exercise2.order = change;
+
+        saveExercise(context, exercise1);
+        saveExercise(context, exercise2);
+    }
+
 
 
     // ---------------------------------------------------------------------------------------------------

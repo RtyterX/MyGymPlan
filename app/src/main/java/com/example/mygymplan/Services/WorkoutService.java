@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.WorkoutDao;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
@@ -57,6 +58,17 @@ public class WorkoutService extends AppCompatActivity {
             }
         }).start();
 
+    }
+
+    // ---------------------------------------------------------------------------------------------------
+    public void changeWorkoutOrder(Context context, Workout workout1, Workout workout2) {
+
+        int change = workout1.order;
+        workout1.order = workout2.order;
+        workout2.order = change;
+
+        saveWorkout(context, workout1);
+        saveWorkout(context, workout2);
     }
 
 

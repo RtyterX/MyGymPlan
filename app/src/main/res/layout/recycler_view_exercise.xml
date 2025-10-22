@@ -162,7 +162,7 @@
             app:layout_constraintEnd_toEndOf="@+id/BackgroundRVExercise" />
 
         <TextView
-            android:id="@+id/lastModifiedTitle"
+            android:id="@+id/LastModifiedTitle"
             android:layout_width="44dp"
             android:layout_height="14dp"
             android:layout_marginBottom="4dp"
@@ -177,11 +177,12 @@
         android:layout_width="38dp"
         android:layout_height="70dp"
         android:layout_marginEnd="12dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundRVExercise"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
         app:layout_constraintVertical_bias="0.463"
-        tools:srcCompat="@drawable/delete_icon" />
+        app:srcCompat="@drawable/delete_icon" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

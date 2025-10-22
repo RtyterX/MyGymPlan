@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:hint="Min - Max"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textSize="12dp"
         app:layout_constraintStart_toEndOf="@+id/WorkoutDurationTitle"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutType" />
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
 
     <TextView
-        android:id="@+id/lastModifiedTitle"
+        android:id="@+id/LastModifiedTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LastMod: "

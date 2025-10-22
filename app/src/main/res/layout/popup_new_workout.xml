@@ -184,6 +184,14 @@
             app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
+        <Button
+            android:id="@+id/DeleteWButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            app:layout_constraintEnd_toEndOf="@+id/NewWorkoutNameText"
+            app:layout_constraintTop_toTopOf="@+id/NewWorkoutNameText" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

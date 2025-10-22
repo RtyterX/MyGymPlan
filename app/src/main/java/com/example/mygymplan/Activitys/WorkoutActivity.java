@@ -1,23 +1,20 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.MenuItem;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -35,38 +32,41 @@ import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Database.WorkoutDao;
+import com.example.mygymplan.Services.ExerciseService;
+import com.example.mygymplan.Services.NavigationBar;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+public class WorkoutActivity extends AppCompatActivity  {
 
-public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    // Data
+    // Entity's Data
     UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
-    String NewWorkoutCompareString;   // Check if Workout is a New Workout
 
     // UI Elements
     TextView showName;
-    List<Exercise> displayedExercises;  //
-    List<Workout> displayedWorkouts;  //
-    TextView workoutId;   //  Jut for Tests
-
-    // RecyclerView
-    ExerciseRVAdapter adapter;
-    RecyclerView recyclerView;
-    RecyclerView recyclerViewHorizontal;
-    TextView emptyView;
+    List<Exercise> displayedExercises;
+    List<Workout> displayedWorkouts;
 
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+
+    // Recycler Views
+    RecyclerView recyclerView;                  // Exercise Recycler View (Vertical)
+    RecyclerView horizontalRecyclerView;        // Workout Recycler View (Horizontal)
+    ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
+    TextView emptyView;                         // Show Text When Recycler View is Empty
+
+    // --> For Tests Only
     Button testButton;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,73 +89,62 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
-        // --- Components ---
+        // --- UI Elements ---
         showName = findViewById(R.id.WorkoutName);
-        Button newExerciseButton = findViewById(R.id.CreateNewExercise);
+        Button newButton = findViewById(R.id.CreateNewExercise);
+        Button addButton = findViewById(R.id.AddExercise);
         Button backButton = findViewById(R.id.BackButtonWorkout);
-        recyclerView = findViewById(R.id.RecycleViewWorkouts);
-        recyclerViewHorizontal = findViewById(R.id.RecyclerView2);
+        recyclerView = findViewById(R.id.RV_WorkoutsMain);
+        horizontalRecyclerView = findViewById(R.id.RV_WorkoutsHorizontal);
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
-        // --- Drawer Layout  ---
-        Toolbar toolbar = findViewById(R.id.toolbar2);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setIcon(R.drawable.mygymplan_logo);                  // Set Logo on Toolbar
-        drawerLayout = findViewById(R.id.DrawerLayout);
+        // --- Drawer Layout ---
+        Toolbar toolbar = findViewById(R.id.toolbar2);                                        // Find Toolbar
+        setSupportActionBar(toolbar);                                                         // Set Toolbar as ActionBar
+        Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.mygymplan_logo);     // Set Logo on Toolbar (Not Null enforceable by IDE)
+        drawerLayout = findViewById(R.id.DrawerLayout);                                       // Find DrawerLayout
         navigationView = findViewById(R.id.NavView);
-        navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        NavigationBar naviBar = new NavigationBar();
+        navigationView.setNavigationItemSelectedListener(naviBar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        // --- Just for Tests ---
-        testButton = navigationView.findViewById(R.id.TestButton);
 
 
         // -------------------------------------------------------------------
         // ---  Set Values based on Received Data  ---
-        NewWorkoutCompareString = thisWorkout.wName;
         showName.setText(thisPlan.planName);
 
 
         // -------------------------------------------------------------------
         // ---  Load Data Recycler View on Create the Activity  ---
-        LoadData();
+        LoadData(thisWorkout);
 
 
-
+        // ---------------------------------
         // ------------ BUTTONS ------------
+        // ---------------------------------
 
-        // Create New Exercise
-        newExerciseButton.setOnClickListener(new View.OnClickListener() {
+        // --- Create New Exercise ---
+        newButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                Exercise newExercise = new Exercise();
-
-                // New Exercise default values
-                newExercise.workout_Id = thisWorkout.id;
-                newExercise.eName = "1";
-                newExercise.eDescription = "Description Here...";
-                newExercise.eSets = 0;
-                newExercise.eReps = 0;
-                newExercise.eRest = 0;
-                newExercise.eLoad = 0;
-
-                // Change Activity
-                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
-                intent.putExtra("SelectedExercise", newExercise);
-                intent.putExtra("SelectedWorkout", thisWorkout);
-                intent.putExtra("SelectedUser", user);
-                startActivity(intent);
+                CreateNewExercise();
             }
         });
 
+        // --- Add Already Created Exercises ---
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AddExercise();
+            }
+        });
 
-        // Back Button
+        // --- Back Button ---
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Change to Main Activity
+                // Change back to Main Activity
                 Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
                 intent.putExtra("SelectedUser", user);
                 intent.putExtra("SelectedPlan", thisPlan);
@@ -166,73 +155,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     }
 
 
-    // -------- NOT IN USE --------
-    public void AddExercise(View view) {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        WorkoutDao dao2 = db.workoutDao();
-
-        dao2.deleteWorkout(thisWorkout);
-
-    }
-
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        // --------------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        // --------------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_settings) {
-            // Open Settings
-        }
-        // --------------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_info) {
-            // ------------------------------------
-            // Open a Popup talking about the app
-            // ------------------------------------
-            // Inflate Activity with a new View
-            View popupView = View.inflate(this, R.layout.popup_warning, null);
-
-            // Popup View UI Content
-            TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
-            Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
-            Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
-
-            // Set height and width as WRAP_CONTENT
-            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-
-            // Create the New View
-            PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-            // Set Text Warning
-            popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
-
-            // Close Buttons
-            confirmButton.setVisibility(View.GONE);
-            closeButton.setOnClickListener(v -> {
-                popupWindow.dismiss();
-            });
-
-        }
-        // --------------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.TestButton) {
-
-            Intent intent = new Intent(this, TesteActivity.class);
-            startActivity(intent);
-
-        }
-        // --------------------------------------------------------------------------------
-
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
     // ------------------------- FUNCTIONS -------------------------------
@@ -240,27 +162,35 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // -------------------------------------------------------------------
 
     // --------------------------------------------
-    // ----------- Load Data and display ----------
-    // ------------- on Recycler View -------------
+    // ----------- Load Data and Display ----------
+    // ------------- on Recycler Views -------------
     // --------------------------------------------
-    public void LoadData() {
+    public void LoadData(Workout workout) {
+        WorkoutsHorizontalRecyclerView();
+        UpdateRecyclerView(workout);
+    }
+
+
+    // ----------------------------------------------
+    // -------- Reload Workouts Recycler View -------
+    // ----------------------------------------------
+    public void WorkoutsHorizontalRecyclerView() {
+        // Access Database
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        WorkoutDao dao = db.workoutDao();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
-
-                displayedExercises = new ArrayList<>();
-                List<Exercise>  newList = dao.listExercise();
-
+                // Initialize List
                 displayedWorkouts = new ArrayList<>();
-                WorkoutDao daoW = db.workoutDao();
                 List<Workout> workoutList = new ArrayList<>();
-                 workoutList = daoW.listWorkouts();
 
+                // List All Workouts
+                workoutList = dao.listWorkouts();
+
+                // Remove Workouts from other Plans
                 if (!workoutList.isEmpty()) {
-
                     for (Workout item : workoutList) {
                         if (item.plan_Id == thisPlan.id) {
                             displayedWorkouts.add(item);
@@ -268,33 +198,11 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                     }
                 }
 
+                // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        for (Exercise e : newList) {
-                            if (e.workout_Id == thisWorkout.id) {
-                                displayedExercises.add(e);
-                            }
-                        }
-
-                        // Recycler View Adapter
-                        ExerciseRVAdapter exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Exercise item) {
-                                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
-                                intent.putExtra("SelectedUser", user);
-                                intent.putExtra("SelectedPlan", thisPlan);
-                                intent.putExtra("SelectedWorkout", thisWorkout);
-                                intent.putExtra("SelectedExercise", item);
-                                startActivity(intent);
-                            }
-                        });
-                        recyclerView.setAdapter(exerciseAdapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-
-
-                        // -------- Recycler View Horizontal --------
-
+                        // -------- Set Recycler View Horizontal --------
                         WorkoutRVAdapterHorizontal workoutAdapter = new WorkoutRVAdapterHorizontal(WorkoutActivity.this, displayedWorkouts, new WorkoutRVAdapterHorizontal.OnItemClickListener() {
                             @Override
                             public void onItemClick(Workout item) {
@@ -302,16 +210,93 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                                 showName.setText(item.wName);           // Just for Tests
                             }
                         });
-                        //displayedWorkouts
-                        recyclerViewHorizontal.setAdapter(workoutAdapter);
-                        recyclerViewHorizontal.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                        // Display Workouts inside the Recycler View
+                        horizontalRecyclerView.setAdapter(workoutAdapter);
+                        horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                    }
+                });
+            }
+        }).start();
+    }
 
+
+    // ----------------------------------------------
+    // -------- Reload Exercise Recycler View -------
+    // ----------------------------------------------
+    public void UpdateRecyclerView(Workout workout) {
+        // Access Database
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        ExerciseDao dao = db.exerciseDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Initialize List
+                displayedExercises = new ArrayList<>();
+                List<Exercise>  newList = dao.listExercise();
+
+                // Add to List only the Exercises from this Workout
+                for (Exercise e : newList) {
+                    if (e.workout_Id == workout.id && e.plan_Id == thisPlan.id) {
+                        displayedExercises.add(e);
+                    }
+                }
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ----- Set Exercise Adapter -----
+                        exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Exercise item) {
+                                ChangeToExercise(item);
+                            }
+                        }, new ExerciseRVAdapter.OnItemClickDelete() {
+                            @Override
+                            public void deleteButtonClick(int position) {
+                                DeleteFromRecyclerView(position);
+                            }
+                        });
+                        // Display Exercises inside the Recycler View
+                        recyclerView.setAdapter(exerciseAdapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+                        // Then Check if Need to Change the UI...
                         ChangeUIVisibility();
                     }
                 });
             }
         }).start();
+    }
 
+
+    // ----------------------------------------------
+    // ------ Create New Exercise From Scratch ------
+    // ----------------------------------------------
+    public void CreateNewExercise() {
+        Exercise newExercise = new Exercise();
+
+        // New Exercise default values
+        newExercise.plan_Id = thisPlan.id;
+        newExercise.workout_Id = thisWorkout.id;
+        newExercise.eName = "1";
+        newExercise.eDescription = "Description Here...";
+        newExercise.eSets = 0;
+        newExercise.eReps = 0;
+        newExercise.eRest = 0;
+        newExercise.eLoad = 0;
+        newExercise.order = displayedExercises.size() + 1;
+
+        // Change Activity
+        ChangeToExercise(newExercise);
+    }
+
+
+    // ----------------------------------------------
+    // --------- Add Exercise From Database ---------
+    // ----------------------------------------------
+    public void AddExercise() {
+        // Not Created
     }
 
 
@@ -328,58 +313,40 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-
     }
 
 
     // ----------------------------------------------
-    // ------------ Reload Recycler View ------------
+    // -------- Delete a Specific Row From ----------
+    // ---------- Exercises Recycler View -----------
     // ----------------------------------------------
-    public void UpdateRecyclerView(Workout workout) {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-
-        new Thread(new Runnable() {
+    public void DeleteFromRecyclerView(int position) {
+        ExerciseService exerciseService = new ExerciseService();
+        exerciseService.deleteExercise(getApplicationContext(), displayedExercises.get(position));
+        displayedExercises.remove(position);
+        exerciseAdapter.notifyItemRemoved(position);
+        // Need to wait for animation when is the last Exercise in List
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                displayedExercises = new ArrayList<>();
-                List<Exercise>  newList = dao.listExercise();
-
-                for (Exercise e : newList) {
-                    if (e.workout_Id == workout.id) {
-                        displayedExercises.add(e);
-                    }
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        ExerciseRVAdapter exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Exercise item) {
-                                Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
-                                intent.putExtra("SelectedUser", user);
-                                intent.putExtra("SelectedPlan", thisPlan);
-                                intent.putExtra("SelectedWorkout", thisWorkout);
-                                intent.putExtra("SelectedExercise", item);
-                                startActivity(intent);
-                            }
-                        });
-                        recyclerView.setAdapter(exerciseAdapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-
-                        ChangeUIVisibility();
-                    }
-
-                });
-
+                ChangeUIVisibility();
             }
-
-        }).start();
+        }, 500); // 3000 milliseconds = 3 seconds
 
     }
 
+
+    // ----------------------------------------------
+    // ------ Change Activity to Show Exercise ------
+    // ----------------------------------------------
+    public void ChangeToExercise(Exercise item) {
+        Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
+        intent.putExtra("SelectedUser", user);
+        intent.putExtra("SelectedPlan", thisPlan);
+        intent.putExtra("SelectedWorkout", thisWorkout);
+        intent.putExtra("SelectedExercise", item);
+        startActivity(intent);
+    }
+
+    //////////////////////// END ////////////////////////
 }

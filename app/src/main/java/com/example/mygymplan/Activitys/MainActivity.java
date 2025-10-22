@@ -1,8 +1,11 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -42,6 +46,7 @@ import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.WorkoutService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -53,12 +58,12 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    // Data
+    // Entity's Data
     UserData user;
     Plan thisPlan;
     List<Workout> displayedWorkouts;
 
-    // UI
+    // UI Elements
     TextView planName;
     Button emptyButton;
     Button emptyWorkoutButton;
@@ -67,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerView;
     TextView emptyText;
     TextView count;
+    WorkoutRVAdapter adapter;
 
     // Drawer NaviBar
     DrawerLayout drawerLayout;
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             "Triceps"};
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,17 +125,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         emptyText = findViewById(R.id.EmptyRVText);
         emptyButton = findViewById(R.id.EmptyButton);
         count = findViewById(R.id.RVCount);
+        // Buttons
+        Button newPlan = findViewById(R.id.NewPlanButton);
+        Button newWorkout = findViewById(R.id.NewWorkout);
 
 
         // --- Drawer Layout ---
-        Toolbar toolbar = findViewById(R.id.toolbar2);                             // Find Toolbar
-        setSupportActionBar(toolbar);                                              // Set Toolbar as ActionBar
-        getSupportActionBar().setIcon(R.drawable.mygymplan_logo);                  // Set Logo on Toolbar
-        drawerLayout = findViewById(R.id.DrawerLayout);                            // Find DrawerLayout
-        navigationView = findViewById(R.id.NavView);                               // Find Navigation View
-        navigationView.setNavigationItemSelectedListener(this);                    // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
+        Toolbar toolbar = findViewById(R.id.toolbar2);                                         // Find Toolbar
+        setSupportActionBar(toolbar);                                                          // Set Toolbar as ActionBar
+        Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.mygymplan_logo);      // Set Logo on Toolbar (Not Null enforceable by IDE)
+        drawerLayout = findViewById(R.id.DrawerLayout);                                        // Find DrawerLayout
+        navigationView = findViewById(R.id.NavView);                                           // Find Navigation View
+        navigationView.setNavigationItemSelectedListener(this);                                // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.app_name, R.string.app_name);              // Set ActionBar Toggle
+                drawerLayout, toolbar, R.string.app_name, R.string.app_name);                          // Set ActionBar Toggle
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -140,21 +150,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // ---- Show Workouts in Recycle View or -----
-        // ---- display Create From Scratch button --
-        LoadData();
+        // ---- Display Create From Scratch button --
+        LoadData2();
+        //ReloadRecyclerView();
+
+
+        // -------------------------------------------
+        // ----------------- BUTTONS -----------------
+        // -------------------------------------------
+
+        newPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoadData2();
+            }
+        });
+
+        newWorkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewWorkout();
+            }
+        });
+
     }
 
-
-    // ---------------------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------------------
-    // ------------------------------------------ BUTTONS ------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------------------
 
     // ----------------------------------------------------------------
     // ---------------- If User Has no Workout Plans ------------------
     // ----------------------------------------------------------------
-    public void NewPlan(View view) {
+    public void NewPlan() {
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
@@ -223,8 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
     // ---------------- Create New Workout ------------------
     // ------------------------------------------------------
-
-    public void NewWorkout(View view) {
+    public void NewWorkout() {
         // -------------------------------------------------------
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
@@ -233,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // --- Popup View UI Content ---
         // Values
-
         EditText newWorkoutName = popupView.findViewById(R.id.NewWorkoutName);
         EditText newWorkoutDescription = popupView.findViewById(R.id.NewWorkoutDescription);
         // Warnings
@@ -271,10 +294,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
-
-            boolean canCreate = false;
-
-            if (!canCreate) {
+            ///////////////////// NEED REWORK /////////////////////
+            /////////////// Check Variables Inputs ////////////////
                 // ---------------------------------------------------------
                 if (newWorkoutName.getText().toString().isEmpty() || newWorkoutName.getText().toString().length() >= 3) {
                     nameWarning.setVisibility(View.VISIBLE);
@@ -286,26 +307,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (newWorkout.wType == null) {
                         typeWarning.setVisibility(View.VISIBLE);
                     }
-                }
-
-
-                else {
+                } else {
                     nameWarning.setVisibility(View.GONE);
                     descriptionWarning.setVisibility(View.GONE);
                     typeWarning.setVisibility(View.GONE);
-
-                    canCreate = true;
                 }
+            ///////////////////////////////////////////////////
 
-            }
-
-
-            if (canCreate) {
                 // Inset New Workout in Database
                 CreateNewWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType);
-                ReloadRecyclerView();
-                popupWindow.dismiss();     // Close Popup
-            }
+                // Need to wait for animation when is the last Exercise in List
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ReloadRecyclerView();
+                        popupWindow.dismiss();     // Close Popup
+                    }
+                }, 300); // 3000 milliseconds = 3 seconds
 
         });
 
@@ -316,10 +334,80 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // ------------------------------------------------------
+    // ---------------- Edit Workout ------------------------
+    // ------------------------------------------------------
+    private void EditWorkout(Workout workout) {
+        // -------------------------------------------------------
+        // Open new Popup where user create a new Plan
+        // -------------------------------------------------------
+        // Inflate Activity with a new View
+        View popupView = View.inflate(this, R.layout.popup_new_workout, null);
+
+        // --- Popup View UI Content ---
+        // Values
+        EditText newWorkoutName = popupView.findViewById(R.id.NewWorkoutName);
+        EditText newWorkoutDescription = popupView.findViewById(R.id.NewWorkoutDescription);
+        // Warnings
+        TextView nameWarning = popupView.findViewById(R.id.NameWorkoutWarning);
+        TextView descriptionWarning = popupView.findViewById(R.id.DescriptionWorkoutWarning);
+        TextView typeWarning = popupView.findViewById(R.id.TypeWorkoutWarning);
+        // Buttons
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+        Button deleteButton = popupView.findViewById(R.id.DeleteWButton);
+        // Type Selection
+        autoComplete = popupView.findViewById(R.id.AutoCompleteNewWorkouts);
+
+        // --- Create the New View ---
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // --- Set Values ---
+        newWorkoutName.setText(workout.wName);
+        newWorkoutDescription.setText(workout.wDescription);
+
+        // ------------------------------------------------------
+        // ------------------ Dropdown Menu ---------------------
+        // ------------------------------------------------------
+        adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, typeInView);
+        autoComplete.setAdapter(adapterItem);
+        autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                WorkoutService workoutService = new WorkoutService();
+                workoutService.ApplyWorkoutType(workout, item);
+
+            }
+        });
+
+        // ------------- Buttons -------------
+        confirmButton.setOnClickListener(v -> {
+            workout.wName = newWorkoutName.getText().toString();
+            workout.wDescription = newWorkoutDescription.getText().toString();
+
+            WorkoutService workoutService = new WorkoutService();
+            workoutService.saveWorkout(getApplicationContext(), workout);
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            WorkoutService workoutService = new WorkoutService();
+            workoutService.deleteWorkout(getApplicationContext(), workout);
+        });
+
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+
+    }
+
     //----------------------------------------------------
     //------------------- Change Plan --------------------
     //----------------------------------------------------
-    public void ChangePlan(View view) {
+    public void ChangePlan() {
         // -------------------------------------------------------
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
@@ -365,38 +453,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-    // --------------------------------------------------
-    // ------------------ Active Plan -------------------
-    // --------------------------------------------------
-    public void ActivePlan(View view) {
-        // PlanService planService = new PlanService;
-        // planService.ActivePlan(thisPlan)
-    }
-
-
-    // -------------------------------------------------------
-    // ------------------ Back Button Teste ------------------
-    // -------------------------------------------------------
-
-
-
-
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
     // ------------------------------------------------------
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.nav_change_plan) {
+            // ChangePlan();
+        }
+        // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
             // Open Settings
         }
-
+        // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {
             // Open a Popup talking about the app
             // -------------------------------------------------------
@@ -426,16 +502,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
 
         }
-
+        // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.TestButton) {
             Intent intent = new Intent(this, TesteActivity.class);
             startActivity(intent);
         }
 
+        // Close Drawer after Click
         drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////// IS WORKING //////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
     // -------------------------------------------------------------------
@@ -449,6 +533,146 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- on Recycler View -------------
     // --------------------------------------------
     public void LoadData() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        UserDataDao dao = db.userDataDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // ------------------------------------
+                // ----- Check if User is created -----
+                // ------------------------------------
+                List<UserData> userList = dao.listUserData();
+
+                if (userList.isEmpty()) {
+                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                } else {
+                    user = userList.get(0);
+                }
+
+                // ------------------------------------
+                // ----- Check if User has 1 Plan  ----
+                // ------------------------------------
+                List<Plan> plansList = new ArrayList<>();
+                PlanDao daoPlan = db.planDao();
+                plansList = daoPlan.listPlans();
+
+                if (!plansList.isEmpty()) {
+                    for (Plan item : plansList) {
+                        if (item.active == true) {
+                            thisPlan = item;
+                        }
+                    }
+                }
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ReloadRecyclerView();
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+    // ---------------------------------------------------
+    // ---------------- Reload Workouts ------------------
+    // ---------------------------------------------------
+    public void ReloadRecyclerView() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+
+                // ------------------------------------
+                // ----- Check if User has 1 Plan  ----
+                // ------------------------------------
+                List<Plan> plansList = new ArrayList<>();
+                PlanDao daoPlan = db.planDao();
+                plansList = daoPlan.listPlans();
+
+                if (!plansList.isEmpty()) {
+                    for (Plan item : plansList) {
+                        if (item.active == true) {
+                            thisPlan = item;
+                        }
+                    }
+                }
+
+                displayedWorkouts = new ArrayList<>();
+                WorkoutDao daoW = db.workoutDao();
+
+                List<Workout> workoutList = new ArrayList<>();
+
+                workoutList = daoW.listWorkouts();
+
+                if (!workoutList.isEmpty()) {
+
+                    for (Workout item : workoutList) {
+                        if (item.plan_Id == thisPlan.id) {
+                            displayedWorkouts.add(item);
+                        }
+                    }
+                }
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //ChangeUIVisibility();
+
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //  Set Recycler View Adapter
+                                adapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(Workout item) {
+                                        Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+                                        intent.putExtra("SelectedUser", user);
+                                        intent.putExtra("SelectedPlan", thisPlan);
+                                        intent.putExtra("SelectedWorkout", item);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onItemLongClick(Workout item) {
+                                        EditWorkout(item);
+                                    }
+
+                                });
+                                // Display Workouts in Recycler View
+                                //recyclerView.setAdapter(adapter);
+                                // recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+                                count.setText(String.valueOf(displayedWorkouts.size()));
+                                ChangeUIVisibility();
+
+
+                            }
+                        }, 3000); // 3000 milliseconds = 3 seconds
+
+                        // ----------------------
+
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+    // --------------------------------------------
+    // ----------- Load Data and Display ----------
+    // ------------- on Recycler View -------------
+    // --------------------------------------------
+    public void LoadData2() {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         UserDataDao dao = db.userDataDao();
@@ -510,12 +734,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         intent.putExtra("SelectedWorkout", item);
                         startActivity(intent);
                     }
-                });
 
-                // Display Recycler View
+                    @Override
+                    public void onItemLongClick(Workout item) {
+                        EditWorkout(item);
+                    }
+
+
+                });
+                // Display Workouts in Recycler View
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
 
                 ChangeUIVisibility();
 
@@ -525,16 +754,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    // ---------------------------------------------------
-    // ---------------- Reload Workouts ------------------
-    // ---------------------------------------------------
-    public void ReloadRecyclerView() {
 
 
-        //count.setText(String.valueOf(displayedWorkouts.size()) + "/10");
-        //ChangeUIVisibility();
-    }
-
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
 
     // ----------------------------------------------
     // ------- Change UI Elements Visibility --------
@@ -542,7 +768,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ----------------------------------------------
     private void ChangeUIVisibility() {
         Button newWorkout = findViewById(R.id.NewWorkout);
-        Button ActivePlanButton = findViewById(R.id.SetActiveButton2);
         Button newPlan = findViewById(R.id.NewPlanButton);
         emptyWorkoutButton = findViewById(R.id.EmptyButton);
 
@@ -555,9 +780,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             emptyButton.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.VISIBLE);
             // -- Buttons --
-            ActivePlanButton.setVisibility(View.GONE);
             newWorkout.setVisibility(View.GONE);
             newPlan.setVisibility(View.GONE);
+            emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewPlan();
+                }
+            });
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
             // -- Plan Name --
@@ -577,7 +807,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        NewWorkout(emptyWorkoutButton);
+                        NewWorkout();
                     }
                 });
                 // -- Workout Number Count --
@@ -595,6 +825,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             // Set Plan Name with or without workouts
             planName.setText(thisPlan.planName);
+        }
+    }
+
+
+    // ---------------------------------------------------------------------
+    // --------------- Disable New Workout Button if -----------------------
+    // --------------- Number of Workouts has Reached ----------------------
+    // --------------- The Limit (Above 10)   ------------------------------
+    // ---------------------------------------------------------------------
+    private void CheckWorkoutLimit() {
+        count.setText(String.valueOf(displayedWorkouts.size()) + "/10");
+
+        if (displayedWorkouts.size() >= 10) {
+            Button newWorkout = findViewById(R.id.NewWorkout);
+            newWorkout.setVisibility(View.GONE);
         }
     }
 
@@ -627,21 +872,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    // ---------------------------------------------------------------------
-    // --------------- Disable New Workout Button if -----------------------
-    // --------------- Number of Workouts has Reached ----------------------
-    // --------------- The Limit (Above 10)   ------------------------------
-    // ---------------------------------------------------------------------
-    private void CheckWorkoutLimit() {
-        count.setText(String.valueOf(displayedWorkouts.size()) + "/10");
-
-        if (displayedWorkouts.size() >= 10) {
-            Button newWorkout = findViewById(R.id.NewWorkout);
-            newWorkout.setVisibility(View.GONE);
-        }
-    }
-
-
 
     // -----------------------------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------
@@ -656,7 +886,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                // Get local Time Date
                 LocalDate date = LocalDate.now();
 
                 // Create New Workout DataBase
@@ -668,28 +898,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 newPlan.active = isActiveOrNot;
                 newPlan.createdDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
+                // Insert Plan in Database
+                PlanService planService = new PlanService();
+                planService.addPlan(getApplicationContext(), newPlan);
 
-                ///////////////////////////////////////////////////////////////////////////
-                ///////////////////////////////////////////////////////////////////////////
-                ///////////////////////////////////////////////////////////////////////////
-
-                new Thread(new Runnable() {
+                // Waite before apply in UI
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        PlanDao dao = db.planDao();
-
-                        dao.insertPlan(newPlan);
-
                         ShowAnotherPlan(newPlan);
-
+                        ReloadRecyclerView();
                     }
-                }).start();
-
-
-                // Reload Recycle View
-                ReloadRecyclerView();
+                }, 300); // 3000 milliseconds = 3 seconds
 
             }
         }).start();
@@ -708,58 +928,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LocalDate date = LocalDate.now();
         newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
 
-        // Access Database
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        WorkoutDao dao = db.workoutDao();
+        // Insert Workout in Database
+        WorkoutService workoutService = new WorkoutService();
+        workoutService.addExercise(getApplicationContext(), newWorkout);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                dao.insertWorkout(newWorkout);
-            }
-        }).start();
-
-        ReloadRecyclerView();
     }
 
 
-    // --------------------------------------------------
-    // ------------------ Active Plan -------------------
-    // --------------------------------------------------
-    public void ActivePlan(Plan plan) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-            }
-        }).start();
-
-        // Variables
-        Plan deactivePlan = new Plan();
-        List<Plan> planList = new ArrayList<>();
-
-        // Access Database
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
-        // List All Plans from Databse
-        planList = dao.listPlans();
-
-        // Select only the Last Active Plan
-        for (Plan item : planList) {
-            if (item.active == true) {
-                deactivePlan = item;
-            }
-        }
-    }
-
-
-    /////////////////////////////////////////
-    /////////////// TESTE ///////////////////
-    /////////////////////////////////////////
-
-    public void teste(View view) {
-        ChangeUIVisibility();
-    }
+    //////////////////////// END ////////////////////////
 }

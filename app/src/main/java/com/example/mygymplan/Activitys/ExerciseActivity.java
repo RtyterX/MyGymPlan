@@ -1,9 +1,12 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Services.WorkoutService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -80,6 +84,7 @@ public class ExerciseActivity extends AppCompatActivity {
             "Triceps"};
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,15 +143,13 @@ public class ExerciseActivity extends AppCompatActivity {
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
         // ------------------------------------------------------
-
         adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, types);
         autoComplete.setAdapter(adapterItem);
         autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(ExerciseActivity.this, "Item selected: " + item, Toast.LENGTH_SHORT).show();
-
+                // Apply Type in Exercise
                 exerciseService.ApplyExerciseType(thisExercise, item);
             }
         });
@@ -155,7 +158,7 @@ public class ExerciseActivity extends AppCompatActivity {
         // ------------------------------------------------------
         // -------------------- Buttons -------------------------
         // ------------------------------------------------------
-
+        /////////////////// IMAGE BUTTON TEST ///////////////////
         exerciseImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -172,13 +175,16 @@ public class ExerciseActivity extends AppCompatActivity {
         saveExercise.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+
                 SaveExerciseValues();
+
 
                 // ------------------
                 ChangeActivity();
+
+
             }
         });
-
 
 
         // -------------------------------------------
@@ -187,12 +193,9 @@ public class ExerciseActivity extends AppCompatActivity {
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 DeleteWarning();
-
             }
         });
-
 
 
         // -------------------------------------------
@@ -209,9 +212,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
                             SaveExerciseValues();
-
                         }
                     }).start();
                 }
@@ -220,7 +221,6 @@ public class ExerciseActivity extends AppCompatActivity {
                 ChangeActivity();
             }
         });
-
 
 
         // -------------------------------------------
@@ -250,7 +250,6 @@ public class ExerciseActivity extends AppCompatActivity {
 
 
     }
-
 
 
     // ---------------------------------------------------------------------------------------------------------
@@ -290,7 +289,6 @@ public class ExerciseActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     // ----------------------------------------
@@ -419,6 +417,9 @@ public class ExerciseActivity extends AppCompatActivity {
             // Save new Exercise
             exerciseService.saveExercise(getApplicationContext(), thisExercise);
         }
+        // Update Last Modified Date in Workout
+        WorkoutService workoutService = new WorkoutService();
+        workoutService.saveWorkout(getApplicationContext(), thisWorkout);
         // ------------------------------------------------------------------------
     }
 
@@ -465,4 +466,5 @@ public class ExerciseActivity extends AppCompatActivity {
   
     }
 
+    //////////////////////// END ////////////////////////
 }

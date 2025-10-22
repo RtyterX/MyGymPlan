@@ -37,7 +37,7 @@ public class WorkoutDuration extends AppCompatActivity {
         maxTime = maxTime / 60;
 
         // Return String
-        return minTime + "min - " + maxTime + "min";
+        return minTime + " - " + maxTime + "min";
     }
 
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Services.ExerciseService;
 
 import java.util.List;
 
@@ -25,16 +23,23 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         void onItemClick(Exercise item);
     }
 
+    public interface OnItemClickDelete {
+        void deleteButtonClick(int position);
+    }
+
     Context context;
     List<Exercise> exerciseList;
     OnItemClickListener onListener;
 
+    OnItemClickDelete deleteListener;
+
 
     // Constructor
-    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener) {
+    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener, OnItemClickDelete deleteListener) {
         this.context = context;
         this.exerciseList = exerciseList;
         this.onListener = onListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -53,8 +58,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        ExerciseService exerciseService = new ExerciseService();
-
         // Text Views
         holder.textViewName.setText(exerciseList.get(position).eName);
         holder.textViewType.setText(exerciseList.get(position).eType.toString());
@@ -63,17 +66,19 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewRest.setText(String.valueOf(exerciseList.get(position).eRest));
         holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
         holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
+
+        // Delete Button
         holder.buttonDeleteExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exerciseService.deleteExercise(context,exerciseList.get(position));
+                deleteListener.deleteButtonClick(position);
             }
         });
 
         // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
 
-        // On Item Click
+        // On Item Click ( Everything inside "bind()" )
         holder.bind(exerciseList.get(position), onListener);
     }
 

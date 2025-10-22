@@ -47,6 +47,12 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "lastModified")
     public String lastModified;
 
+    @ColumnInfo(name = "order")
+    public int order;
+
+    @ColumnInfo(name = "plan_Id")
+    public int plan_Id;
+
     @ColumnInfo(name = "workout_Id")
     public int workout_Id;
 

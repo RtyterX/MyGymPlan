@@ -1,5 +1,6 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.example.mygymplan.Database.UserDataDao;
 public class WelcomeActivity extends AppCompatActivity {
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,4 +88,5 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
+    //////////////////////// END ////////////////////////
 }

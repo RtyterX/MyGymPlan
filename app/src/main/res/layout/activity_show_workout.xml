@@ -53,12 +53,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RecycleViewWorkouts"
+            android:id="@+id/RV_WorkoutsMain"
             android:layout_width="410dp"
             android:layout_height="616dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RecyclerView2">
+            app:layout_constraintTop_toBottomOf="@+id/RV_WorkoutsHorizontal">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -69,50 +69,51 @@
             android:layout_marginTop="144dp"
             android:text="VOCE AINDA NAO TEM NENHUM EXERCISE"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts"
+            app:layout_constraintEnd_toEndOf="@+id/RV_WorkoutsMain"
             app:layout_constraintHorizontal_bias="0.506"
-            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts"
-            app:layout_constraintTop_toTopOf="@+id/RecycleViewWorkouts" />
+            app:layout_constraintStart_toStartOf="@+id/RV_WorkoutsMain"
+            app:layout_constraintTop_toTopOf="@+id/RV_WorkoutsMain" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="400dp"
-            android:layout_height="55dp"
+            android:layout_width="361dp"
+            android:layout_height="69dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <Button
-                android:id="@+id/CreateNewExercise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="72dp"
-                android:text="New Exercise"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" >
 
             <Button
                 android:id="@+id/AddExercise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
+                android:layout_width="177dp"
+                android:layout_height="49dp"
+                android:layout_marginEnd="108dp"
+                android:text="Add"
                 android:onClick="AddExercise"
-                android:text="Add Exercise"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/CreateNewExercise"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/CreateNewExercise"
+                android:layout_width="177dp"
+                android:layout_height="49dp"
+                android:text="Create"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/AddExercise"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
             android:id="@+id/HelpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="55dp"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            app:layout_constraintBottom_toBottomOf="@id/main"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="@id/main"
             app:srcCompat="@drawable/plan_help_icon" />
 
@@ -127,7 +128,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RecyclerView2"
+            android:id="@+id/RV_WorkoutsHorizontal"
             android:layout_width="336dp"
             android:layout_height="58dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -144,9 +145,9 @@
         android:fitsSystemWindows="true"
         android:textColor="@color/white"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
         app:itemIconTint="@color/blue2"
         app:itemTextColor="@color/blue1"
+        app:menu="@menu/nav_menu"
         tools:visibility="gone" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

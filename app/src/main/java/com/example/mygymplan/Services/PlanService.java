@@ -8,6 +8,11 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Entitys.Plan;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlanService {
 
     // ---------------------------------------------------------------------------------------------------
@@ -56,6 +61,36 @@ public class PlanService {
             }
         }).start();
 
+    }
+
+    // --------------------------------------------------
+    // ------------------ Active Plan -------------------
+    // --------------------------------------------------
+    public void ActivePlan(Context context, Plan plan) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();
+
+        // Variables
+        Plan deactivePlan = new Plan();
+        List<Plan> planList = new ArrayList<>();
+
+        // Access Database
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
+        // List All Plans from Database
+        planList = dao.listPlans();
+
+        // Select only the Last Active Plan
+        for (Plan item : planList) {
+            if (item.active == true) {
+                deactivePlan = item;
+            }
+        }
     }
 
 }
