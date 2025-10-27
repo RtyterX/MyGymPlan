@@ -17,6 +17,7 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Database.UserDataDao;
+import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomePage5 extends AppCompatActivity {
 
@@ -42,12 +43,12 @@ public class WelcomePage5 extends AppCompatActivity {
 
 
         // Components
-        Button next = findViewById(R.id.StartPlanningButton);
+        Button confirm = findViewById(R.id.StartPlanningButton);
         Button back = findViewById(R.id.backSlideButton);
 
 
         // Button
-        next.setOnClickListener(new View.OnClickListener() {
+        confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -61,6 +62,9 @@ public class WelcomePage5 extends AppCompatActivity {
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         UserDataDao dao = db.userDataDao();
                         dao.insertUser(user);
+
+                        SavedExerciseService savedExerciseService = new SavedExerciseService();
+                        savedExerciseService.ConvertStringToSavedExercises();
 
                         runOnUiThread(new Runnable() {
                             @Override

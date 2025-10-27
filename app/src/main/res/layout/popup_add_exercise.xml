@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/BackgroundAddExercise"
+        android:layout_width="359dp"
+        android:layout_height="506dp"
+        android:background="@color/material_dynamic_neutral95"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@android:color/transparent" />
+
+    <Button
+        android:id="@+id/MyExercisesButton"
+        android:layout_width="140dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="40dp"
+        android:text="My Exercises"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/AddExerciseTitle" />
+
+    <Button
+        android:id="@+id/DatabaseExercisesButton"
+        android:layout_width="140dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="36dp"
+        android:text="Database"
+        app:layout_constraintEnd_toStartOf="@+id/MyExercisesButton"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/AddExerciseTitle" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/AddExerciseRV"
+        android:layout_width="317dp"
+        android:layout_height="325dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/DatabaseExercisesButton" />
+
+    <Button
+        android:id="@+id/CloseAddExercise"
+        android:layout_width="128dp"
+        android:layout_height="35dp"
+        android:background="@android:color/transparent"
+        android:text="Close"
+        android:textColor="@color/blue1"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundAddExercise"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/AddExerciseRV" />
+
+    <TextView
+        android:id="@+id/AddExerciseTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Add Exercise"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundAddExercise" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

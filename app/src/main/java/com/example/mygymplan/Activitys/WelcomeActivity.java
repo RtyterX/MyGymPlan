@@ -19,6 +19,7 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Database.UserDataDao;
+import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -68,6 +69,9 @@ public class WelcomeActivity extends AppCompatActivity {
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         UserDataDao dao = db.userDataDao();
                         dao.insertUser(user);
+
+                        SavedExerciseService savedExerciseService = new SavedExerciseService();
+                        savedExerciseService.ConvertStringToSavedExercises();
 
                         runOnUiThread(new Runnable() {
                             @Override

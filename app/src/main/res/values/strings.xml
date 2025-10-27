@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">My Gym Plan</string>
+    <!-- Drawer / Navigation Bar-->
+    <string name="OpenDrawer">Open NaviBar</string>
+    <string name="CloseDrawer">Close NaviBar</string>
 </resources>

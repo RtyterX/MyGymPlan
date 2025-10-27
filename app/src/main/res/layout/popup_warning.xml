@@ -17,10 +17,13 @@
 
     <TextView
         android:id="@+id/WarningMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="213dp"
+        android:layout_height="50dp"
         android:layout_marginTop="28dp"
         android:text="Warning Message"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/viewTeste3"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/viewTeste3"
@@ -31,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="12dp"
         android:text="Close"
         app:layout_constraintStart_toStartOf="@+id/viewTeste3"
         app:layout_constraintTop_toBottomOf="@+id/WarningMessage" />
@@ -40,7 +42,6 @@
         android:id="@+id/ConfirmWarningButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginEnd="64dp"
         android:text="Confirm"
         app:layout_constraintEnd_toEndOf="@+id/viewTeste3"

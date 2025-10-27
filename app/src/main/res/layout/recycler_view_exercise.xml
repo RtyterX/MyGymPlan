@@ -11,7 +11,7 @@
         android:id="@+id/BackgroundRVExercise"
         android:layout_width="407dp"
         android:layout_height="111dp"
-        android:background="#1EC1BFF8"
+        android:background="#F5EEFC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
         app:layout_constraintEnd_toStartOf="@+id/DeleteWorkoutIcon" />
 
     <ImageButton
-        android:id="@+id/ChangeOrderExercise"
+        android:id="@+id/SwapPositionsExerciseRV"
         android:layout_width="42dp"
         android:layout_height="95dp"
         android:background="@android:color/transparent"
@@ -100,7 +100,7 @@
             android:layout_height="73dp"
             android:layout_marginStart="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ChangeOrderExercise"
+            app:layout_constraintStart_toEndOf="@+id/SwapPositionsExerciseRV"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 

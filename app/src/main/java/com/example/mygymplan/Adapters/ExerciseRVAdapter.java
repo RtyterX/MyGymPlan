@@ -27,19 +27,26 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         void deleteButtonClick(int position);
     }
 
+    public interface OnItemLongClickSwapPositions {
+        void swapButtonLongClick(int position);
+    }
+
     Context context;
     List<Exercise> exerciseList;
     OnItemClickListener onListener;
 
     OnItemClickDelete deleteListener;
 
+    OnItemLongClickSwapPositions onSwapListener;
+
 
     // Constructor
-    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener, OnItemClickDelete deleteListener) {
+    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener, OnItemClickDelete deleteListener, OnItemLongClickSwapPositions onSwapListener) {
         this.context = context;
         this.exerciseList = exerciseList;
         this.onListener = onListener;
         this.deleteListener = deleteListener;
+        this.onSwapListener = onSwapListener;
     }
 
     @NonNull
@@ -67,8 +74,17 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
         holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
 
+        // Swap Positions Button
+        holder.swapPositionButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onSwapListener.swapButtonLongClick(position);
+                return true;
+            }
+        });
+
         // Delete Button
-        holder.buttonDeleteExercise.setOnClickListener(new View.OnClickListener() {
+        holder.deleteExerciseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteListener.deleteButtonClick(position);
@@ -99,7 +115,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewRest;
         TextView textViewLoad;
         TextView textViewLastMod;
-        ImageButton buttonDeleteExercise;
+        ImageButton swapPositionButton;
+        ImageButton deleteExerciseButton;
         ImageView imageView;
 
         // Constructor
@@ -113,7 +130,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             textViewRest = itemView.findViewById(R.id.RecyclerExerciseRest);
             textViewLoad = itemView.findViewById(R.id.RecyclerExerciseLoad);
             textViewLastMod = itemView.findViewById(R.id.LastModifiedExercise);
-            buttonDeleteExercise = itemView.findViewById(R.id.DeleteWorkoutIcon);
+            swapPositionButton = itemView.findViewById(R.id.SwapPositionsExerciseRV);
+            deleteExerciseButton = itemView.findViewById(R.id.DeleteWorkoutIcon);
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
 
 

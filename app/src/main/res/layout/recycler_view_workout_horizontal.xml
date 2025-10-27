@@ -27,6 +27,7 @@
         android:maxLines="1"
         android:text="Workout"
         android:textAlignment="center"
+        android:textAllCaps="true"
         android:textSize="14dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"

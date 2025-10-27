@@ -3,31 +3,42 @@ package com.example.mygymplan.Activitys;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Adapters.ExerciseRVAdapter;
 import com.example.mygymplan.Adapters.WorkoutRVAdapterHorizontal;
 import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Database.SavedExerciseDao;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
@@ -36,13 +47,14 @@ import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.Services.NavigationBar;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class WorkoutActivity extends AppCompatActivity  {
 
-    // Entity's Data
     UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
@@ -51,6 +63,17 @@ public class WorkoutActivity extends AppCompatActivity  {
     TextView showName;
     List<Exercise> displayedExercises;
     List<Workout> displayedWorkouts;
+
+// -------------------------------------------------------------
+    // Add Exercise Teste
+    List<SavedExercise> myExercises;
+    List<SavedExercise> databaseExercises;
+    SavedExerciseRVAdapter myExerciseAdapter;
+    SavedExerciseRVAdapter databaseAdapter;
+    Exercise newExercise;
+
+    // -------------------------------------------------------------
+
 
     // Drawer NaviBar
     DrawerLayout drawerLayout;
@@ -61,6 +84,8 @@ public class WorkoutActivity extends AppCompatActivity  {
     RecyclerView horizontalRecyclerView;        // Workout Recycler View (Horizontal)
     ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
     TextView emptyView;                         // Show Text When Recycler View is Empty
+
+    ItemTouchHelper mIth;
 
     // --> For Tests Only
     Button testButton;
@@ -102,15 +127,15 @@ public class WorkoutActivity extends AppCompatActivity  {
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                        // Find Toolbar
         setSupportActionBar(toolbar);                                                         // Set Toolbar as ActionBar
-        Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.mygymplan_logo);     // Set Logo on Toolbar (Not Null enforceable by IDE)
         drawerLayout = findViewById(R.id.DrawerLayout);                                       // Find DrawerLayout
-        navigationView = findViewById(R.id.NavView);
-        NavigationBar naviBar = new NavigationBar();
-        navigationView.setNavigationItemSelectedListener(naviBar);
+        navigationView = findViewById(R.id.NavView);                                          // Find Navigation View
+        NavigationBar naviBar = new NavigationBar();                                          // Set Navigation Drawer
+        navigationView.setNavigationItemSelectedListener(naviBar);                            // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+                drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);            // Set ActionBar (Hamburger Menu)
+        drawerLayout.addDrawerListener(toggle);                                               // Set Click on ActionBar
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);  // Lock NaviBar Swipe Right Gesture to Open
+        toggle.syncState();                                                                   // Sync with drawer state (Open/Close)
 
 
         // -------------------------------------------------------------------
@@ -152,6 +177,42 @@ public class WorkoutActivity extends AppCompatActivity  {
             }
         });
 
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        mIth = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                        0) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+
+                        final int fromPos = viewHolder.getBindingAdapterPosition();
+                        final int toPos = target.getBindingAdapterPosition();
+
+                        Exercise exercise1 = displayedExercises.get(fromPos);
+                        Exercise exercise2 = displayedExercises.get(toPos);
+
+                        Collections.swap(displayedExercises, fromPos, toPos);
+                        exerciseAdapter.notifyItemMoved(fromPos, toPos);
+
+                        ExerciseService exerciseService = new ExerciseService();
+                        exerciseService.changeExerciseOrder(getApplicationContext(), exercise1, exercise2);
+
+                        showName.setText("Posicao 1: " + fromPos + " - Posicao 2: " + toPos);
+
+                        return true;// true if moved, false otherwise
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        // Has no Swipe action
+
+                    }
+                });
+
+
     }
 
 
@@ -160,6 +221,127 @@ public class WorkoutActivity extends AppCompatActivity  {
     // ------------------------- FUNCTIONS -------------------------------
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
+
+    // ----------------------------------------------
+    // --------- Add Exercise From Database ---------
+    // ----------------------------------------------
+    public void AddExercise() {
+        // Open new Popup where user create a new Plan
+        // -------------------------------------------------------
+        // Inflate Activity with a new View
+        View popupView = View.inflate(this, R.layout.popup_add_exercise, null);
+
+        ExerciseService exerciseService = new ExerciseService();
+
+        // Popup View UI Content
+        Button MyExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
+        Button DatabaseButton = popupView.findViewById(R.id.DatabaseExercisesButton);
+        Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
+        RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
+
+                // Initialize List
+                myExercises = new ArrayList<>();
+                List<SavedExercise> allExercises;
+
+                // List All Exercises
+                allExercises = dao.listSavedExercise();
+
+                // ---------- MY EXERCISES ----------
+                if (!allExercises.isEmpty()) {
+                    for (SavedExercise item : allExercises) {
+                        if (item.userCreated) {
+                            myExercises.add(item);
+                        }
+                    }
+                }
+
+                // ---------- DATABASE ----------
+                if (!allExercises.isEmpty()) {
+                    for (SavedExercise item : allExercises) {
+                        if (!item.userCreated) {
+                            myExercises.add(item);
+                        }
+                    }
+                }
+
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ------ Show Recycler View (My Exercises when Open) ------
+                        myExerciseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(SavedExercise item) {
+                                AddExerciseToWorkout(item);
+                                popupWindow.dismiss();
+                            }
+                        });
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Display Exercises inside the Recycler View
+                                addExerciseRV.setAdapter(myExerciseAdapter);
+                                addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+                            }
+                        }, 500); // 3000 milliseconds = 3 seconds
+
+                    }
+                });
+            }
+        }).start();
+
+
+        // ------ Buttons ------
+        MyExercisesButton.setOnClickListener(v -> {
+            // ------ Show Recycler View (My Exercises when Open) ------
+            SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    AddExerciseToWorkout(item);
+                    popupWindow.dismiss();
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(myExerciseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+        });
+
+        DatabaseButton.setOnClickListener(v -> {
+            // ------ Show Recycler View (My Exercises when Open) ------
+            databaseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    AddExerciseToWorkout(item);
+                    popupWindow.dismiss();
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(databaseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+        });
+
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+
+    }
+
 
     // --------------------------------------------
     // ----------- Load Data and Display ----------
@@ -184,19 +366,22 @@ public class WorkoutActivity extends AppCompatActivity  {
             public void run() {
                 // Initialize List
                 displayedWorkouts = new ArrayList<>();
-                List<Workout> workoutList = new ArrayList<>();
+                List<Workout> allWorkouts = new ArrayList<>();
 
                 // List All Workouts
-                workoutList = dao.listWorkouts();
+                allWorkouts = dao.listWorkouts();
 
                 // Remove Workouts from other Plans
-                if (!workoutList.isEmpty()) {
-                    for (Workout item : workoutList) {
+                if (!allWorkouts.isEmpty()) {
+                    for (Workout item : allWorkouts) {
                         if (item.plan_Id == thisPlan.id) {
-                            displayedWorkouts.add(item);
+                            displayedWorkouts.add(item.order, item);
                         }
                     }
                 }
+
+                // Sort by Order
+                displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
@@ -224,6 +409,7 @@ public class WorkoutActivity extends AppCompatActivity  {
     // -------- Reload Exercise Recycler View -------
     // ----------------------------------------------
     public void UpdateRecyclerView(Workout workout) {
+
         // Access Database
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         ExerciseDao dao = db.exerciseDao();
@@ -233,7 +419,7 @@ public class WorkoutActivity extends AppCompatActivity  {
             public void run() {
                 // Initialize List
                 displayedExercises = new ArrayList<>();
-                List<Exercise>  newList = dao.listExercise();
+                List<Exercise> newList = dao.listExercise();
 
                 // Add to List only the Exercises from this Workout
                 for (Exercise e : newList) {
@@ -242,10 +428,14 @@ public class WorkoutActivity extends AppCompatActivity  {
                     }
                 }
 
+                // Sort by Order
+                displayedExercises.sort((e1, e2) -> Integer.compare(e1.order, e2.order));
+
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         // ----- Set Exercise Adapter -----
                         exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
                             @Override
@@ -257,46 +447,25 @@ public class WorkoutActivity extends AppCompatActivity  {
                             public void deleteButtonClick(int position) {
                                 DeleteFromRecyclerView(position);
                             }
+                        }, new ExerciseRVAdapter.OnItemLongClickSwapPositions() {
+                            @Override
+                            public void swapButtonLongClick(int position) {
+
+                            }
                         });
                         // Display Exercises inside the Recycler View
                         recyclerView.setAdapter(exerciseAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
                         // Then Check if Need to Change the UI...
                         ChangeUIVisibility();
+                        // Attach Item Touch to RecyclerView
+                        mIth.attachToRecyclerView(recyclerView);
+
+
                     }
                 });
             }
         }).start();
-    }
-
-
-    // ----------------------------------------------
-    // ------ Create New Exercise From Scratch ------
-    // ----------------------------------------------
-    public void CreateNewExercise() {
-        Exercise newExercise = new Exercise();
-
-        // New Exercise default values
-        newExercise.plan_Id = thisPlan.id;
-        newExercise.workout_Id = thisWorkout.id;
-        newExercise.eName = "1";
-        newExercise.eDescription = "Description Here...";
-        newExercise.eSets = 0;
-        newExercise.eReps = 0;
-        newExercise.eRest = 0;
-        newExercise.eLoad = 0;
-        newExercise.order = displayedExercises.size() + 1;
-
-        // Change Activity
-        ChangeToExercise(newExercise);
-    }
-
-
-    // ----------------------------------------------
-    // --------- Add Exercise From Database ---------
-    // ----------------------------------------------
-    public void AddExercise() {
-        // Not Created
     }
 
 
@@ -317,12 +486,52 @@ public class WorkoutActivity extends AppCompatActivity  {
 
 
     // ----------------------------------------------
+    // ------ Create New Exercise From Scratch ------
+    // ----------------------------------------------
+    public void CreateNewExercise() {
+        Exercise newExercise = new Exercise();
+
+        // New Exercise default values
+        newExercise.plan_Id = thisPlan.id;
+        newExercise.workout_Id = thisWorkout.id;
+        newExercise.eName = "1";
+        newExercise.eDescription = "Description Here...";
+        newExercise.eSets = 0;
+        newExercise.eReps = 0;
+        newExercise.eRest = 0;
+        newExercise.eLoad = 0;
+        newExercise.order = displayedExercises.size();
+
+        // Change Activity
+        ChangeToExercise(newExercise);
+    }
+
+
+    // ----------------------------------------------
+    // -------- Delete a Specific Row From ----------
+    // ---------- Exercises Recycler View -----------
+    // ----------------------------------------------
+    public void AddExerciseToWorkout(SavedExercise savedExercise) {
+        ExerciseService exerciseService = new ExerciseService();
+        // --------------------------------------
+        newExercise = exerciseService.ConvertExercise(savedExercise,
+                displayedExercises.size() + 1,thisPlan.id, thisWorkout.id);
+        // --------------------------------------
+        exerciseService.addExercise(getApplicationContext(), newExercise);
+        exerciseAdapter.notifyItemRangeRemoved(0, exerciseAdapter.getItemCount());
+        UpdateRecyclerView(thisWorkout);
+        ChangeUIVisibility();
+    }
+
+
+    // ----------------------------------------------
     // -------- Delete a Specific Row From ----------
     // ---------- Exercises Recycler View -----------
     // ----------------------------------------------
     public void DeleteFromRecyclerView(int position) {
         ExerciseService exerciseService = new ExerciseService();
-        exerciseService.deleteExercise(getApplicationContext(), displayedExercises.get(position));
+        // --------------------------------------
+        exerciseService.deleteExercise(getApplicationContext(), newExercise);
         displayedExercises.remove(position);
         exerciseAdapter.notifyItemRemoved(position);
         // Need to wait for animation when is the last Exercise in List

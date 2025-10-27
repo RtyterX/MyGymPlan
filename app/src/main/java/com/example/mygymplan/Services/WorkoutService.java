@@ -9,7 +9,27 @@ import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+
 public class WorkoutService extends AppCompatActivity {
+
+    // ---------------------------------------------------------------------------------------------------
+    public Workout ConverterWorkout(String name, String description, WorkoutType type, int planId) {
+        // Create New Workout DataBase
+        Workout newWorkout = new Workout();
+        newWorkout.plan_Id = planId;
+        newWorkout.wName = name;
+        newWorkout.wDescription = description;
+        newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
+
+        LocalDate date = LocalDate.now();
+        newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+
+        return newWorkout;
+
+    }
 
 
     // ---------------------------------------------------------------------------------------------------

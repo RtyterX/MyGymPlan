@@ -9,8 +9,8 @@
 
     <View
         android:id="@+id/BackgroundRVWorkout"
-        android:layout_width="408dp"
-        android:layout_height="97dp"
+        android:layout_width="400dp"
+        android:layout_height="99dp"
         android:background="#1EC1BFF8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,54 +23,52 @@
         android:layout_width="105dp"
         android:layout_height="91dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.516"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutName"
         android:layout_width="103dp"
         android:layout_height="20dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
         android:text="Workout Name"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/RecyclerWorkoutDescription"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Workout Enum"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/RecyclerWorkoutDescription"
-        app:layout_constraintHorizontal_bias="0.406"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutName" />
 
     <TextView
         android:id="@+id/RecyclerWorkoutDescription"
-        android:layout_width="153dp"
-        android:layout_height="69dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="132dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
         android:maxLines="4"
         android:text="Descrição: Teste here"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintVertical_bias="0.428" />
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <TextView
         android:id="@+id/WorkoutDurationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="6dp"
         android:text="Duration: "
         android:textAlignment="center"
@@ -101,11 +99,21 @@
 
     <TextView
         android:id="@+id/LastModifiedTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="44dp"
+        android:layout_height="16dp"
         android:text="LastMod: "
         android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/LastModifiedWorkout"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
+        app:srcCompat="@drawable/spheres_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

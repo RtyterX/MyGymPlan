@@ -49,7 +49,6 @@
             android:layout_width="398dp"
             android:layout_height="519dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/NewPlanButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PlanNameText">
@@ -71,15 +70,7 @@
             app:layout_constraintTop_toBottomOf="@+id/EmptyRVText"
             app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/NewWorkout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:onClick="NewWorkout"
-            android:text="New Workout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/RecycleViewWorkouts" />
+
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
@@ -91,39 +82,61 @@
             android:theme="@style/ToolbarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/mygymplan_logo"
+                android:layout_marginEnd="50sp"/>
+
+            </androidx.appcompat.widget.Toolbar>
 
         <TextView
             android:id="@+id/RVCount"
             android:layout_width="40dp"
             android:layout_height="24dp"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:text="Count"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts" />
 
-        <Button
-            android:id="@+id/NewPlanButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:onClick="NewPlan"
-            android:text="New Plan"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts" />
 
-        <Button
-            android:id="@+id/SetActiveButton2"
-            android:layout_width="99dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:onClick="teste"
-            android:text="Active"
-            app:layout_constraintEnd_toEndOf="@+id/toolbar2"
-            app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
+            android:layout_width="361dp"
+            android:layout_height="69dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <Button
+                android:id="@+id/NewPlanButton"
+                android:layout_width="150dp"
+                android:layout_height="49dp"
+                android:layout_marginStart="30dp"
+                android:onClick="NewPlan"
+                android:text="New Plan"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/NewWorkout"
+                android:layout_width="150dp"
+                android:layout_height="49dp"
+                android:onClick="NewWorkout"
+                android:text="New Workout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/NewPlanButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,16 +14,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/NewWorkoutNameText"
-            android:layout_width="342dp"
-            android:layout_height="446dp"
+        <ImageView
+            android:id="@+id/NewWorkoutBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="#F1F1FF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.243" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/NewWorkoutName"
@@ -64,8 +65,7 @@
             android:inputType="textMultiLine"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/NewWorkoutNameText"
-            app:layout_constraintHorizontal_bias="0.657"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/NewWorkoutName" />
 
@@ -122,8 +122,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.483"
-            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -133,8 +132,7 @@
             android:layout_height="56dp"
             android:hint="Workout Type"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.625"
-            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WorkoutTypeTitle">
 
 
@@ -142,20 +140,23 @@
                 android:id="@+id/AutoCompleteNewWorkouts"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
-                android:inputType="none" />
+                android:inputType="none"
+                tools:layout_editor_absoluteX="23dp"
+                tools:layout_editor_absoluteY="328dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/NameWorkoutWarning"
             android:layout_width="307dp"
             android:layout_height="25dp"
-            android:layout_marginStart="20dp"
             android:text="Name Cant be Null. Choose a name with: more than 3 charaters"
             android:textColor="#BA0202"
             android:textSize="10sp"
             android:textStyle="italic"
             android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.509"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/NewWorkoutName" />
 
         <TextView
@@ -163,11 +164,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="72dp"
             android:text="Description can be Null, but need to be more than 5 characters"
             android:textColor="#BA0202"
             android:textSize="10sp"
             android:textStyle="italic"
             android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
             app:layout_constraintTop_toBottomOf="@+id/NewWorkoutDescription" />
 
@@ -175,13 +178,14 @@
             android:id="@+id/TypeWorkoutWarning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:text="Choose a Type"
             android:textColor="#BA0202"
             android:textSize="10sp"
             android:textStyle="italic"
             android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="@+id/NewWorkoutNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.077"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <Button
@@ -189,8 +193,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"
-            app:layout_constraintEnd_toEndOf="@+id/NewWorkoutNameText"
-            app:layout_constraintTop_toTopOf="@+id/NewWorkoutNameText" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/NewWorkoutBackground" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

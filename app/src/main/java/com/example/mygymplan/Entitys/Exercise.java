@@ -56,5 +56,7 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "workout_Id")
     public int workout_Id;
 
+    @ColumnInfo(name = "savedExercise_Id")
+    public int savedExercise_Id;
 
 }
