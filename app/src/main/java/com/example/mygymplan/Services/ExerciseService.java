@@ -75,6 +75,7 @@ public class ExerciseService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -92,6 +93,7 @@ public class ExerciseService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -108,6 +110,7 @@ public class ExerciseService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -169,6 +172,7 @@ public class ExerciseService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
     // ---------------------------------------------------------------------------------------------------

@@ -16,23 +16,6 @@ import java.util.Objects;
 public class WorkoutService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
-    public Workout ConverterWorkout(String name, String description, WorkoutType type, int planId) {
-        // Create New Workout DataBase
-        Workout newWorkout = new Workout();
-        newWorkout.plan_Id = planId;
-        newWorkout.wName = name;
-        newWorkout.wDescription = description;
-        newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
-
-        LocalDate date = LocalDate.now();
-        newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
-
-        return newWorkout;
-
-    }
-
-
-    // ---------------------------------------------------------------------------------------------------
     public void addExercise(Context context, Workout workout) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
@@ -45,6 +28,7 @@ public class WorkoutService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -61,6 +45,7 @@ public class WorkoutService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -78,6 +63,7 @@ public class WorkoutService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -89,6 +75,23 @@ public class WorkoutService extends AppCompatActivity {
 
         saveWorkout(context, workout1);
         saveWorkout(context, workout2);
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------
+    public Workout ConverterWorkout(String name, String description, WorkoutType type, int planId) {
+        // Create New Workout DataBase
+        Workout newWorkout = new Workout();
+        newWorkout.plan_Id = planId;
+        newWorkout.wName = name;
+        newWorkout.wDescription = description;
+        newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
+
+        LocalDate date = LocalDate.now();
+        newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+
+        return newWorkout;
+
     }
 
 

@@ -32,7 +32,7 @@
             android:id="@+id/PlanNameText"
             android:layout_width="213dp"
             android:layout_height="32dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="My Workout Plan"
@@ -40,7 +40,6 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
@@ -48,8 +47,9 @@
             android:id="@+id/RecycleViewWorkouts"
             android:layout_width="398dp"
             android:layout_height="519dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.461"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PlanNameText">
 
