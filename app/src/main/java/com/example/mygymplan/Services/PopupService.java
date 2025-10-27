@@ -33,12 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PopupService extends AppCompatActivity {
-
     Workout newWorkout;
 
     public void NewPlanPopup(Context context, MainActivity mainActivity, String username) {
-        // Open new Popup where user create a new Plan
-        // -------------------------------------------------------
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_plan, null);
 
@@ -60,16 +57,17 @@ public class PopupService extends AppCompatActivity {
 
         // ------ Buttons ------
         confirmButton.setOnClickListener(v -> {
+            // --------------------------------------------------------------------
             if (newPlanName.getText().toString().isEmpty()) {
                 newPlanNameWarning.setVisibility(View.VISIBLE);
             } else if (newPlanDescription.getText().toString().isEmpty()) {
                 newPlanDescripWarning.setVisibility(View.VISIBLE);
             } else {
 
+                PlanService planService = new PlanService();
+
                 // Inflate Activity with a new View
                 View subView = View.inflate(context, R.layout.popup_warning, null);
-
-                PlanService planService = new PlanService();
 
                 // Popup View UI Content
                 TextView popupText = subView.findViewById(R.id.WarningMessage);
@@ -92,10 +90,10 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.CovertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
+                    Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.ShowAnotherPlan(newPlan);
+                    //mainActivity.ShowAnotherPlan(newPlan);
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -103,16 +101,16 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.CovertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
+                    Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.ShowAnotherPlan(newPlan);
+                   // mainActivity.ShowAnotherPlan(newPlan);
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
                 });
             }
-
+            // --------------------------------------------------------------------
         });
 
         closeButton.setOnClickListener(v -> {
@@ -122,9 +120,6 @@ public class PopupService extends AppCompatActivity {
 
 
     public void NewWorkoutPopup(Context context, MainActivity mainActivity, int planId) {
-        // -------------------------------------------------------
-        // Open new Popup where user create a new Plan
-        // -------------------------------------------------------
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -142,10 +137,7 @@ public class PopupService extends AppCompatActivity {
         // Type Selection
         AutoCompleteTextView autoComplete = popupView.findViewById(R.id.AutoCompleteNewWorkouts);
         ArrayAdapter<String> adapterItem;
-
-        // ------------------------------------
         // ------------ Enum ------------------
-        // ------------------------------------
         String[] typeInView = {
                 "Chest",
                 "Back",
@@ -154,7 +146,6 @@ public class PopupService extends AppCompatActivity {
                 "Legs",
                 "Biceps",
                 "Triceps"};
-
 
 
         // Initialize new Popup View
@@ -180,7 +171,6 @@ public class PopupService extends AppCompatActivity {
 
                 WorkoutService workoutService = new WorkoutService();
                 workoutService.ApplyWorkoutType(newWorkout, item);
-
             }
         });
 
@@ -228,9 +218,6 @@ public class PopupService extends AppCompatActivity {
     }
 
     public void EditWorkoutPopup(Context context, MainActivity mainActivity, Workout workout) {
-        // -------------------------------------------------------
-        // Open new Popup where user create a new Plan
-        // -------------------------------------------------------
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -249,10 +236,7 @@ public class PopupService extends AppCompatActivity {
         // Type Selection
         AutoCompleteTextView autoComplete = popupView.findViewById(R.id.AutoCompleteNewWorkouts);
         ArrayAdapter<String> adapterItem;
-
-        // ------------------------------------
         // ------------ Enum ------------------
-        // ------------------------------------
         String[] typeInView = {
                 "Chest",
                 "Back",
@@ -261,7 +245,6 @@ public class PopupService extends AppCompatActivity {
                 "Legs",
                 "Biceps",
                 "Triceps"};
-
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -289,7 +272,6 @@ public class PopupService extends AppCompatActivity {
 
                 WorkoutService workoutService = new WorkoutService();
                 workoutService.ApplyWorkoutType(workout, item);
-
             }
         });
 
@@ -313,7 +295,6 @@ public class PopupService extends AppCompatActivity {
     }
 
 
-
     ////////////////////////////////////////////////////////////////////
     ///////////////////////// NOT IN USE //////////////////////////////
     ///////////////////////////////////////////////////////////////////
@@ -322,9 +303,6 @@ public class PopupService extends AppCompatActivity {
     //------------------- Change Plan --------------------
     //----------------------------------------------------
     public void ChangePlan(Context context, MainActivity mainActivity) {
-        // -------------------------------------------------------
-        // Open new Popup where user create a new Plan
-        // -------------------------------------------------------
         // --- Inflate Activity with a new View ---
         View popupView = View.inflate(context, R.layout.popup_change_plan, null);
 
@@ -341,16 +319,15 @@ public class PopupService extends AppCompatActivity {
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // Database
                 List<Plan> plansList = new ArrayList<>();
-                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-                PlanDao dao = db.planDao();
-
                 plansList = dao.listPlans();
-                //plansList.add(thisPlan);
 
                 // Set Recycler View Adapter
                 PlanRVAdapter adapterPlan = new PlanRVAdapter(context, plansList, new PlanRVAdapter.OnItemClickListener() {
@@ -368,6 +345,38 @@ public class PopupService extends AppCompatActivity {
             }
         }).start();
 
+        db.close();
+    }
+
+
+    //----------------------------------------------------
+    //-------------------- About Us ----------------------
+    //----------------------------------------------------
+    public void AboutUsPopup(Context context) {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_warning, null);
+
+        // Popup View UI Content
+        TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // Set Text Warning
+        popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
+
+        // Buttons
+        confirmButton.setVisibility(View.GONE);
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
     }
 
 }

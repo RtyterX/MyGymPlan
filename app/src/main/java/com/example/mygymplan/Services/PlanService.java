@@ -30,6 +30,7 @@ public class PlanService {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -46,6 +47,7 @@ public class PlanService {
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -63,8 +65,10 @@ public class PlanService {
             }
         }).start();
 
+        db.close();
     }
 
+    // ---------------------------------------------------------------------------------------------------
     public void CreateNewPlan(String name, String description, boolean isActiveOrNot, Context context, String username) {
         new Thread(new Runnable() {
             @Override
@@ -89,7 +93,8 @@ public class PlanService {
 
     }
 
-    public Plan CovertPlan(String name, String description, String author, boolean isActiveOrNot) {
+    // ---------------------------------------------------------------------------------------------------
+    public Plan ConvertPlan(String name, String description, String author, boolean isActiveOrNot) {
         // Get local Time Date
         LocalDate date = LocalDate.now();
 
@@ -105,9 +110,7 @@ public class PlanService {
         return newPlan;
     }
 
-    // --------------------------------------------------
-    // ------------------ Active Plan -------------------
-    // --------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------
     public void ActivePlan(Context context, Plan plan) {
         new Thread(new Runnable() {
             @Override

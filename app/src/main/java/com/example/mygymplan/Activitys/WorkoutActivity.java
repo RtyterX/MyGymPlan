@@ -247,12 +247,13 @@ public class WorkoutActivity extends AppCompatActivity  {
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        SavedExerciseDao dao = db.savedExerciseDao();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                SavedExerciseDao dao = db.savedExerciseDao();
 
                 // Initialize List
                 myExercises = new ArrayList<>();
@@ -305,6 +306,8 @@ public class WorkoutActivity extends AppCompatActivity  {
                 });
             }
         }).start();
+
+        db.close();
 
 
         // ------ Buttons ------
@@ -466,6 +469,8 @@ public class WorkoutActivity extends AppCompatActivity  {
                 });
             }
         }).start();
+
+        db.close();
     }
 
 

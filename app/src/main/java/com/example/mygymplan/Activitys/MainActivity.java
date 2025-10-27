@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     ItemTouchHelper mIth;
 
+    PopupService popupService = new PopupService();
+
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -152,8 +154,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // ---- Show Workouts in Recycle View or -----
-        // ---- Display Create From Scratch button --
-        LoadData2();
+        // ---- Display Create From Scratch button --\
+        CheckUser();
+
+        //LoadData2();
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Code to execute after the delay
+                // This code runs on the UI thread
+                CheckPlan();
+                // newReloadRecyclerView();
+                // Teste(displayedWorkouts);
+
+            }
+        }, 2000); // 3000 milliseconds = 3 seconds
+
+
 
 
         // -------------------------------------------
@@ -163,7 +181,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         newPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewPlan();
+                // newReloadRecyclerView();
+                Teste(displayedWorkouts);
             }
         });
 
@@ -181,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------- Create New Plan  --------------------
     // ------------------------------------------------------
     public void NewPlan() {
-        PopupService popupService = new PopupService();
         popupService.NewPlanPopup(this, this, user.name);
     }
 
@@ -191,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
 
     public void NewWorkout() {
-        PopupService popupService = new PopupService();
         popupService.NewWorkoutPopup(this, this, thisPlan.id);
     }
 
@@ -200,16 +217,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------- Edit Workout ------------------------
     // ------------------------------------------------------
     private void EditWorkout(Workout workout) {
-        PopupService popupService = new PopupService();
         popupService.EditWorkoutPopup(this, this, workout);
     }
-
 
 
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
     // ------------------------------------------------------
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         // -----------------------------------------------------------------------------
@@ -227,29 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {
-            // Open a Popup talking about the app
-            // -------------------------------------------------------
-            // Inflate Activity with a new View
-            View popupView = View.inflate(this, R.layout.popup_warning, null);
-
-            // Popup View UI Content
-            TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
-            Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
-            Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
-
-            // Initialize new Popup View
-            PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-            // Set Text Warning
-            popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
-
-            // Close Buttons
-            confirmButton.setVisibility(View.GONE);
-            closeButton.setOnClickListener(v -> {
-                popupWindow.dismiss();
-            });
-
+            popupService.AboutUsPopup(this);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.TestButton) {
@@ -273,87 +265,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////// NOT WORKING //////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////
-
-    // --------------------------------------------
-    // ----------- Load Data and Display ----------
-    // ------------- on Recycler View -------------
-    // --------------------------------------------
-    public void LoadData() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        UserDataDao dao = db.userDataDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // ------------------------------------
-                // ----- Check if User is created -----
-                // ------------------------------------
-                List<UserData> userList = dao.listUserData();
-
-                if (userList.isEmpty()) {
-                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    user = userList.get(0);
-                }
-
-                // ------------------------------------
-                // ----- Check if User has 1 Plan  ----
-                // ------------------------------------
-                List<Plan> plansList = new ArrayList<>();
-                PlanDao daoPlan = db.planDao();
-                plansList = daoPlan.listPlans();
-
-                if (!plansList.isEmpty()) {
-                    for (Plan item : plansList) {
-                        if (item.active == true) {
-                            thisPlan = item;
-                        }
-                    }
-                }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReloadRecyclerView();
-                    }
-                });
-            }
-        }).start();
-    }
-
-
     // ---------------------------------------------------
     // ---------------- Reload Workouts ------------------
     // ---------------------------------------------------
-    public void ReloadRecyclerView() {
+    public void ReloadRecyclerView2() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
-                // ------------------------------------
-                // ----- Check if User has 1 Plan  ----
-                // ------------------------------------
-                List<Plan> plansList = new ArrayList<>();
-                PlanDao daoPlan = db.planDao();
-                plansList = daoPlan.listPlans();
-
-                if (!plansList.isEmpty()) {
-                    for (Plan item : plansList) {
-                        if (item.active == true) {
-                            thisPlan = item;
-                        }
-                    }
-                }
 
                 displayedWorkouts = new ArrayList<>();
                 WorkoutDao daoW = db.workoutDao();
@@ -403,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 // recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
                                 count.setText(String.valueOf(displayedWorkouts.size()));
-                                ChangeUIVisibility();
+                                // ChangeUIVisibility();
 
 
                             }
@@ -415,13 +336,170 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
             }
         }).start();
+
+        db.close();
     }
+
+
+
+
+
+
+
+
+
+
 
 
     // --------------------------------------------
     // ----------- Load Data and Display ----------
     // ------------- on Recycler View -------------
     // --------------------------------------------
+    public void CheckUser() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        UserDataDao dao = db.userDataDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // ------------------------------------
+                // ----- Check if User is created -----
+                // ------------------------------------
+                List<UserData> userList = dao.listUserData();
+
+                if (userList.isEmpty()) {
+                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                } else {
+                    user = userList.get(0);
+                }
+
+            }
+        }).start();
+
+        db.close();
+    }
+
+
+    public void CheckPlan() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // ------------------------------------
+                // ----- Check if User has 1 Plan  ----
+                // ------------------------------------
+                List<Plan> plansList = new ArrayList<>();
+                PlanDao daoPlan = db.planDao();
+                plansList = daoPlan.listPlans();
+
+                if (!plansList.isEmpty()) {
+                    for (Plan item : plansList) {
+                        if (item.active == true) {
+                            thisPlan = item;
+                        }
+                    }
+                }
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        planName.setText(thisPlan.planName);
+
+
+                    }
+                });
+            }
+        }).start();
+
+        db.close();
+        newReloadRecyclerView();
+    }
+
+
+
+    public void newReloadRecyclerView() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        WorkoutDao daoW = db.workoutDao();
+        displayedWorkouts = new ArrayList<>();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<Workout> workoutList = new ArrayList<>();
+
+                workoutList = daoW.listWorkouts();
+
+                if (!workoutList.isEmpty()) {
+                    planName.setText("Plan ID: " + thisPlan.id);
+
+                    for (Workout item : workoutList) {
+                        if (item.plan_Id == thisPlan.id) {
+                            displayedWorkouts.add(item);
+                        }
+                    }
+                }
+                // Sort by Order
+                displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        count.setText(displayedWorkouts.size() + "/10");
+
+
+                    }
+                });
+
+            }
+        }).start();
+
+        db.close();
+        // Teste(displayedWorkouts);
+    }
+
+
+
+
+public void Teste(List<Workout> list) {
+    WorkoutRVAdapter adapter1 = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(Workout item) {
+            Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+            intent.putExtra("SelectedUser", user);
+            intent.putExtra("SelectedPlan", thisPlan);
+            intent.putExtra("SelectedWorkout", item);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onItemLongClick(Workout item) {
+            EditWorkout(item);
+        }
+
+
+    });
+    // Display Workouts in Recycler View
+    recyclerView.setAdapter(adapter1);
+    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+}
+
+
+
+
+
+
+
     public void LoadData2() {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -499,7 +577,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-                ChangeUIVisibility();
+               //  ChangeUIVisibility();
 
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
@@ -513,6 +591,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }).start();
 
+        db.close();
     }
 
 
@@ -527,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------- Change UI Elements Visibility --------
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
-    private void ChangeUIVisibility() {
+    private void ChangeUIVisibility2() {
         Button newWorkout = findViewById(R.id.NewWorkout);
         Button newPlan = findViewById(R.id.NewPlanButton);
         emptyWorkoutButton = findViewById(R.id.EmptyButton);
@@ -582,7 +661,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 emptyButton.setVisibility(View.GONE);
                 emptyText.setVisibility(View.GONE);
 
-                CheckWorkoutLimit();
+                // CheckWorkoutLimit();
             }
             // Set Plan Name with or without workouts
             planName.setText(thisPlan.planName);
@@ -595,8 +674,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // --------------- Number of Workouts has Reached ----------------------
     // --------------- The Limit (Above 10)   ------------------------------
     // ---------------------------------------------------------------------
-    private void CheckWorkoutLimit() {
-        count.setText(String.valueOf(displayedWorkouts.size()) + "/10");
+    private void CheckWorkoutLimit2() {
+        count.setText(displayedWorkouts.size() + "/10");
 
         if (displayedWorkouts.size() >= 10) {
             Button newWorkout = findViewById(R.id.NewWorkout);
@@ -608,16 +687,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // -------------------------------------------------------
     // ---------- Display Another Plan on Screen  ------------
     // -------------------------------------------------------
-    public void ShowAnotherPlan(Plan plan) {
+    public void ShowAnotherPlan2(Plan plan) {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 List<Plan> plansList = new ArrayList<>();
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                PlanDao dao = db.planDao();
-
                 plansList = dao.listPlans();
 
                 for (Plan item : plansList) {
@@ -626,9 +704,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
 
-                ReloadRecyclerView();
+                // ReloadRecyclerView();
             }
         }).start();
+
+        db.close();
 
     }
 

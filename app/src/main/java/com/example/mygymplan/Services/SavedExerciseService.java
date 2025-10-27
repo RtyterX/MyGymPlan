@@ -27,6 +27,8 @@ public class SavedExerciseService extends AppCompatActivity {
                 dao.insertSavedExercise(savedExercise);
             }
         }).start();
+
+        db.close();
     }
 
     public void updateUserExerciseInDatabase(Context context, SavedExercise savedExercise) {
@@ -40,6 +42,8 @@ public class SavedExerciseService extends AppCompatActivity {
                 dao.updateSavedExercise(savedExercise);
             }
         }).start();
+
+        db.close();
     }
 
     public void deleteUserExerciseInDatabase(Context context, SavedExercise savedExercise) {
@@ -53,6 +57,8 @@ public class SavedExerciseService extends AppCompatActivity {
                 dao.deleteSavedExercise(savedExercise);
             }
         }).start();
+
+        db.close();
     }
 
 }

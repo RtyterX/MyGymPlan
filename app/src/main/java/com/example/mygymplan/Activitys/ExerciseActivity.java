@@ -48,7 +48,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExerciseActivity extends AppCompatActivity {
 
-
     UserData user;
     Plan thisPlan;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity

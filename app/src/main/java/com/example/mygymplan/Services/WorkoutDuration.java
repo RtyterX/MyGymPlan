@@ -40,4 +40,40 @@ public class WorkoutDuration extends AppCompatActivity {
         return minTime + " - " + maxTime + "min";
     }
 
+    public String CalculateDurationTime2(Context context, Workout workout) {
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        ExerciseDao dao = db.exerciseDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<Exercise> allExercises = new ArrayList<>();
+
+                // Remove Any Exercise that is not from this Workout
+                allExercises.removeIf(item -> item.workout_Id != workout.id);
+
+                for (Exercise item : allExercises) {
+                    // Calculate Individually by each Exercise inside the Workout
+                    minTime += ((item.eSets * (item.eReps * 4)) + (item.eSets * item.eRest));
+                    maxTime += ((item.eSets * (item.eReps * 12)) + (item.eSets * item.eRest));
+                }
+
+                // Divide by Minute
+                minTime = minTime / 60;
+                maxTime = maxTime / 60;
+
+            }
+        }).start();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //
+            }
+        }, 3000); // 3000 milliseconds = 3 seconds
+        // Return String
+        return minTime + " - " + maxTime + "min";
+    }
+
 }

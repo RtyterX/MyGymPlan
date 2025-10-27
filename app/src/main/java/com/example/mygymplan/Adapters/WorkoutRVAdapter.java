@@ -76,19 +76,19 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         holder.bind(workoutList.get(position), onListener);
 
         // Calculate Workout Duration Time
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        //new Thread(new Runnable() {
+            //@Override
+            //public void run() {
 
-                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-                ExerciseDao dao = db.exerciseDao();
+                //AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+               // ExerciseDao dao = db.exerciseDao();
 
-                listExercises = dao.listExercise();
+               // listExercises = dao.listExercise();
 
-                holder.textViewDuration.setText(workoutDuration.CalculateDurationTime(workoutList.get(position), listExercises));
+               // holder.textViewDuration.setText(workoutDuration.CalculateDurationTime(workoutList.get(position), listExercises));
 
-            }
-        }).start();
+           // }
+      //  }).start();
     }
 
     @Override
