@@ -9,6 +9,8 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,6 +35,7 @@ public class TesteActivity extends AppCompatActivity {
 
         Button resetPreferences = findViewById(R.id.ResetSharedPreferences);
         Button backButton = findViewById(R.id.BackTestButton);
+        SwitchCompat darkThemeSwitch = findViewById(R.id.DarkThemeSwitch);
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
@@ -58,7 +61,21 @@ public class TesteActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        darkThemeSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+            }
+        });
     }
+
+
 
     public void DeleteDataBase(View view) {
         new Thread(new Runnable() {

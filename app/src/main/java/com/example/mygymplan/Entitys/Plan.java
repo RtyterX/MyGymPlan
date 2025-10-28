@@ -21,14 +21,14 @@ public class Plan implements Serializable {
     @ColumnInfo(name = "description")
     public String planDescription;
 
+    @ColumnInfo(name = "active")
+    public Boolean active;
+
     @ColumnInfo(name = "author")
     public String author;
 
     @ColumnInfo(name = "createdDate")
     public String createdDate;
-
-    @ColumnInfo(name = "active")
-    public Boolean active;
 
     @ColumnInfo(name = "pro")
     public Boolean pro;

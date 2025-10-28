@@ -12,30 +12,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reset Preferences"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.836"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
-
-    <Button
-        android:id="@+id/show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:onClick="show"
-        android:text="Show Exercises"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/DeleteDataBase" />
 
     <Button
         android:id="@+id/BackTestButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="108dp"
+        android:layout_height="55dp"
         android:text="Back"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.049"
@@ -48,11 +35,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="DeleteDataBase"
-        android:text="Reset App"
+        android:text="Reset Database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.218" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/DarkThemeSwitch"
+        android:layout_width="217dp"
+        android:layout_height="101dp"
+        android:text="Dark Theme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ResetSharedPreferences" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
