@@ -8,10 +8,10 @@
     tools:context=".Activitys.TesteActivity">
 
     <Button
-        android:id="@+id/CreateNewExercise1"
+        android:id="@+id/ResetSharedPreferences"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create New Exercise"
+        android:text="Reset Preferences"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.836"

@@ -1,6 +1,9 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -16,8 +19,8 @@ import com.example.mygymplan.R;
 
 public class WelcomePage4 extends AppCompatActivity {
 
-    UserData user;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +34,6 @@ public class WelcomePage4 extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // ----- Received Data From Another Activity -----
-        Intent intent = getIntent();
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
-
 
         // Components
         Button type1 = findViewById(R.id.NewUserBodyType1);
@@ -46,11 +45,14 @@ public class WelcomePage4 extends AppCompatActivity {
         type1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("bodyType", 1);    // Type 1
+                editor.apply();
 
-                user.bodyType = 1;
-
+                // Change Activity
                 Intent intent = new Intent(WelcomePage4.this, WelcomePage5.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });
@@ -58,11 +60,14 @@ public class WelcomePage4 extends AppCompatActivity {
         type2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("bodyType", 2);    // Type 2
+                editor.apply();
 
-                user.bodyType = 2;
-
+                // Change Activity
                 Intent intent = new Intent(WelcomePage4.this, WelcomePage5.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });
@@ -72,7 +77,6 @@ public class WelcomePage4 extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(WelcomePage4.this, WelcomePage3.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });

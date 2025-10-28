@@ -1,7 +1,9 @@
 package com.example.mygymplan.Activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +21,6 @@ import com.example.mygymplan.R;
 import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomeActivity extends AppCompatActivity {
-
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -52,37 +53,31 @@ public class WelcomeActivity extends AppCompatActivity {
 
         });
 
+
+        //////////////////////// FOR TESTING //////////////////////////////////////
+
         skip.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                UserData user = new UserData();
-                user.name = "No Name";
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+                editor.putString("username", "No Name");
+                editor.putString("email", "teste@gmail.com");
+                editor.putInt("bodyType", 1);
+                editor.putString("language", "English");
+                editor.putBoolean("poundsOverKg", false);
+                editor.putBoolean("isPro", false);
+                // ----------- FUTURE IDEAS ------------
+                // Height
+                // Weight
 
-                        // Save New User in Database
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        UserDataDao dao = db.userDataDao();
-                        dao.insertUser(user);
+                editor.apply();
 
-                        SavedExerciseService savedExerciseService = new SavedExerciseService();
-                        savedExerciseService.ConvertStringToSavedExercises();
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                                intent.putExtra("SelectedUser", user);
-                                startActivity(intent);
-
-                            }
-                        });
-                    }
-
-                }).start();
+                // Change Activity
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                startActivity(intent);
             }
 
         });

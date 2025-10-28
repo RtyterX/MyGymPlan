@@ -2,6 +2,7 @@ package com.example.mygymplan.Activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
 
@@ -31,7 +31,7 @@ public class TesteActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button createNewExercise = findViewById(R.id.CreateNewExercise1);
+        Button resetPreferences = findViewById(R.id.ResetSharedPreferences);
         Button backButton = findViewById(R.id.BackTestButton);
 
         // ----- Received Data From Another Activity -----
@@ -39,19 +39,14 @@ public class TesteActivity extends AppCompatActivity {
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
-        createNewExercise.setOnClickListener(new View.OnClickListener() {
+        resetPreferences.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Exercise newExercise = new Exercise();
-                newExercise.eName = "New Exercise";
-
-                Intent intent = new Intent(TesteActivity.this, ExerciseActivity.class);
-                intent.putExtra("SelectedExercise", newExercise);
-
-                startActivity(intent);
-
+                // Reset Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
             }
         });
 
@@ -60,7 +55,6 @@ public class TesteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TesteActivity.this, MainActivity.class);
-
                 startActivity(intent);
             }
         });

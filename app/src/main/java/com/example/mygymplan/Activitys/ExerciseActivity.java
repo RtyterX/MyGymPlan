@@ -46,7 +46,6 @@ import java.util.TimerTask;
 
 public class ExerciseActivity extends AppCompatActivity {
 
-    UserData user;
     Plan thisPlan;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
@@ -108,7 +107,6 @@ public class ExerciseActivity extends AppCompatActivity {
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
@@ -543,7 +541,6 @@ public class ExerciseActivity extends AppCompatActivity {
     private void ChangeActivity() {
 
         Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
-        intent.putExtra("SelectedUser", user);
         intent.putExtra("SelectedPlan", thisPlan);
         intent.putExtra("SelectedWorkout", thisWorkout);
 

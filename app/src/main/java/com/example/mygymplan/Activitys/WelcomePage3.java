@@ -1,6 +1,9 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +20,9 @@ import com.example.mygymplan.R;
 
 public class WelcomePage3 extends AppCompatActivity {
 
-    UserData user;
+    String email;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +37,8 @@ public class WelcomePage3 extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        // ----- Received Data From Another Activity -----
-        Intent intent = getIntent();
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
-
-
         // Components
-        EditText email = findViewById(R.id.NewUserEmail);
+        EditText newUserEmail = findViewById(R.id.NewUserEmail);
         Button next = findViewById(R.id.NextPageButton2);
         Button back = findViewById(R.id.backSlideButton);
 
@@ -48,11 +47,17 @@ public class WelcomePage3 extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get value from EditText
+                email = newUserEmail.getText().toString();
 
-                user.email = email.getText().toString();
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("email", email);
+                editor.apply();
 
+                // Change Activity
                 Intent intent = new Intent(WelcomePage3.this, WelcomePage4.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });
@@ -62,7 +67,6 @@ public class WelcomePage3 extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(WelcomePage3.this, WelcomePage2.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });

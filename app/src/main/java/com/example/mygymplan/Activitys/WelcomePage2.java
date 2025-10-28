@@ -1,6 +1,9 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +20,9 @@ import com.example.mygymplan.R;
 
 public class WelcomePage2 extends AppCompatActivity {
 
-    UserData user;
-    String name;
+    String username;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,7 @@ public class WelcomePage2 extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+
         // Components
         EditText newUseName = findViewById(R.id.NewUserName);
         Button next = findViewById(R.id.NextPageButton1);
@@ -43,14 +47,17 @@ public class WelcomePage2 extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get value from EditText
+                username = newUseName.getText().toString();
 
-                name = newUseName.getText().toString();
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("username", username);
+                editor.apply();
 
-                user = new UserData();
-                user.name = name;
-
+                // Change Activity
                 Intent intent = new Intent(WelcomePage2.this, WelcomePage3.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });

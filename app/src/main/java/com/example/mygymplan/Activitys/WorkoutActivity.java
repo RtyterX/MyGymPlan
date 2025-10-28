@@ -54,7 +54,6 @@ import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    UserData user;
     public Plan thisPlan;
     public Workout thisWorkout;
 
@@ -110,7 +109,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
@@ -178,7 +176,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             public void onClick(View v) {
                 // Change back to Main Activity
                 Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
-                intent.putExtra("SelectedUser", user);
                 intent.putExtra("SelectedPlan", thisPlan);
                 startActivity(intent);
             }
@@ -593,7 +590,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ----------------------------------------------
     public void ChangeToExercise(Exercise item) {
         Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
-        intent.putExtra("SelectedUser", user);
         intent.putExtra("SelectedPlan", thisPlan);
         intent.putExtra("SelectedWorkout", thisWorkout);
         intent.putExtra("SelectedExercise", item);

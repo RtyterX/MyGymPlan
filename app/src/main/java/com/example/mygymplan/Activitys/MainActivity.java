@@ -1,7 +1,9 @@
 package com.example.mygymplan.Activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -40,12 +42,17 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    UserData user;
+
+
     Plan thisPlan;
     List<Workout> displayedWorkouts;
+
+    // Shared Preferences
+    String username;
 
     // UI Elements
     TextView planName;
@@ -88,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
 
 
         // --- Components ---
@@ -136,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
-        // CheckUser();
-        CheckPlan();
+        CheckUser();
+        // CheckPlan();
 
 
         // -------------------------------------------
@@ -196,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------- Create New Plan  --------------------
     // ------------------------------------------------------
     public void NewPlan() {
-        popupService.NewPlanPopup(this, this, user.name);
+        popupService.NewPlanPopup(this, this, username);
     }
 
 
@@ -264,30 +270,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- on Recycler View -------------
     // --------------------------------------------
     public void CheckUser() {
+        // Check if is First time opening App
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        UserDataDao dao = db.userDataDao();
+        username = sharedPreferences.getString("username", "");
+        planName.setText(username);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        if (Objects.equals(username, "")) {
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+        }
 
-                // ------------------------------------
-                // ----- Check if User is created -----
-                // ------------------------------------
-                List<UserData> userList = dao.listUserData();
-
-                if (userList.isEmpty()) {
-                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    user = userList.get(0);
-                }
-
-            }
-        }).start();
-
-        db.close();
+        //////////////// NOT IMPLEMENTED //////////////
+        // Check if User is Pro
+        // CheckPro();
     }
 
 
@@ -378,7 +374,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(Workout item) {
                 Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedUser", user);
                 intent.putExtra("SelectedPlan", thisPlan);
                 intent.putExtra("SelectedWorkout", item);
                 startActivity(intent);

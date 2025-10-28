@@ -1,6 +1,9 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -19,8 +22,7 @@ import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomePage5 extends AppCompatActivity {
 
-    UserData user;
-
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +37,6 @@ public class WelcomePage5 extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        // ----- Received Data From Another Activity -----
-        Intent intent = getIntent();
-        user = (UserData) intent.getSerializableExtra("SelectedUser");
-
-
         // Components
         Button confirm = findViewById(R.id.StartPlanningButton);
         Button back = findViewById(R.id.backSlideButton);
@@ -50,33 +47,19 @@ public class WelcomePage5 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                user.isPro = false;
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                // Set Pro is False (buy later)
+                editor.putBoolean("isPro", false);
+                // All to Other Options
+                editor.putString("language", "English");
+                editor.putBoolean("poundsOverKg", false);
+                editor.apply();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // Save New User in Database
-                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                        UserDataDao dao = db.userDataDao();
-                        dao.insertUser(user);
-
-                        SavedExerciseService savedExerciseService = new SavedExerciseService();
-                        savedExerciseService.ConvertStringToSavedExercises();
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                Intent intent = new Intent(WelcomePage5.this, MainActivity.class);
-                                intent.putExtra("SelectedUser", user);
-                                startActivity(intent);
-
-                            }
-                        });
-                    }
-
-                }).start();
+                // Change Activity
+                Intent intent = new Intent(WelcomePage5.this, MainActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -86,7 +69,6 @@ public class WelcomePage5 extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(WelcomePage5.this, WelcomePage4.class);
-                intent.putExtra("SelectedUser", user);
                 startActivity(intent);
             }
         });
