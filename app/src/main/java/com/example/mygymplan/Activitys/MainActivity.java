@@ -29,10 +29,8 @@ import androidx.room.Room;
 import com.example.mygymplan.Adapters.WorkoutRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
-import com.example.mygymplan.Database.UserDataDao;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
-import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Services.PopupService;
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
-        CheckUser();
+        // CheckUser();
         CheckPlan();
 
 
@@ -231,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_change_plan) {
-            // ChangePlan();
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            startActivity(intent);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {

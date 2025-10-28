@@ -18,7 +18,7 @@ public interface SavedExerciseDao {
     List<SavedExercise> listSavedExercise();
 
     @Insert
-    void insertSavedExercise(SavedExercise... savedExercises);
+    void insertSavedExercise(SavedExercise... savedExercise);
 
     @Update
     void updateSavedExercise(SavedExercise... savedExercise);

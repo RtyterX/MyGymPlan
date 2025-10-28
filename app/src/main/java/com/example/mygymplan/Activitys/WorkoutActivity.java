@@ -41,7 +41,6 @@ import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Services.ExerciseService;
@@ -49,8 +48,6 @@ import com.example.mygymplan.Services.NavigationBar;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

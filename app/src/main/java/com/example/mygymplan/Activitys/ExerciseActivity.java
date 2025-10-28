@@ -34,7 +34,6 @@ import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Services.TimerService;
 import com.example.mygymplan.Services.WorkoutService;

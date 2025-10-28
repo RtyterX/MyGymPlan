@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mygymplan.R;
-import com.example.mygymplan.Entitys.UserData;
 
 public class WelcomePage3 extends AppCompatActivity {
 

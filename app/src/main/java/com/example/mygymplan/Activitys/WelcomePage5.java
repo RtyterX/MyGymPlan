@@ -15,8 +15,6 @@ import androidx.room.Room;
 
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Entitys.UserData;
-import com.example.mygymplan.Database.UserDataDao;
 import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomePage5 extends AppCompatActivity {
