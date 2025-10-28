@@ -116,17 +116,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/HelpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/app_name"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-            app:layout_constraintEnd_toEndOf="@id/main"
-            app:srcCompat="@drawable/plan_help_icon" />
-
         <Button
             android:id="@+id/BackButtonWorkout"
             android:layout_width="wrap_content"

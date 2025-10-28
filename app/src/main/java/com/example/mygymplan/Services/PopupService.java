@@ -93,7 +93,7 @@ public class PopupService extends AppCompatActivity {
                     Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                    //mainActivity.ShowAnotherPlan(newPlan);
+                    mainActivity.newReloadRecyclerView();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -104,7 +104,7 @@ public class PopupService extends AppCompatActivity {
                     Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                   // mainActivity.ShowAnotherPlan(newPlan);
+                    mainActivity.newReloadRecyclerView();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -199,12 +199,12 @@ public class PopupService extends AppCompatActivity {
             // Inset New Workout in Database
             WorkoutService workoutService = new WorkoutService();
             newWorkout = workoutService.ConverterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, planId);
-            workoutService.addExercise(context, newWorkout);
+            workoutService.addWorkout(context, newWorkout);
             // Need to wait for animation when is the last Exercise in List
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // mainActivity.ReloadRecyclerView();
+                    mainActivity.newReloadRecyclerView();
                     popupWindow.dismiss();     // Close Popup
                 }
             }, 300); // 3000 milliseconds = 3 seconds
@@ -259,11 +259,16 @@ public class PopupService extends AppCompatActivity {
         newWorkoutName.setText(workout.wName);
         newWorkoutDescription.setText(workout.wDescription);
 
+        // ----------------------------------
+
+
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
         // ------------------------------------------------------
+        autoComplete.setText(workout.wType.toString());
         adapterItem = new ArrayAdapter<String>(context, R.layout.enum_list, typeInView);
         autoComplete.setAdapter(adapterItem);
+
         autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -277,16 +282,26 @@ public class PopupService extends AppCompatActivity {
 
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
+            // Set Variables
             workout.wName = newWorkoutName.getText().toString();
             workout.wDescription = newWorkoutDescription.getText().toString();
-
+            // Update Workout
             WorkoutService workoutService = new WorkoutService();
-            workoutService.saveWorkout(getApplicationContext(), workout);
+            workoutService.updateWorkout(context, workout);
+            // Change Activity
+            mainActivity.newReloadRecyclerView();
+            // Close Popup
+            popupWindow.dismiss();
         });
 
         deleteButton.setOnClickListener(v -> {
+            // Delete Workout
             WorkoutService workoutService = new WorkoutService();
-            workoutService.deleteWorkout(getApplicationContext(), workout);
+            workoutService.deleteWorkout(context, workout);
+            // Change Activity
+            mainActivity.newReloadRecyclerView();
+            // Close Popup
+            popupWindow.dismiss();
         });
 
         closeButton.setOnClickListener(v -> {

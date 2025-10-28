@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.Entitys.Workout;
@@ -23,13 +24,15 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
     Context context;
     List<Workout> workoutList;
     OnItemClickListener onListener;
+    public int selectedPosition;
 
 
     // Constructor
-    public WorkoutRVAdapterHorizontal(Context context, List<Workout> workoutList, OnItemClickListener onListener) {
+    public WorkoutRVAdapterHorizontal(Context context, List<Workout> workoutList, OnItemClickListener onListener, int selectedPosition) {
         this.context = context;
         this.workoutList = workoutList;
         this.onListener = onListener;
+        this.selectedPosition = selectedPosition;
     }
 
     @NonNull
@@ -47,6 +50,13 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
     public void onBindViewHolder(@NonNull WorkoutRVAdapterHorizontal.MyViewHolder holder, int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
+
+        if (selectedPosition == position) {
+            holder.backgroundView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.grayBG));
+        } else {
+           holder.backgroundView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.selectedBG));
+        }
+
         holder.textViewName.setText(workoutList.get(position).wName);
 
         // On Item Click
@@ -64,6 +74,7 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
         TextView textViewName;
+        View backgroundView;
 
 
         // Constructor
@@ -71,15 +82,14 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutHorizontalName);
+            backgroundView = itemView.findViewById(R.id.BackgroundRVWorkout);
         }
 
         public void bind(Workout item, OnItemClickListener onlistener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    onlistener.onItemClick(item);
-                }
+                public void onClick(View v) { onlistener.onItemClick(item); }
             });
 
         }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -45,6 +46,7 @@ import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.Services.NavigationBar;
+import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.LocalDate;
@@ -53,7 +55,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WorkoutActivity extends AppCompatActivity  {
+public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     UserData user;
     public Plan thisPlan;
@@ -89,6 +91,8 @@ public class WorkoutActivity extends AppCompatActivity  {
 
     // --> For Tests Only
     Button testButton;
+
+    PopupService popupService;
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -134,8 +138,14 @@ public class WorkoutActivity extends AppCompatActivity  {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);            // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                               // Set Click on ActionBar
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);  // Lock NaviBar Swipe Right Gesture to Open
-        toggle.syncState();                                                                   // Sync with drawer state (Open/Close)
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);  // Lock NaviBar Swipe Right Gesture to Open
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        toggle.syncState();                                                                      // Sync with drawer state (Open/Close)
 
 
         // -------------------------------------------------------------------
@@ -200,9 +210,7 @@ public class WorkoutActivity extends AppCompatActivity  {
                         ExerciseService exerciseService = new ExerciseService();
                         exerciseService.changeExerciseOrder(getApplicationContext(), exercise1, exercise2);
 
-                        showName.setText("Posicao 1: " + fromPos + " - Posicao 2: " + toPos);
-
-                        return true;// true if moved, false otherwise
+                        return true;
                     }
 
                     @Override
@@ -213,6 +221,39 @@ public class WorkoutActivity extends AppCompatActivity  {
                 });
 
 
+    }
+
+    // ------------------------------------------------------
+    // ------- Switch for Navigation Bar Item List ----------
+    // ------------------------------------------------------
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.nav_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.nav_change_plan) {
+            // ChangePlan();
+        }
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.nav_settings) {
+            // Open Settings
+        }
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.nav_info) {
+            popupService.AboutUsPopup(this);
+        }
+        // -----------------------------------------------------------------------------
+        if (menuItem.getItemId() == R.id.TestButton) {
+            Intent intent = new Intent(this, TesteActivity.class);
+            startActivity(intent);
+        }
+
+        // Close Drawer after Click
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 
@@ -351,7 +392,7 @@ public class WorkoutActivity extends AppCompatActivity  {
     // ------------- on Recycler Views -------------
     // --------------------------------------------
     public void LoadData(Workout workout) {
-        WorkoutsHorizontalRecyclerView();
+        WorkoutsHorizontalRecyclerView(workout.order);
         UpdateRecyclerView(workout);
     }
 
@@ -359,7 +400,7 @@ public class WorkoutActivity extends AppCompatActivity  {
     // ----------------------------------------------
     // -------- Reload Workouts Recycler View -------
     // ----------------------------------------------
-    public void WorkoutsHorizontalRecyclerView() {
+    public void WorkoutsHorizontalRecyclerView(int position) {
         // Access Database
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         WorkoutDao dao = db.workoutDao();
@@ -395,9 +436,9 @@ public class WorkoutActivity extends AppCompatActivity  {
                             @Override
                             public void onItemClick(Workout item) {
                                 UpdateRecyclerView(item);
-                                showName.setText(item.wName);           // Just for Tests
+                                WorkoutsHorizontalRecyclerView(item.order);  // Change Color
                             }
-                        });
+                        }, position);
                         // Display Workouts inside the Recycler View
                         horizontalRecyclerView.setAdapter(workoutAdapter);
                         horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this, LinearLayoutManager.HORIZONTAL, false));

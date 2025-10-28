@@ -4,19 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.WorkoutDao;
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WorkoutService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
-    public void addExercise(Context context, Workout workout) {
+    public void addWorkout(Context context, Workout workout) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         WorkoutDao dao = db.workoutDao();
@@ -24,6 +25,10 @@ public class WorkoutService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                List<Workout> allWorkouts = new ArrayList<>();
+                allWorkouts = dao.listWorkouts();
+
+                workout.order = allWorkouts.size();
                 dao.insertWorkout(workout);
             }
         }).start();
@@ -33,7 +38,7 @@ public class WorkoutService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public void saveWorkout(Context context, Workout workout) {
+    public void updateWorkout(Context context, Workout workout) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         WorkoutDao dao = db.workoutDao();
@@ -58,8 +63,21 @@ public class WorkoutService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                // Delete Workout
                 dao.deleteWorkout(workout);
+
+                // List All Workouts
+                List<Workout> allWorkouts = new ArrayList<>();
+                allWorkouts = dao.listWorkouts();
+
+                // Alter Workout List Order
+                List<Workout> newWorkouts = new ArrayList<>();
+                for (Workout item : allWorkouts) {
+                    if (item.order >= workout.order) {
+                        item.order -= 1;
+                        dao.updateWorkout(item);
+                    }
+                }
             }
         }).start();
 
@@ -73,25 +91,23 @@ public class WorkoutService extends AppCompatActivity {
         workout1.order = workout2.order;
         workout2.order = change;
 
-        saveWorkout(context, workout1);
-        saveWorkout(context, workout2);
+        updateWorkout(context, workout1);
+        updateWorkout(context, workout2);
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public Workout ConverterWorkout(String name, String description, WorkoutType type, int planId) {
         // Create New Workout DataBase
+        LocalDate date = LocalDate.now();
         Workout newWorkout = new Workout();
         newWorkout.plan_Id = planId;
         newWorkout.wName = name;
         newWorkout.wDescription = description;
         newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
-
-        LocalDate date = LocalDate.now();
         newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
 
         return newWorkout;
-
     }
 
 

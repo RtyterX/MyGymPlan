@@ -44,7 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExerciseActivity extends AppCompatActivity {
 
@@ -534,7 +533,7 @@ public class ExerciseActivity extends AppCompatActivity {
         }
         // Update Last Modified Date in Workout
         WorkoutService workoutService = new WorkoutService();
-        workoutService.saveWorkout(getApplicationContext(), thisWorkout);
+        workoutService.updateWorkout(getApplicationContext(), thisWorkout);
         // ------------------------------------------------------------------------
     }
 

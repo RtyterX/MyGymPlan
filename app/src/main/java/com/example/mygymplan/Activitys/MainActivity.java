@@ -3,23 +3,11 @@ package com.example.mygymplan.Activitys;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -38,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.example.mygymplan.Adapters.PlanRVAdapter;
 import com.example.mygymplan.Adapters.WorkoutRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
@@ -47,18 +34,14 @@ import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.UserData;
 import com.example.mygymplan.Entitys.Workout;
-import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
-import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.PopupService;
 import com.example.mygymplan.Services.WorkoutService;
 import com.google.android.material.navigation.NavigationView;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerView;
     TextView emptyText;
     TextView count;
-    WorkoutRVAdapter adapter;
+    WorkoutRVAdapter workoutAdapter;
 
     // Drawer NaviBar
     DrawerLayout drawerLayout;
@@ -156,22 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
         CheckUser();
-
-        //LoadData2();
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Code to execute after the delay
-                // This code runs on the UI thread
-                CheckPlan();
-                // newReloadRecyclerView();
-                // Teste(displayedWorkouts);
-
-            }
-        }, 2000); // 3000 milliseconds = 3 seconds
-
-
+        CheckPlan();
 
 
         // -------------------------------------------
@@ -180,10 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         newPlan.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // newReloadRecyclerView();
-                Teste(displayedWorkouts);
-            }
+            public void onClick(View v) { NewPlan(); }
         });
 
         newWorkout.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +157,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 NewWorkout();
             }
         });
+
+
+        // ---------------------------------------------
+        // --- Swap Recycler View List Item Position ---
+        // ---------------------------------------------
+        mIth = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                        0) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+
+                        final int fromPos = viewHolder.getBindingAdapterPosition();
+                        final int toPos = target.getBindingAdapterPosition();
+
+                        Workout workout1 = displayedWorkouts.get(fromPos);
+                        Workout workout2 = displayedWorkouts.get(toPos);
+
+                        Collections.swap(displayedWorkouts, fromPos, toPos);
+                        workoutAdapter.notifyItemMoved(fromPos, toPos);
+
+                        WorkoutService workoutService = new WorkoutService();
+                        workoutService.changeWorkoutOrder(getApplicationContext(), workout1, workout2);
+
+                        return true;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        // Has no Swipe action
+                    }
+                });
 
     }
 
@@ -256,100 +254,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
     // ------------------------- FUNCTIONS -------------------------------
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
-
-
-
-    // ---------------------------------------------------
-    // ---------------- Reload Workouts ------------------
-    // ---------------------------------------------------
-    public void ReloadRecyclerView2() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                displayedWorkouts = new ArrayList<>();
-                WorkoutDao daoW = db.workoutDao();
-
-                List<Workout> workoutList = new ArrayList<>();
-
-                workoutList = daoW.listWorkouts();
-
-                if (!workoutList.isEmpty()) {
-
-                    for (Workout item : workoutList) {
-                        if (item.plan_Id == thisPlan.id) {
-                            displayedWorkouts.add(item);
-                        }
-                    }
-                }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        //ChangeUIVisibility();
-
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //  Set Recycler View Adapter
-                                adapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(Workout item) {
-                                        Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-                                        intent.putExtra("SelectedUser", user);
-                                        intent.putExtra("SelectedPlan", thisPlan);
-                                        intent.putExtra("SelectedWorkout", item);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onItemLongClick(Workout item) {
-                                        EditWorkout(item);
-                                    }
-
-                                });
-                                // Display Workouts in Recycler View
-                                //recyclerView.setAdapter(adapter);
-                                // recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-                                count.setText(String.valueOf(displayedWorkouts.size()));
-                                // ChangeUIVisibility();
-
-
-                            }
-                        }, 3000); // 3000 milliseconds = 3 seconds
-
-                        // ----------------------
-
-                    }
-                });
-            }
-        }).start();
-
-        db.close();
-    }
-
-
-
-
-
-
-
-
-
-
-
 
     // --------------------------------------------
     // ----------- Load Data and Display ----------
@@ -409,21 +318,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        planName.setText(thisPlan.planName);
-
-
+                        newReloadRecyclerView();
                     }
                 });
             }
         }).start();
 
         db.close();
-        newReloadRecyclerView();
+
     }
 
 
 
+    // ---------------------------------------------------
+    // ---------------- Reload Workouts ------------------
+    // ---------------------------------------------------
     public void newReloadRecyclerView() {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -439,8 +348,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 workoutList = daoW.listWorkouts();
 
                 if (!workoutList.isEmpty()) {
-                    planName.setText("Plan ID: " + thisPlan.id);
-
                     for (Workout item : workoutList) {
                         if (item.plan_Id == thisPlan.id) {
                             displayedWorkouts.add(item);
@@ -454,10 +361,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         count.setText(displayedWorkouts.size() + "/10");
-
-
+                        ChangeUIVisibility2();
+                        Teste();
                     }
                 });
 
@@ -465,142 +371,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }).start();
 
         db.close();
-        // Teste(displayedWorkouts);
     }
 
 
-
-
-public void Teste(List<Workout> list) {
-    WorkoutRVAdapter adapter1 = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(Workout item) {
-            Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-            intent.putExtra("SelectedUser", user);
-            intent.putExtra("SelectedPlan", thisPlan);
-            intent.putExtra("SelectedWorkout", item);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onItemLongClick(Workout item) {
-            EditWorkout(item);
-        }
-
-
-    });
-    // Display Workouts in Recycler View
-    recyclerView.setAdapter(adapter1);
-    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-}
-
-
-
-
-
-
-
-    public void LoadData2() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        UserDataDao dao = db.userDataDao();
-
-        new Thread(new Runnable() {
+    public void Teste() {
+        workoutAdapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
             @Override
-            public void run() {
-
-                // ------------------------------------
-                // ----- Check if User is created -----
-                // ------------------------------------
-                List<UserData> userList = dao.listUserData();
-
-                if (userList.isEmpty()) {
-                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    user = userList.get(0);
-                }
-
-                // ------------------------------------
-                // ----- Check if User has 1 Plan  ----
-                // ------------------------------------
-                List<Plan> plansList = new ArrayList<>();
-                PlanDao daoPlan = db.planDao();
-                plansList = daoPlan.listPlans();
-
-                if (!plansList.isEmpty()) {
-                    for (Plan item : plansList) {
-                        if (item.active == true) {
-                            thisPlan = item;
-                        }
-                    }
-                }
-
-                displayedWorkouts = new ArrayList<>();
-                WorkoutDao daoW = db.workoutDao();
-
-                List<Workout> workoutList = new ArrayList<>();
-
-                workoutList = daoW.listWorkouts();
-
-                if (!workoutList.isEmpty()) {
-
-                    for (Workout item : workoutList) {
-                        if (item.plan_Id == thisPlan.id) {
-                            displayedWorkouts.add(item);
-                        }
-                    }
-                }
-
-                // Sort by Order
-                displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
-
-                //  Set Recycler View Adapter
-                WorkoutRVAdapter adapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Workout item) {
-                        Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-                        intent.putExtra("SelectedUser", user);
-                        intent.putExtra("SelectedPlan", thisPlan);
-                        intent.putExtra("SelectedWorkout", item);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onItemLongClick(Workout item) {
-                        EditWorkout(item);
-                    }
-
-
-                });
-                // Display Workouts in Recycler View
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-               //  ChangeUIVisibility();
-
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Code to execute after the delay
-                        // This code runs on the UI thread
-                        // mIth.attachToRecyclerView(recyclerView);
-                    }
-                }, 3000); // 3000 milliseconds = 3 seconds
-
+            public void onItemClick(Workout item) {
+                Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+                intent.putExtra("SelectedUser", user);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", item);
+                startActivity(intent);
             }
-        }).start();
-
-        db.close();
+            // --------------------------------------
+            @Override
+            public void onItemLongClick(Workout item) {
+                // Do nothing
+            }
+        }, new WorkoutRVAdapter.OnItemLongClickSwapPositions() {
+            @Override
+            public void swapButtonLongClick(int position) {
+                mIth.attachToRecyclerView(recyclerView);
+            }
+        }, new WorkoutRVAdapter.OnClickEditListener() {
+            @Override
+            public void editButtonClick(Workout item) {
+                EditWorkout(item);
+            }
+        });
+        // Display Workouts in Recycler View
+        recyclerView.setAdapter(workoutAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
-
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
 
     // ----------------------------------------------
     // ------- Change UI Elements Visibility --------
@@ -642,6 +446,7 @@ public void Teste(List<Workout> list) {
                 emptyButton.setVisibility(View.VISIBLE);
                 emptyText.setVisibility(View.VISIBLE);
                 // -- Buttons --
+                newPlan.setVisibility(View.GONE);
                 newWorkout.setVisibility(View.GONE);
                 emptyWorkoutButton.setText("Create New Workout");
                 emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
@@ -661,7 +466,7 @@ public void Teste(List<Workout> list) {
                 emptyButton.setVisibility(View.GONE);
                 emptyText.setVisibility(View.GONE);
 
-                // CheckWorkoutLimit();
+                CheckWorkoutLimit();
             }
             // Set Plan Name with or without workouts
             planName.setText(thisPlan.planName);
@@ -674,7 +479,7 @@ public void Teste(List<Workout> list) {
     // --------------- Number of Workouts has Reached ----------------------
     // --------------- The Limit (Above 10)   ------------------------------
     // ---------------------------------------------------------------------
-    private void CheckWorkoutLimit2() {
+    private void CheckWorkoutLimit() {
         count.setText(displayedWorkouts.size() + "/10");
 
         if (displayedWorkouts.size() >= 10) {
@@ -687,7 +492,7 @@ public void Teste(List<Workout> list) {
     // -------------------------------------------------------
     // ---------- Display Another Plan on Screen  ------------
     // -------------------------------------------------------
-    public void ShowAnotherPlan2(Plan plan) {
+    public void ShowAnotherPlan(Plan plan) {
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
 

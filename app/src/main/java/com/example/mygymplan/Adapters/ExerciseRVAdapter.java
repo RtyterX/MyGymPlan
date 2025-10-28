@@ -133,8 +133,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             swapPositionButton = itemView.findViewById(R.id.SwapPositionsExerciseRV);
             deleteExerciseButton = itemView.findViewById(R.id.DeleteWorkoutIcon);
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
-
-
         }
 
         public void bind(Exercise item, OnItemClickListener onlistener) {

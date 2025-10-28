@@ -11,7 +11,7 @@
         android:id="@+id/BackgroundRVWorkout"
         android:layout_width="80dp"
         android:layout_height="42dp"
-        android:background="#1EC1BFF8"
+        android:background="#F5EEFC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

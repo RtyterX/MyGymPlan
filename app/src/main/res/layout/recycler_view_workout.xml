@@ -57,7 +57,7 @@
         android:layout_width="132dp"
         android:layout_height="68dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="20dp"
         android:maxLines="4"
         android:text="Descrição: Teste here"
         android:textSize="14sp"
@@ -107,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/WorkoutSwapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -115,5 +115,14 @@
         app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
         app:srcCompat="@drawable/spheres_icon" />
+
+    <ImageView
+        android:id="@+id/EditWorkoutRV"
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
+        app:srcCompat="@drawable/edit_icon2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
