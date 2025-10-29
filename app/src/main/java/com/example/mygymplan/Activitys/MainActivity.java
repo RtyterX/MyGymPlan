@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_change_plan) {
-            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            Intent intent = new Intent(this, PlanActivity.class);
             startActivity(intent);
         }
         // -----------------------------------------------------------------------------

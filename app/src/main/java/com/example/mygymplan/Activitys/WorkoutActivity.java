@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -217,6 +218,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
     }
 
+
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
     // ------------------------------------------------------
@@ -229,7 +231,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_change_plan) {
-            // ChangePlan();
+            Intent intent = new Intent(this, PlanActivity.class);
+            startActivity(intent);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
@@ -249,6 +252,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     // -------------------------------------------------------------------
@@ -314,8 +318,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         }
                     }
                 }
-
-
+                
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
@@ -325,6 +328,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public void onItemClick(SavedExercise item) {
                                 AddExerciseToWorkout(item);
+                                // Show Text on Screen
+                                Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
+                                ///////////// If Changed to Popup Service, Alter context //////////////
                                 popupWindow.dismiss();
                             }
                         });
@@ -352,6 +358,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onItemClick(SavedExercise item) {
                     AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
+                    ///////////// If Changed to Popup Service, Alter context //////////////
                     popupWindow.dismiss();
                 }
             });
@@ -366,6 +375,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onItemClick(SavedExercise item) {
                     AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
+                    ///////////// If Changed to Popup Service, Alter context //////////////
                     popupWindow.dismiss();
                 }
             });
@@ -574,6 +586,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         exerciseService.deleteExercise(getApplicationContext(), newExercise);
         displayedExercises.remove(position);
         exerciseAdapter.notifyItemRemoved(position);
+        // Show Text on Screen
+        Toast.makeText(getApplicationContext(), "Exercise Deleted",Toast.LENGTH_SHORT).show();
         // Need to wait for animation when is the last Exercise in List
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override

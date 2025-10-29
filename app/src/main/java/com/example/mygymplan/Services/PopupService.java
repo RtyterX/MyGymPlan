@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -94,6 +95,8 @@ public class PopupService extends AppCompatActivity {
                     planService.addPlan(context, newPlan);
                     // Update Activity
                     mainActivity.CheckPlan();
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -105,6 +108,8 @@ public class PopupService extends AppCompatActivity {
                     planService.addPlan(context, newPlan);
                     // Update Activity
                     mainActivity.CheckPlan();
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -202,6 +207,8 @@ public class PopupService extends AppCompatActivity {
             WorkoutService workoutService = new WorkoutService();
             newWorkout = workoutService.ConverterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, planId);
             workoutService.addWorkout(context, newWorkout);
+            // Show Text on Screen
+            Toast.makeText(context, "Workout Created",Toast.LENGTH_SHORT).show();
             // Need to wait for animation when is the last Exercise in List
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -292,6 +299,7 @@ public class PopupService extends AppCompatActivity {
             workoutService.updateWorkout(context, workout);
             // Change Activity
             mainActivity.GetWorkoutList();
+            Toast.makeText(context, "Workout Modified",Toast.LENGTH_SHORT).show();
             // Close Popup
             popupWindow.dismiss();
         });
@@ -302,6 +310,8 @@ public class PopupService extends AppCompatActivity {
             workoutService.deleteWorkout(context, workout);
             // Change Activity
             mainActivity.GetWorkoutList();
+            // Show Confirmation Text
+            Toast.makeText(context, "Workout Deleted",Toast.LENGTH_SHORT).show();
             // Close Popup
             popupWindow.dismiss();
         });

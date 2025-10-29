@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -521,17 +522,23 @@ public class ExerciseActivity extends AppCompatActivity {
         if (Objects.equals(NewExerciseCompareString, "1")) {
             // Save new Exercise in Workout and Store in Database
             exerciseService.createExercise(getApplicationContext(), thisExercise);
+            // Show Text on Screen
+            Toast.makeText(getApplicationContext(), "Exercise Created",Toast.LENGTH_SHORT).show();
 
         }
         // Update if Exercise is already created
         else {
             // Update Exercise Values
             exerciseService.saveExercise(getApplicationContext(), thisExercise);
+            // Show Text on Screen
+            Toast.makeText(getApplicationContext(), "Exercise Saved",Toast.LENGTH_SHORT).show();
         }
         // Update Last Modified Date in Workout
         WorkoutService workoutService = new WorkoutService();
         workoutService.updateWorkout(getApplicationContext(), thisWorkout);
         // ------------------------------------------------------------------------
+
+
     }
 
 
