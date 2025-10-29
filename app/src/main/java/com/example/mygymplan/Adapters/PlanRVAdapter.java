@@ -51,7 +51,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         holder.textViewName.setText(planList.get(position).planName);
         holder.textViewDescription.setText(planList.get(position).planDescription);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
-        holder.textViewCreatedDate.setText(planList.get(position).createdDate);
+        //holder.textViewCreatedDate.setText(planList.get(position).createdDate);
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
