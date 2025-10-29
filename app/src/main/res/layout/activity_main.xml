@@ -16,6 +16,18 @@
         android:layout_height="match_parent"
         tools:context=".Activitys.MainActivity">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecycleViewWorkouts"
+            android:layout_width="394dp"
+            android:layout_height="600dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.478"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
         <TextView
             android:id="@+id/EmptyRVText"
             android:layout_width="wrap_content"
@@ -32,28 +44,16 @@
             android:id="@+id/PlanNameText"
             android:layout_width="213dp"
             android:layout_height="32dp"
-            android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="My Workout Plan"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/RecycleViewWorkouts"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RecycleViewWorkouts"
-            android:layout_width="398dp"
-            android:layout_height="519dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.461"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PlanNameText">
-
-        </androidx.recyclerview.widget.RecyclerView>
 
         <Button
             android:id="@+id/EmptyButton"
@@ -93,17 +93,18 @@
 
             </androidx.appcompat.widget.Toolbar>
 
+
         <TextView
             android:id="@+id/RVCount"
             android:layout_width="40dp"
             android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:text="Count"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/RecycleViewWorkouts" />
-
+            app:layout_constraintBottom_toTopOf="@+id/RecycleViewWorkouts"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout4"

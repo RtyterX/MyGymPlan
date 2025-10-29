@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     Plan thisPlan;
-    List<Workout> displayedWorkouts;
+    List<Workout> displayedWorkouts = new ArrayList<>();;
 
     // Shared Preferences
     String username;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
         CheckUser();
-        // CheckPlan();
+        CheckPlan();
 
 
         // -------------------------------------------
@@ -270,11 +271,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- on Recycler View -------------
     // --------------------------------------------
     public void CheckUser() {
-        // Check if is First time opening App
+        // Check if its user First time opening App
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-
         username = sharedPreferences.getString("username", "");
-        planName.setText(username);
 
         if (Objects.equals(username, "")) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
@@ -313,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        newReloadRecyclerView();
+                        GetWorkoutList();
                     }
                 });
             }
@@ -328,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------------------------------------------
     // ---------------- Reload Workouts ------------------
     // ---------------------------------------------------
-    public void newReloadRecyclerView() {
+    public void GetWorkoutList() {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         WorkoutDao daoW = db.workoutDao();
@@ -338,9 +337,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
 
-                List<Workout> workoutList = new ArrayList<>();
-
-                workoutList = daoW.listWorkouts();
+                List<Workout> workoutList = daoW.listWorkouts();
 
                 if (!workoutList.isEmpty()) {
                     for (Workout item : workoutList) {
@@ -356,9 +353,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        count.setText(displayedWorkouts.size() + "/10");
-                        ChangeUIVisibility2();
-                        Teste();
+                        if (!displayedWorkouts.isEmpty()) {
+                            UpdateRecyclerView();
+                        }
+                        else {
+                            ChangeUIVisibility();
+                        }
                     }
                 });
 
@@ -369,34 +369,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void Teste() {
-        workoutAdapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Workout item) {
-                Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-                intent.putExtra("SelectedPlan", thisPlan);
-                intent.putExtra("SelectedWorkout", item);
-                startActivity(intent);
-            }
-            // --------------------------------------
-            @Override
-            public void onItemLongClick(Workout item) {
-                // Do nothing
-            }
-        }, new WorkoutRVAdapter.OnItemLongClickSwapPositions() {
-            @Override
-            public void swapButtonLongClick(int position) {
-                mIth.attachToRecyclerView(recyclerView);
-            }
-        }, new WorkoutRVAdapter.OnClickEditListener() {
-            @Override
-            public void editButtonClick(Workout item) {
-                EditWorkout(item);
-            }
-        });
-        // Display Workouts in Recycler View
-        recyclerView.setAdapter(workoutAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+    public void UpdateRecyclerView() {
+        if (!displayedWorkouts.isEmpty()) {
+            workoutAdapter = new WorkoutRVAdapter(MainActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(Workout item) {
+                    Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+                    intent.putExtra("SelectedPlan", thisPlan);
+                    intent.putExtra("SelectedWorkout", item);
+                    startActivity(intent);
+                }
+                // --------------------------------------
+                @Override
+                public void onItemLongClick(Workout item) {
+                    // Do nothing
+                }
+            }, new WorkoutRVAdapter.OnItemLongClickSwapPositions() {
+                @Override
+                public void swapButtonLongClick(int position) {
+                    mIth.attachToRecyclerView(recyclerView);
+                }
+            }, new WorkoutRVAdapter.OnClickEditListener() {
+                @Override
+                public void editButtonClick(Workout item) {
+                    EditWorkout(item);
+                }
+            });
+            // Display Workouts in Recycler View
+            recyclerView.setAdapter(workoutAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+            ChangeUIVisibility();
+        } else {
+            Toast.makeText(getApplicationContext(), "Reload Recycler View Ok",Toast.LENGTH_SHORT);
+        }
+
     }
 
 
@@ -404,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------- Change UI Elements Visibility --------
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
-    private void ChangeUIVisibility2() {
+    private void ChangeUIVisibility() {
         Button newWorkout = findViewById(R.id.NewWorkout);
         Button newPlan = findViewById(R.id.NewPlanButton);
         emptyWorkoutButton = findViewById(R.id.EmptyButton);
@@ -429,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
             // -- Plan Name --
-            planName.setText("No Plan");
+            planName.setText("No Plans");
         } else {
             // ----------------------
             // ----- NO WORKOUT -----
@@ -459,6 +466,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // -- Buttons --
                 emptyButton.setVisibility(View.GONE);
                 emptyText.setVisibility(View.GONE);
+                newPlan.setVisibility(View.VISIBLE);
+                newWorkout.setVisibility(View.VISIBLE);
 
                 CheckWorkoutLimit();
             }

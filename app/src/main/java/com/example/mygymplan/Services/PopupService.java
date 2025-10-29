@@ -93,7 +93,7 @@ public class PopupService extends AppCompatActivity {
                     Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.newReloadRecyclerView();
+                    mainActivity.CheckPlan();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -104,7 +104,7 @@ public class PopupService extends AppCompatActivity {
                     Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
                     planService.addPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.newReloadRecyclerView();
+                    mainActivity.CheckPlan();
                     // Close Popup
                     popupWindow.dismiss();
                     subPopupWindow.dismiss();
@@ -134,6 +134,8 @@ public class PopupService extends AppCompatActivity {
         // Buttons
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+        Button deleteButton = popupView.findViewById(R.id.DeleteWButton);
+        deleteButton.setVisibility(View.INVISIBLE);   // Don't Show when creating a New Workout
         // Type Selection
         AutoCompleteTextView autoComplete = popupView.findViewById(R.id.AutoCompleteNewWorkouts);
         ArrayAdapter<String> adapterItem;
@@ -204,7 +206,7 @@ public class PopupService extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mainActivity.newReloadRecyclerView();
+                    mainActivity.GetWorkoutList();
                     popupWindow.dismiss();     // Close Popup
                 }
             }, 300); // 3000 milliseconds = 3 seconds
@@ -289,7 +291,7 @@ public class PopupService extends AppCompatActivity {
             WorkoutService workoutService = new WorkoutService();
             workoutService.updateWorkout(context, workout);
             // Change Activity
-            mainActivity.newReloadRecyclerView();
+            mainActivity.GetWorkoutList();
             // Close Popup
             popupWindow.dismiss();
         });
@@ -299,7 +301,7 @@ public class PopupService extends AppCompatActivity {
             WorkoutService workoutService = new WorkoutService();
             workoutService.deleteWorkout(context, workout);
             // Change Activity
-            mainActivity.newReloadRecyclerView();
+            mainActivity.GetWorkoutList();
             // Close Popup
             popupWindow.dismiss();
         });
