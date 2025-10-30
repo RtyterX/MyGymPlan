@@ -17,7 +17,7 @@ import java.util.Objects;
 public class WorkoutService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
-    public void addWorkout(Context context, Workout workout) {
+    public void insertWorkout(Context context, Workout workout) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         WorkoutDao dao = db.workoutDao();
@@ -97,7 +97,7 @@ public class WorkoutService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public Workout ConverterWorkout(String name, String description, WorkoutType type, int planId) {
+    public Workout converterWorkout(String name, String description, WorkoutType type, int planId) {
         // Create New Workout DataBase
         LocalDate date = LocalDate.now();
         Workout newWorkout = new Workout();
@@ -112,7 +112,7 @@ public class WorkoutService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public WorkoutType ApplyWorkoutType(Workout workout, String item){
+    public WorkoutType applyWorkoutType(Workout workout, String item){
         switch(item)  {
             case "Chest":
                 workout.wType = WorkoutType.Chest;

@@ -68,7 +68,7 @@ public class ExerciseService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public void addExercise(Context context, Exercise exercise) {
+    public void insertExercise(Context context, Exercise exercise) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         ExerciseDao dao = db.exerciseDao();
@@ -176,7 +176,7 @@ public class ExerciseService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public Exercise ConvertExercise(SavedExercise savedExercise, int workoutOrder, int planId, int workoutId) {
+    public Exercise convertExercise(SavedExercise savedExercise, int workoutOrder, int planId, int workoutId) {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
         LocalDate date = LocalDate.now();
@@ -198,7 +198,7 @@ public class ExerciseService extends AppCompatActivity {
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public WorkoutType ApplyExerciseType(Exercise exercise, String item){
+    public WorkoutType applyExerciseType(Exercise exercise, String item){
         switch(item)  {
             case "Chest":
                 exercise.eType = WorkoutType.Chest;

@@ -91,8 +91,8 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
-                    planService.addPlan(context, newPlan);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
+                    planService.insertPlan(context, newPlan);
                     // Update Activity
                     mainActivity.CheckPlan();
                     // Show Text on Screen
@@ -104,8 +104,8 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.ConvertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
-                    planService.addPlan(context, newPlan);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
+                    planService.insertPlan(context, newPlan);
                     // Update Activity
                     mainActivity.CheckPlan();
                     // Show Text on Screen
@@ -177,7 +177,7 @@ public class PopupService extends AppCompatActivity {
                 String item = parent.getItemAtPosition(position).toString();
 
                 WorkoutService workoutService = new WorkoutService();
-                workoutService.ApplyWorkoutType(newWorkout, item);
+                workoutService.applyWorkoutType(newWorkout, item);
             }
         });
 
@@ -205,8 +205,8 @@ public class PopupService extends AppCompatActivity {
 
             // Inset New Workout in Database
             WorkoutService workoutService = new WorkoutService();
-            newWorkout = workoutService.ConverterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, planId);
-            workoutService.addWorkout(context, newWorkout);
+            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, planId);
+            workoutService.insertWorkout(context, newWorkout);
             // Show Text on Screen
             Toast.makeText(context, "Workout Created",Toast.LENGTH_SHORT).show();
             // Need to wait for animation when is the last Exercise in List
@@ -285,7 +285,7 @@ public class PopupService extends AppCompatActivity {
                 String item = parent.getItemAtPosition(position).toString();
 
                 WorkoutService workoutService = new WorkoutService();
-                workoutService.ApplyWorkoutType(workout, item);
+                workoutService.applyWorkoutType(workout, item);
             }
         });
 

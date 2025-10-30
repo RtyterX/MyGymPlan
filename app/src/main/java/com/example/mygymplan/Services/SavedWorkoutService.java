@@ -11,7 +11,7 @@ import com.example.mygymplan.Entitys.SavedWorkout;
 
 public class SavedWorkoutService extends AppCompatActivity {
 
-        public void saveMyWorkout(Context context, SavedWorkout savedWorkout) {
+        public void insertSavedWorkout(Context context, SavedWorkout savedWorkout) {
 
             AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
             SavedWorkoutDao dao = db.savedWorkoutDao();

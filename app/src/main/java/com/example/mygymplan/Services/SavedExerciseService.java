@@ -16,7 +16,7 @@ public class SavedExerciseService extends AppCompatActivity {
         ////////// Only on First Entered the App //////////
     }
 
-    public void saveUserExerciseInDatabase(Context context, SavedExercise savedExercise) {
+    public void insertSavedExercise(Context context, SavedExercise savedExercise) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         SavedExerciseDao dao = db.savedExerciseDao();
@@ -31,7 +31,7 @@ public class SavedExerciseService extends AppCompatActivity {
         db.close();
     }
 
-    public void updateUserExerciseInDatabase(Context context, SavedExercise savedExercise) {
+    public void updateSavedExercise(Context context, SavedExercise savedExercise) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         SavedExerciseDao dao = db.savedExerciseDao();
@@ -46,7 +46,7 @@ public class SavedExerciseService extends AppCompatActivity {
         db.close();
     }
 
-    public void deleteUserExerciseInDatabase(Context context, SavedExercise savedExercise) {
+    public void deleteSavedExercise(Context context, SavedExercise savedExercise) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         SavedExerciseDao dao = db.savedExerciseDao();

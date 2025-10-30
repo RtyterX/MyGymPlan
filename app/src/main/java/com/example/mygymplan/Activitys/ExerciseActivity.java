@@ -157,7 +157,7 @@ public class ExerciseActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 // Apply Type in Exercise
-                exerciseService.ApplyExerciseType(thisExercise, item);
+                exerciseService.applyExerciseType(thisExercise, item);
             }
         });
 

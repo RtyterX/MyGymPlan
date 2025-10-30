@@ -1,8 +1,6 @@
 package com.example.mygymplan.Services;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.room.Room;
 
@@ -18,7 +16,7 @@ import java.util.List;
 public class PlanService {
 
     // ---------------------------------------------------------------------------------------------------
-    public void addPlan(Context context, Plan plan) {
+    public void insertPlan(Context context, Plan plan) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
@@ -69,7 +67,7 @@ public class PlanService {
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public void CreateNewPlan(String name, String description, boolean isActiveOrNot, Context context, String username) {
+    public void createNewPlan(String name, String description, boolean isActiveOrNot, Context context, String username) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -86,7 +84,7 @@ public class PlanService {
                 newPlan.createdDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
                 // Insert Plan in Database
-                addPlan(context, newPlan);
+                insertPlan(context, newPlan);
 
             }
         }).start();
@@ -94,7 +92,7 @@ public class PlanService {
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public Plan ConvertPlan(String name, String description, String author, boolean isActiveOrNot) {
+    public Plan convertPlan(String name, String description, String author, boolean isActiveOrNot) {
         // Get local Time Date
         LocalDate date = LocalDate.now();
 
