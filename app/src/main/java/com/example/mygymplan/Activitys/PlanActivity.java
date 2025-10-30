@@ -1,12 +1,15 @@
 package com.example.mygymplan.Activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,10 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
     List<Plan> planList = new ArrayList<>();
     PlanRVAdapter adapter;
+
+    // Shared Preferences
+    String username;
+    String email;
 
     // UI
     RecyclerView recyclerView;
@@ -76,6 +83,9 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         Button databasePlans = findViewById(R.id.DatabasePlansButton);
         Button backButton = findViewById(R.id.BackButton2);
 
+        // -------------------------------
+        LoadDatabasePlans();
+        LoadPrefs();
 
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                         // Find Toolbar
@@ -85,9 +95,19 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.NavView);                                           // Find Navigation View
         navigationView.setNavigationItemSelectedListener(this);                                // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);             // Set ActionBar (Hamburger Menu)
+                drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);                       // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
-        toggle.syncState();                                                                   // Sync with drawer state (Open/Close)
+        toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
+
+        // NaviBar Values
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
+        TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
+        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+        userNameText.setText(username);
+        userEmailText.setText(email);
+        // userPhoto.setImageResource();
+
 
 
         // ----- Buttons -----
@@ -116,8 +136,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        // -------------------------------
-        LoadDatabasePlans();
+    }
+
+    private void LoadPrefs() {
+        // Check if its user First time opening App
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("username", "");
+        email = sharedPreferences.getString("email", "");
     }
 
 

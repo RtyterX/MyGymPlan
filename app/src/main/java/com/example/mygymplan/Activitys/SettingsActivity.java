@@ -10,6 +10,10 @@ import com.example.mygymplan.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    // Shared Preferences
+    String username;
+    String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,7 +1,9 @@
 package com.example.mygymplan.Activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +14,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -57,6 +60,10 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
     public Plan thisPlan;
     public Workout thisWorkout;
+
+    // Shared Preferences
+    String username;
+    String email;
 
     // UI Elements
     TextView showName;
@@ -124,6 +131,12 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         emptyView = findViewById(R.id.EmptyRVWorkouts);
 
 
+        // -------------------------------------------------------------------
+        // ---  Load Data Recycler View on Create the Activity  ---
+        LoadData(thisWorkout);
+        LoadPrefs();
+
+
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                        // Find Toolbar
         setSupportActionBar(toolbar);                                                         // Set Toolbar as ActionBar
@@ -141,17 +154,22 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             }
         });
 
-        toggle.syncState();                                                                      // Sync with drawer state (Open/Close)
+        toggle.syncState();                                                                           // Sync with drawer state (Open/Close)
+
+        // NaviBar Values
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
+        TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
+        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+        userNameText.setText(username);
+        userEmailText.setText(email);
+        // userPhoto.setImageResource();
 
 
         // -------------------------------------------------------------------
         // ---  Set Values based on Received Data  ---
         showName.setText(thisPlan.planName);
 
-
-        // -------------------------------------------------------------------
-        // ---  Load Data Recycler View on Create the Activity  ---
-        LoadData(thisWorkout);
 
 
         // ---------------------------------
@@ -286,7 +304,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
-
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         SavedExerciseDao dao = db.savedExerciseDao();
 
@@ -294,8 +311,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             @Override
             public void run() {
 
-                // Initialize List
+                // Initialize ListS
                 myExercises = new ArrayList<>();
+                databaseExercises = new ArrayList<>();
                 List<SavedExercise> allExercises;
 
                 // List All Exercises
@@ -314,11 +332,11 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 if (!allExercises.isEmpty()) {
                     for (SavedExercise item : allExercises) {
                         if (!item.userCreated) {
-                            myExercises.add(item);
+                            databaseExercises.add(item);
                         }
                     }
                 }
-                
+
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
@@ -402,6 +420,13 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         UpdateRecyclerView(workout);
     }
 
+    private void LoadPrefs() {
+        // Check if its user First time opening App
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("username", "");
+        email = sharedPreferences.getString("email", "");
+    }
+
 
     // ----------------------------------------------
     // -------- Reload Workouts Recycler View -------
@@ -425,7 +450,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 if (!allWorkouts.isEmpty()) {
                     for (Workout item : allWorkouts) {
                         if (item.plan_Id == thisPlan.id) {
-                            displayedWorkouts.add(item.order, item);
+                            displayedWorkouts.add(item);
                         }
                     }
                 }
@@ -566,10 +591,10 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     public void AddExerciseToWorkout(SavedExercise savedExercise) {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
-        newExercise = exerciseService.ConvertExercise(savedExercise,
+        newExercise = exerciseService.convertExercise(savedExercise,
                 displayedExercises.size() + 1,thisPlan.id, thisWorkout.id);
         // --------------------------------------
-        exerciseService.addExercise(getApplicationContext(), newExercise);
+        exerciseService.insertExercise(getApplicationContext(), newExercise);
         exerciseAdapter.notifyItemRangeRemoved(0, exerciseAdapter.getItemCount());
         UpdateRecyclerView(thisWorkout);
         ChangeUIVisibility();
@@ -583,7 +608,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     public void DeleteFromRecyclerView(int position) {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
-        exerciseService.deleteExercise(getApplicationContext(), newExercise);
+        exerciseService.deleteExercise(getApplicationContext(), displayedExercises.get(position));
         displayedExercises.remove(position);
         exerciseAdapter.notifyItemRemoved(position);
         // Show Text on Screen

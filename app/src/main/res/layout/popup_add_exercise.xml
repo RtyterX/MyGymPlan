@@ -47,14 +47,14 @@
         android:id="@+id/CloseAddExercise"
         android:layout_width="128dp"
         android:layout_height="35dp"
+        android:layout_marginBottom="12dp"
         android:background="@android:color/transparent"
         android:text="Close"
         android:textColor="@color/blue1"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundAddExercise"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
-        app:layout_constraintTop_toBottomOf="@+id/AddExerciseRV" />
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise" />
 
     <TextView
         android:id="@+id/AddExerciseTitle"

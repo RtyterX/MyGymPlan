@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Shared Preferences
     String username;
+    String email;
 
     // UI Elements
     TextView planName;
@@ -109,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Button newWorkout = findViewById(R.id.NewWorkout);
 
 
+        // ---- Show Workouts in Recycle View or -----
+        // ---- Display Create From Scratch button --\
+        CheckUser();
+        CheckPlan();
+
+
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                         // Find Toolbar
         setSupportActionBar(toolbar);                                                          // Set Toolbar as ActionBar
@@ -117,22 +125,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.NavView);                                           // Find Navigation View
         navigationView.setNavigationItemSelectedListener(this);                                // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);             // Set ActionBar (Hamburger Menu)
+                drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);                       // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
-
-
+        // Teste
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle the click event here
                 // For example, you might want to navigate up or perform a custom action
                 //drawerLayout.openDrawer(GravityCompat.START);
+
                 planName.setText("Deu bom");
                 //onBackPressed(); // Example: Go back to the previous screen
             }
         });
+        toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
-        toggle.syncState();                                                                   // Sync with drawer state (Open/Close)
+        // NaviBar Values
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
+        TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
+        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+       userNameText.setText(username);
+        userEmailText.setText(email);
+        // userPhoto.setImageResource();
 
 
         //  --- Go to Test Activity ---
@@ -140,11 +156,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // JUST FOR DEBUG ------------------------------------
         // JUST FOR DEBUG ------------------------------------
 
-
-        // ---- Show Workouts in Recycle View or -----
-        // ---- Display Create From Scratch button --\
-        CheckUser();
-        CheckPlan();
 
 
         // -------------------------------------------
@@ -229,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -274,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Check if its user First time opening App
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
+        email = sharedPreferences.getString("email", "");
 
         if (Objects.equals(username, "")) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);

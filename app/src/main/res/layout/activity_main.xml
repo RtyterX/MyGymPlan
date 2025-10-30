@@ -136,11 +136,10 @@
                 app:layout_constraintStart_toEndOf="@+id/NewPlanButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/NavView"

@@ -4,36 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="167dp"
+    android:layout_height="220sp"
     android:gravity="bottom"
-    android:padding="165dp">
+    android:paddingTop="10sp"
+    android:paddingStart="24sp">
     <!-- Change Background Later -->
 
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/UserPhotoNaviBar"
+        android:layout_width="80sp"
+        android:layout_height="80sp"
         android:contentDescription="User Photo"
-        android:src="@drawable/nav_info"
+        android:src="@drawable/no_image_plan"
         android:background="@color/blue1"
         android:visibility="visible" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation Bar"
-        android:textColor="@color/black"
-        android:textStyle="bold"/>
-
-    <TextView
+        android:id="@+id/UsernameNaviBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User Name"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/black"
-        android:textSize="14dp"
-        android:layout_marginBottom="16dp"/>
+        android:textSize="16sp"
+        android:layout_marginTop="8sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/UserEmailNaviBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Email"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_marginBottom="12sp"/>
 
 
 </LinearLayout>

@@ -136,7 +136,7 @@ public class ExerciseActivity extends AppCompatActivity {
         // If Exercise isn't New...
         if (!Objects.equals(NewExerciseCompareString, "1")) {
             // Show already storage Values
-            showName.setText(thisExercise.eName);
+            //showName.setText(thisExercise.eName);
             showDescription.setText(thisExercise.eDescription);
             showSets.setText(String.valueOf(thisExercise.eSets));
             showReps.setText(String.valueOf(thisExercise.eReps));
@@ -145,7 +145,6 @@ public class ExerciseActivity extends AppCompatActivity {
             autoComplete.setText(thisExercise.eType.toString());
             // showImage.setText(intent.getParcelableExtra(thisExercise.eName));
         }
-
 
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
@@ -221,14 +220,8 @@ public class ExerciseActivity extends AppCompatActivity {
                 // If not new, Save Exercise
                 // -----------------------------
                 if (!Objects.equals(NewExerciseCompareString, "1")) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            SaveExerciseValues();
-                        }
-                    }).start();
+                    SaveExerciseValues();
                 }
-
                 // ------------------
                 ChangeActivity();
             }
@@ -243,18 +236,12 @@ public class ExerciseActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-
+                // -----------------------------
+                // If not new, Save Exercise
+                // -----------------------------
                 if (!Objects.equals(NewExerciseCompareString, "1")) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            SaveExerciseValues();
-
-                        }
-                    }).start();
+                    SaveExerciseValues();
                 }
-
                 // ------------------
                 ChangeActivity();
             }
@@ -417,7 +404,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void SetsPlus(View view) {
-        if (thisExercise.eSets < 10) {
+        if (thisExercise.eSets < 20) {
             thisExercise.eSets += 1;
             showSets.setText(String.valueOf(thisExercise.eSets));
         }
@@ -435,7 +422,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void RepsPlus(View view) {
-        if (thisExercise.eReps < 100) {
+        if (thisExercise.eReps < 1000) {
             thisExercise.eReps += 1;
             showReps.setText(String.valueOf(thisExercise.eReps));
         }
@@ -470,6 +457,9 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void LoadPlus(View view) {
+        if (!Objects.equals(NewExerciseCompareString, "1")) {
+            thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+        }
         if (thisExercise.eLoad < 1000) {
             thisExercise.eLoad += 1;
             showLoad.setText(String.valueOf(thisExercise.eLoad));
