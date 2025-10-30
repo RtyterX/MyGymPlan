@@ -26,6 +26,9 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "description")
     public String eDescription;
 
+    //@ColumnInfo(name = "image")
+    // public int eImage;           // Later
+
     @ColumnInfo(name = "sets")
     public int eSets;
 
@@ -41,14 +44,11 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "type")
     public WorkoutType eType;    // Enum
 
-    //@ColumnInfo(name = "image")
-    // public int eImage;           // Later
+    @ColumnInfo(name = "order")
+    public int order;
 
     @ColumnInfo(name = "lastModified")
     public String lastModified;
-
-    @ColumnInfo(name = "order")
-    public int order;
 
     @ColumnInfo(name = "plan_Id")
     public int plan_Id;

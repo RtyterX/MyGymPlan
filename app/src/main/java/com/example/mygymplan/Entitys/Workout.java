@@ -21,17 +21,18 @@ public class Workout implements Serializable {
     @ColumnInfo(name = "description")
     public String wDescription;
 
-    @ColumnInfo(name = "type")
-    public WorkoutType wType;
-
     // @ColumnInfo(name = "image")
     // public int wImage;
 
-    @ColumnInfo(name = "lastModified")
-    public String lastModified;
+    @ColumnInfo(name = "type")
+    public WorkoutType wType;
 
     @ColumnInfo(name = "order")
     public int order;
+
+
+    @ColumnInfo(name = "lastModified")
+    public String lastModified;
 
     @ColumnInfo(name = "plan_Id")
     public  int plan_Id;
