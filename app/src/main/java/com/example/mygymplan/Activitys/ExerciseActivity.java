@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -68,6 +70,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     // For Image Selection
     ImageView exerciseImage;
+    VideoView exerciseVideo;
 
     // constant to compare
     // the activity result code
@@ -124,11 +127,16 @@ public class ExerciseActivity extends AppCompatActivity {
         autoComplete = findViewById(R.id.AutoCompleteEnumList);
         // Image
         exerciseImage = findViewById(R.id.ExerciseImage);
+        exerciseVideo = findViewById(R.id.videoView);
         // Buttons
         Button saveExercise = findViewById(R.id.SaveExercise);
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);
         Button timerButton = findViewById(R.id.TimerButton);
         Button backButton = findViewById(R.id.BackButton3);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, // Set width to match_parent
+                ViewGroup.LayoutParams.WRAP_CONTENT  // Keep height as wrap_content or set to MATCH_PARENT
+        );
 
 
         // --- Set UI Values ---
@@ -136,14 +144,20 @@ public class ExerciseActivity extends AppCompatActivity {
         // If Exercise isn't New...
         if (!Objects.equals(NewExerciseCompareString, "1")) {
             // Show already storage Values
-            //showName.setText(thisExercise.eName);
+            showName.setText(thisExercise.eName);
             showDescription.setText(thisExercise.eDescription);
             showSets.setText(String.valueOf(thisExercise.eSets));
             showReps.setText(String.valueOf(thisExercise.eReps));
             showRest.setText(String.valueOf(thisExercise.eRest));
             showLoad.setText(String.valueOf(thisExercise.eLoad));
             autoComplete.setText(thisExercise.eType.toString());
-            // showImage.setText(intent.getParcelableExtra(thisExercise.eName));
+            // exerciseImage =
+            // exerciseVideo =
+
+        } else {
+            timerButton.setVisibility(View.GONE); // Delete is no necessary when creating new
+            deleteButton.setVisibility(View.GONE); // Delete is no necessary when creating new
+            saveExercise.setLayoutParams(layoutParams);
         }
 
         // ------------------------------------------------------
@@ -429,13 +443,13 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void RestMinus(View view) {
-        if (thisExercise.eRest > 1) {
+        if (thisExercise.eRest > 0) {
             thisExercise.eRest -= 1;
             showRest.setText(String.valueOf(thisExercise.eRest));
         }
-        else if (thisExercise.eRest == 0) {
-            thisExercise.eRest = 1;
-            showRest.setText(String.valueOf(thisExercise.eRest));
+        if (thisExercise.eRest <= 0) {
+            thisExercise.eRest = 0;
+            showRest.setText("-");
         }
     }
 
@@ -447,10 +461,11 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void LoadMinus(View view) {
-        if (thisExercise.eLoad > 1) {
+        if (thisExercise.eLoad > 0) {
             thisExercise.eLoad -= 1;
             showLoad.setText(String.valueOf(thisExercise.eLoad));
-        } else if (thisExercise.eLoad < 1) {
+        }
+        if (thisExercise.eLoad <= 0) {
             thisExercise.eLoad = 0 ;
             showLoad.setText("-");
         }

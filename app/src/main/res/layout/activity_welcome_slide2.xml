@@ -34,7 +34,7 @@
             android:inputType="text"
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"
-            android:background="@drawable/welcome_input"
+            android:background="@drawable/text_box"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454"
