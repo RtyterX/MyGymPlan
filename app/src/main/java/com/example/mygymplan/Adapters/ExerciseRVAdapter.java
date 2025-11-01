@@ -27,8 +27,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         void deleteButtonClick(int position);
     }
 
-    public interface OnItemLongClickSwapPositions {
-        void swapButtonLongClick(int position);
+    public interface OnItemSwapPositionsClick {
+        void swapButtonClick(int position);
     }
 
     Context context;
@@ -37,11 +37,11 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
 
     OnItemClickDelete deleteListener;
 
-    OnItemLongClickSwapPositions onSwapListener;
+    OnItemSwapPositionsClick onSwapListener;
 
 
     // Constructor
-    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener, OnItemClickDelete deleteListener, OnItemLongClickSwapPositions onSwapListener) {
+    public ExerciseRVAdapter(Context context, List<Exercise> exerciseList, OnItemClickListener onListener, OnItemClickDelete deleteListener, OnItemSwapPositionsClick onSwapListener) {
         this.context = context;
         this.exerciseList = exerciseList;
         this.onListener = onListener;
@@ -75,11 +75,10 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
 
         // Swap Positions Button
-        holder.swapPositionButton.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.swapPositionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                onSwapListener.swapButtonLongClick(position);
-                return true;
+            public void onClick(View v) {
+                onSwapListener.swapButtonClick(position);
             }
         });
 

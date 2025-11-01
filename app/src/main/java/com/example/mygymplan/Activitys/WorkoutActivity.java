@@ -522,10 +522,11 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             public void deleteButtonClick(int position) {
                                 DeleteFromRecyclerView(position);
                             }
-                        }, new ExerciseRVAdapter.OnItemLongClickSwapPositions() {
+                        }, new ExerciseRVAdapter.OnItemSwapPositionsClick() {
                             @Override
-                            public void swapButtonLongClick(int position) {
-
+                            public void swapButtonClick(int position) {
+                                // Attach Item Touch to RecyclerView
+                                mIth.attachToRecyclerView(recyclerView);
                             }
                         });
                         // Display Exercises inside the Recycler View
@@ -533,8 +534,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
                         // Then Check if Need to Change the UI...
                         ChangeUIVisibility();
-                        // Attach Item Touch to RecyclerView
-                        mIth.attachToRecyclerView(recyclerView);
+
 
 
                     }

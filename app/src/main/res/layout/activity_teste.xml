@@ -34,14 +34,13 @@
         android:id="@+id/DeleteDataBase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
         android:onClick="DeleteDataBase"
         android:text="Reset Database"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.218" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/DarkThemeSwitch"
@@ -51,6 +50,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ResetSharedPreferences" />
+
+    <TextView
+        android:id="@+id/ConvertTextBox"
+        android:layout_width="224dp"
+        android:layout_height="87dp"
+        android:text="Teste aqui"
+        android:background="@drawable/text_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ShareServiceTitle" />
+
+    <TextView
+        android:id="@+id/ShareServiceTitle"
+        android:layout_width="183dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="28dp"
+        android:text="Convert / Share"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DarkThemeSwitch" />
+
+    <Button
+        android:id="@+id/ShareTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="112dp"
+        android:text="Share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ConvertTextBox" />
+
+    <Button
+        android:id="@+id/ConvertTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Convert"
+        app:layout_constraintEnd_toStartOf="@+id/ShareTest"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ConvertTextBox" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

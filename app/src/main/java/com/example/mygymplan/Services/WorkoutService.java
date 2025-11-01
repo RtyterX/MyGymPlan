@@ -16,6 +16,22 @@ import java.util.Objects;
 
 public class WorkoutService extends AppCompatActivity {
 
+
+    // ---------------------------------------------------------------------------------------------------
+    public List<Workout> listAllWorkout(Context context) {
+
+        List<Workout> allWorkouts;
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        WorkoutDao dao = db.workoutDao();
+
+        allWorkouts = dao.listWorkouts();
+
+        db.close();
+
+        return allWorkouts;
+    }
+
     // ---------------------------------------------------------------------------------------------------
     public void insertWorkout(Context context, Workout workout) {
 

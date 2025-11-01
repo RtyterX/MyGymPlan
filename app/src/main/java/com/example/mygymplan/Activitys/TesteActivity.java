@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +16,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Services.ShareService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
 
 public class TesteActivity extends AppCompatActivity {
 
+    Plan testPlan;
+    Workout[] String;
     Workout thisWorkout;
+    TextView shareText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,11 @@ public class TesteActivity extends AppCompatActivity {
         Button resetPreferences = findViewById(R.id.ResetSharedPreferences);
         Button backButton = findViewById(R.id.BackTestButton);
         SwitchCompat darkThemeSwitch = findViewById(R.id.DarkThemeSwitch);
+
+        Button sharePlan = findViewById(R.id.ShareTest);
+        Button convertPlan = findViewById(R.id.ConvertTest);
+        shareText = findViewById(R.id.ConvertTextBox);
+
 
         // ----- Received Data From Another Activity -----
         Intent intent = getIntent();
@@ -75,8 +86,6 @@ public class TesteActivity extends AppCompatActivity {
         });
     }
 
-
-
     public void DeleteDataBase(View view) {
         new Thread(new Runnable() {
             @Override
@@ -88,6 +97,39 @@ public class TesteActivity extends AppCompatActivity {
                 //recreate();
             }
         }).start();
+    }
+
+
+    public void ConvertPlan(View view) {
+
+        ShareService shareService = new ShareService();
+        shareService.CreatePlanFromString(getApplicationContext(), (String) shareText.getText());
+    }
+
+
+    public void SharePlan(View view) {
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Context context = getApplicationContext();    // Or your activity context
+                context.deleteDatabase("workouts");   // Just Change the Name
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        ShareService shareService = new ShareService();
+                        shareService.ConvertPlanToString(getApplicationContext(), testPlan);
+
+                    }
+                });
+            }
+        }).start();
+
+
     }
 
 
