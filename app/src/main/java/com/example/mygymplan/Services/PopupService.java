@@ -101,6 +101,7 @@ public class PopupService extends AppCompatActivity {
                     // Create Plan as Active
                     Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
                     planService.insertPlan(context, newPlan);
+                    planService.activePlan(context, newPlan);
                     // Update Activity
                     mainActivity.recreate();
                     //mainActivity.CheckPlan();
@@ -376,7 +377,12 @@ public class PopupService extends AppCompatActivity {
                     @Override
                     public void deleteButtonClick(int position) {
                         PlanService planService = new PlanService();
-                       // planService.deletePlan(getApplicationContext(), planList.get(postion));
+                        // planService.deletePlan(getApplicationContext(), planList.get(postion));
+                    }
+                }, new PlanRVAdapter.OnItemClickSetActive() {
+                    @Override
+                    public void setActiveButtonClick(Plan plan) {
+
                     }
                 });
 

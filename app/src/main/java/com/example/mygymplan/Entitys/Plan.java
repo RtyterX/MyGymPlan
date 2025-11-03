@@ -21,6 +21,9 @@ public class Plan implements Serializable {
     @ColumnInfo(name = "description")
     public String planDescription;
 
+    @ColumnInfo(name = "bodyType")
+    public int bodyType;
+
     @ColumnInfo(name = "active")
     public Boolean active;
 

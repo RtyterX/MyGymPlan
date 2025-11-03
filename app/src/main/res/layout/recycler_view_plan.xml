@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RecycleExerciceImage"
@@ -20,12 +20,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.47" />
 
         <TextView
             android:id="@+id/RecyclerPlanName"
-            android:layout_width="55dp"
-            android:layout_height="20dp"
+            android:layout_width="72dp"
+            android:layout_height="28dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
@@ -92,10 +93,39 @@
             android:id="@+id/DeletePlanButton"
             android:layout_width="31dp"
             android:layout_height="35dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/RecyclerPlanDescrip"
-            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintBottom_toBottomOf="@+id/RecyclerPlanDescrip"
+            app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanDescrip"
             app:srcCompat="@drawable/delete_icon" />
+
+        <TextView
+            android:id="@+id/BodyTypePlanRv"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:text="TextView"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/BodyTypeTitleRV"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName" />
+
+        <TextView
+            android:id="@+id/BodyTypeTitleRV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Body Type:"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName" />
+
+        <Button
+            android:id="@+id/SetPlanActiveRV"
+            android:layout_width="76dp"
+            android:layout_height="29dp"
+            android:text="Set Active"
+            android:textAlignment="gravity"
+            android:textSize="6sp"
+            app:layout_constraintBottom_toTopOf="@+id/RecyclerPlanDescrip"
+            app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

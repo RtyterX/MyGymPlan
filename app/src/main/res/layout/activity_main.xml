@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/mygymplan_logo"
-                android:layout_marginEnd="50sp"/>
+                android:layout_marginEnd="48sp"/>
 
             </androidx.appcompat.widget.Toolbar>
 

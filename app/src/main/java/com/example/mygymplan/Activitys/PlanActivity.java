@@ -268,6 +268,14 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
                     LoadMyPlans();
                 }
+            }, new PlanRVAdapter.OnItemClickSetActive() {
+                @Override
+                public void setActiveButtonClick(Plan plan) {
+                    PlanService planService = new PlanService();
+                    planService.activePlan(getApplicationContext(), plan);
+
+                    LoadMyPlans();
+                }
             });
             // Display Workouts in Recycler View
             recyclerView.setAdapter(adapter);

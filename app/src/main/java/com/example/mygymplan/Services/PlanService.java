@@ -146,31 +146,36 @@ public class PlanService extends AppCompatActivity {
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public void ActivePlan(Context context, Plan plan) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    public void activePlan(Context context, Plan plan) {
 
-            }
-        }).start();
-
-        // Variables
-        Plan deactivePlan = new Plan();
-        List<Plan> planList = new ArrayList<>();
-
-        // Access Database
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
 
-        // List All Plans from Database
-        planList = dao.listPlans();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // List All Plans from Database
+                List<Plan> allPlans = dao.listPlans();
 
-        // Select only the Last Active Plan
-        for (Plan item : planList) {
-            if (item.active == true) {
-                deactivePlan = item;
+                // Deactivate any other Active Plan
+                for (Plan item : allPlans) {
+                    if (item != plan) {
+                        if (item.active == true) {
+                            item.active = false;
+                            dao.updatePlan(item);
+                        }
+                    }
+                }
+
+                if (plan.active != true) {
+                    // Active only the selected Plan
+                    plan.active = true;
+                    dao.updatePlan(plan);
+                }
             }
-        }
+        }).start();
+
+        db.close();
     }
 
 }
