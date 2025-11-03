@@ -246,7 +246,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             startActivity(intent);
         }
         // -----------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_change_plan) {
+        if (menuItem.getItemId() == R.id.nav_plans) {
             Intent intent = new Intent(this, PlanActivity.class);
             startActivity(intent);
         }
@@ -280,136 +280,10 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ----------------------------------------------
     // --------- Add Exercise From Database ---------
     // ----------------------------------------------
-
     public void AddExercise() {
         popupService.addExercisePopup(this, WorkoutActivity.this);
     }
 
-    public void AddExercise2() {
-        // Open new Popup where user create a new Plan
-        // -------------------------------------------------------
-        // Inflate Activity with a new View
-        View popupView = View.inflate(this, R.layout.popup_add_exercise, null);
-
-        // Popup View UI Content
-        Button MyExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
-        Button DatabaseButton = popupView.findViewById(R.id.DatabaseExercisesButton);
-        Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
-        RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
-
-        // Initialize new Popup View
-        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        // Set Shadow
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setElevation(10.0f);
-        // Set Popup Location on Screen
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Initialize ListS
-                myExercises = new ArrayList<>();
-                databaseExercises = new ArrayList<>();
-                List<SavedExercise> allExercises;
-
-                // List All Exercises
-                allExercises = dao.listSavedExercise();
-
-                // ---------- MY EXERCISES ----------
-                if (!allExercises.isEmpty()) {
-                    for (SavedExercise item : allExercises) {
-                        if (item.userCreated) {
-                            myExercises.add(item);
-                        }
-                    }
-                }
-
-                // ---------- DATABASE ----------
-                if (!allExercises.isEmpty()) {
-                    for (SavedExercise item : allExercises) {
-                        if (!item.userCreated) {
-                            databaseExercises.add(item);
-                        }
-                    }
-                }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // ------ Show Recycler View (My Exercises when Open) ------
-                        myExerciseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(SavedExercise item) {
-                                AddExerciseToWorkout(item);
-                                // Show Text on Screen
-                                Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
-                                ///////////// If Changed to Popup Service, Alter context //////////////
-                                popupWindow.dismiss();
-                            }
-                        });
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Display Exercises inside the Recycler View
-                                addExerciseRV.setAdapter(myExerciseAdapter);
-                                addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-                            }
-                        }, 500); // 3000 milliseconds = 3 seconds
-
-                    }
-                });
-            }
-        }).start();
-
-        db.close();
-
-
-        // ------ Buttons ------
-        MyExercisesButton.setOnClickListener(v -> {
-            // ------ Show Recycler View (My Exercises when Open) ------
-            SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(SavedExercise item) {
-                    AddExerciseToWorkout(item);
-                    // Show Text on Screen
-                    Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
-                    ///////////// If Changed to Popup Service, Alter context //////////////
-                    popupWindow.dismiss();
-                }
-            });
-            // Display Exercises inside the Recycler View
-            addExerciseRV.setAdapter(myExerciseAdapter);
-            addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-        });
-
-        DatabaseButton.setOnClickListener(v -> {
-            // ------ Show Recycler View (My Exercises when Open) ------
-            databaseAdapter = new SavedExerciseRVAdapter(WorkoutActivity.this, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(SavedExercise item) {
-                    AddExerciseToWorkout(item);
-                    // Show Text on Screen
-                    Toast.makeText(getApplicationContext(), "Exercise Add",Toast.LENGTH_SHORT).show();
-                    ///////////// If Changed to Popup Service, Alter context //////////////
-                    popupWindow.dismiss();
-                }
-            });
-            // Display Exercises inside the Recycler View
-            addExerciseRV.setAdapter(databaseAdapter);
-            addExerciseRV.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-        });
-
-        closeButton.setOnClickListener(v -> {
-            popupWindow.dismiss();
-        });
-
-    }
 
 
     // --------------------------------------------
@@ -523,21 +397,14 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             public void deleteButtonClick(int position) {
                                 DeleteFromRecyclerView(position);
                             }
-                        }, new ExerciseRVAdapter.OnItemSwapPositionsClick() {
-                            @Override
-                            public void swapButtonClick(int position) {
-                                // Attach Item Touch to RecyclerView
-                                mIth.attachToRecyclerView(recyclerView);
-                            }
                         });
                         // Display Exercises inside the Recycler View
                         recyclerView.setAdapter(exerciseAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+                        // Attach item Helper
+                        mIth.attachToRecyclerView(recyclerView);
                         // Then Check if Need to Change the UI...
                         ChangeUIVisibility();
-
-
-
                     }
                 });
             }
@@ -600,6 +467,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         UpdateRecyclerView(thisWorkout);
         ChangeUIVisibility();
     }
+
 
 
     // ----------------------------------------------

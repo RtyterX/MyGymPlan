@@ -20,61 +20,63 @@
             android:id="@+id/RecycleViewWorkouts"
             android:layout_width="394dp"
             android:layout_height="600dp"
+            android:onClick="ChangePlan"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.478"
+            app:layout_constraintHorizontal_bias="0.47"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar2">
+            app:layout_constraintTop_toBottomOf="@+id/PlanNameText">
 
         </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/EmptyRVText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VOCE AINDA NAO TEM NENHUM WORKOUT"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.41" />
 
 
         <TextView
             android:id="@+id/PlanNameText"
             android:layout_width="213dp"
             android:layout_height="32dp"
+            android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="My Workout Plan"
             android:textAlignment="center"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/RecycleViewWorkouts"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
         <Button
-            android:id="@+id/EmptyButton"
+            android:id="@+id/StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginTop="320dp"
+            android:onClick="NewPlan"
+            android:text="Start"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2"
+            app:layout_constraintVertical_bias="0.133" />
+
+        <Button
+            android:id="@+id/ChangePlan2Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="372dp"
-            android:onClick="NewPlan"
-            android:text="Create From Scratch"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@android:color/transparent"
+            android:text="Change Plan"
+            android:textColor="@color/blue2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EmptyRVText"
-            app:layout_constraintVertical_bias="1.0" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/StartButton" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
-            android:layout_width="413dp"
+            android:layout_width="412dp"
             android:layout_height="60dp"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
@@ -116,24 +118,22 @@
 
 
             <Button
-                android:id="@+id/NewPlanButton"
-                android:layout_width="150dp"
+                android:id="@+id/ChangePlanButton"
+                android:layout_width="177dp"
                 android:layout_height="49dp"
-                android:layout_marginStart="30dp"
-                android:onClick="NewPlan"
-                android:text="New Plan"
+                android:text="Change Plan"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/NewWorkout"
-                android:layout_width="150dp"
+                android:layout_width="177dp"
                 android:layout_height="49dp"
-                android:onClick="NewWorkout"
                 android:text="New Workout"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/NewPlanButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ChangePlanButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

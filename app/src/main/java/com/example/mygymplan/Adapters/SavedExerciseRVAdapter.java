@@ -23,16 +23,28 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         void onItemClick(SavedExercise item);
     }
 
+    public interface OnShareClickListener {
+        void onItemShare(SavedExercise item);
+    }
+
+    public interface OnEditClickListener {
+        void onItemEdit(SavedExercise item);
+    }
+
     Context context;
     List<SavedExercise> savedExerciseList;
     OnItemClickListener onListener;
+    OnShareClickListener shareListener ;
+    OnEditClickListener editListener;
 
 
     // Constructor
-    public SavedExerciseRVAdapter(Context context, List<SavedExercise> savedExerciseList, OnItemClickListener onListener) {
+    public SavedExerciseRVAdapter(Context context, List<SavedExercise> savedExerciseList, OnItemClickListener onListener, OnShareClickListener shareListener, OnEditClickListener editListener) {
         this.context = context;
         this.savedExerciseList = savedExerciseList;
         this.onListener = onListener;
+        this.shareListener = shareListener;
+        this.editListener = editListener;
     }
 
     @NonNull
@@ -54,9 +66,23 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         holder.textViewName.setText(savedExerciseList.get(position).name);
         holder.textViewType.setText(savedExerciseList.get(position).type.toString());
         holder.textViewDeleteDate.setText(String.valueOf(savedExerciseList.get(position).createdDate));
-
-        // Image View
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
+
+        // Edit Button
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editListener.onItemEdit(savedExerciseList.get(position));
+            }
+        });
+
+        // Share Button
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareListener.onItemShare(savedExerciseList.get(position));
+            }
+        });
 
         // On Item Click ( Everything inside "bind()" )
         holder.bind(savedExerciseList.get(position), onListener);
@@ -76,6 +102,8 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         TextView textViewType;
         TextView textViewDeleteDate;
         ImageView imageView;
+        ImageView shareButton;
+        ImageView editButton;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
@@ -85,7 +113,8 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
             textViewType = itemView.findViewById(R.id.AddExerciseRVType);
             textViewDeleteDate = itemView.findViewById(R.id.AddExerciseRVDelete);
             imageView = itemView.findViewById(R.id.AddExerciseImageRV);
-
+            shareButton = itemView.findViewById(R.id.ShareExerciseIcon);
+            editButton = itemView.findViewById(R.id.EditSavedExerciseIcon);
         }
 
         public void bind(SavedExercise item, OnItemClickListener onlistener) {

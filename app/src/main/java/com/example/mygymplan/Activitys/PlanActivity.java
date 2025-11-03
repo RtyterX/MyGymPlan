@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -83,6 +82,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         Button myPlans = findViewById(R.id.MyPlansButton);
         Button databasePlans = findViewById(R.id.DatabasePlansButton);
         Button backButton = findViewById(R.id.BackButton2);
+        Button newPlan = findViewById(R.id.CreateNewPlanButton);
 
         // -------------------------------
         LoadDatabasePlans();
@@ -110,7 +110,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         // userPhoto.setImageResource();
 
 
-
         // ----- Buttons -----
         myPlans.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +125,14 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        newPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                teste();
+            }
+        });
+
+        // -----------------------------------------------------
         // Only for Testing
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +144,10 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    public void teste() {
+        popupService.NewPlanActivityPopup(this, this, username);
     }
 
     private void LoadPrefs() {
@@ -158,7 +169,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         // -----------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_change_plan) {
+        if (menuItem.getItemId() == R.id.nav_plans) {
             Intent intent = new Intent(this, PlanActivity.class);
             startActivity(intent);
         }

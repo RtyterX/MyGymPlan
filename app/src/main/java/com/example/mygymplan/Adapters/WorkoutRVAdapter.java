@@ -27,29 +27,21 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
     }
 
-    public interface OnItemLongClickSwapPositions {
-        void swapButtonLongClick(int position);
-    }
-
     public interface OnClickEditListener {
         void editButtonClick(Workout workout);
     }
 
-
     Context context;
     List<Workout> workoutList;
     OnItemClickListener onListener;
-    OnItemLongClickSwapPositions onSwapListener;
-
     OnClickEditListener editListener;
 
 
     // Constructor
-    public WorkoutRVAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener, OnItemLongClickSwapPositions onSwapListener, OnClickEditListener editListener) {
+    public WorkoutRVAdapter(Context context, List<Workout> workoutList, OnItemClickListener onListener, OnClickEditListener editListener) {
         this.context = context;
         this.workoutList = workoutList;
         this.onListener = onListener;
-        this.onSwapListener = onSwapListener;
         this.editListener = editListener;
     }
 
@@ -75,17 +67,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         holder.textViewDescription.setText(workoutList.get(position).wDescription);
         holder.textViewType.setText(workoutList.get(position).wType.toString());
         holder.textViewLastMod.setText(workoutList.get(position).lastModified);
-
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
-
-        // Swap Positions Button
-        holder.swapPositionButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onSwapListener.swapButtonLongClick(position);
-                return true;
-            }
-        });
 
         // Edit Button
         holder.editButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +76,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
                 editListener.editButtonClick(workoutList.get(position));
             }
         });
-
 
         // On Item Click
         holder.bind(workoutList.get(position), onListener);
@@ -130,7 +111,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         TextView textViewDuration;
         TextView textViewLastMod;
         ImageView imageView;
-        ImageView swapPositionButton;
         ImageView editButton;
 
 
@@ -144,7 +124,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
             textViewLastMod = itemView.findViewById(R.id.LastModifiedWorkout);
             imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
             textViewDuration = itemView.findViewById(R.id.WorkoutDurationTime);
-            swapPositionButton = itemView.findViewById(R.id.WorkoutSwapButton);
             editButton = itemView.findViewById(R.id.EditWorkoutRV);
         }
 

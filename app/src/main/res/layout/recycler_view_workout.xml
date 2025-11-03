@@ -91,20 +91,19 @@
         android:id="@+id/LastModifiedWorkout"
         android:layout_width="45dp"
         android:layout_height="14dp"
-        android:layout_marginEnd="10dp"
         android:text="TextView"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
+        app:layout_constraintEnd_toStartOf="@+id/EditWorkoutRV"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <TextView
         android:id="@+id/LastModifiedTitle"
         android:layout_width="44dp"
-        android:layout_height="16dp"
+        android:layout_height="14dp"
         android:text="LastMod: "
         android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/LastModifiedWorkout"
-        app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutDescription" />
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <ImageView
         android:id="@+id/WorkoutSwapButton"
@@ -124,5 +123,15 @@
         app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
         app:srcCompat="@drawable/edit_icon2" />
+
+    <Button
+        android:id="@+id/DropdownExercisesListWRV"
+        android:layout_width="55dp"
+        android:layout_height="29dp"
+        android:text="V"
+        android:textAlignment="center"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

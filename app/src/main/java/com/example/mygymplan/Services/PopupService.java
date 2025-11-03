@@ -1,6 +1,5 @@
 package com.example.mygymplan.Services;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,13 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.mygymplan.Activitys.MainActivity;
+import com.example.mygymplan.Activitys.PlanActivity;
 import com.example.mygymplan.Activitys.WorkoutActivity;
 import com.example.mygymplan.Adapters.PlanRVAdapter;
 import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Database.SavedExerciseDao;
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
@@ -41,10 +40,10 @@ import java.util.List;
 
 public class PopupService extends AppCompatActivity {
     Workout newWorkout;
-    private List<SavedExercise> databaseExercises;
-    private List<SavedExercise> myExercises;
+    private List<SavedExercise> databaseExercises = new ArrayList<>();
+    private List<SavedExercise> myExercises = new ArrayList<>();
 
-    public void NewPlanPopup(Context context, MainActivity mainActivity, String username) {
+    public void NewPlanMainActivityPopup(Context context, MainActivity mainActivity, String username) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_plan, null);
 
@@ -118,6 +117,95 @@ public class PopupService extends AppCompatActivity {
                     planService.insertPlan(context, newPlan);
                     // Update Activity
                     mainActivity.CheckPlan();
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
+                    // Close Popup
+                    popupWindow.dismiss();
+                    subPopupWindow.dismiss();
+                });
+            }
+            // --------------------------------------------------------------------
+        });
+
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+    }
+
+
+    public void NewPlanActivityPopup(Context context, PlanActivity activity, String username) {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_new_plan, null);
+
+        // Popup View UI Content
+        EditText newPlanName = popupView.findViewById(R.id.NewPlanName);
+        EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
+        TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
+        TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // ------ Buttons ------
+        confirmButton.setOnClickListener(v -> {
+            // --------------------------------------------------------------------
+            if (newPlanName.getText().toString().isEmpty()) {
+                newPlanNameWarning.setVisibility(View.VISIBLE);
+            } else if (newPlanDescription.getText().toString().isEmpty()) {
+                newPlanDescripWarning.setVisibility(View.VISIBLE);
+            } else {
+
+                PlanService planService = new PlanService();
+
+                // Inflate Activity with a new View
+                View subView = View.inflate(context, R.layout.popup_warning, null);
+
+                // Popup View UI Content
+                TextView popupText = subView.findViewById(R.id.WarningMessage);
+                Button yesButton = subView.findViewById(R.id.ConfirmWarningButton);
+                Button noButton = subView.findViewById(R.id.CloseWarningButton);
+
+                // Initialize new Popup View
+                PopupWindow subPopupWindow = new PopupWindow(subView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                // Set Shadow
+                subPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                subPopupWindow.setElevation(10.0f);
+                // Set Popup Location on Screen
+                subPopupWindow.showAtLocation(subView, Gravity.CENTER, 0, 0);
+
+                // Set Text Warning
+                popupText.setText("Gostaria de deixar o Plano como Ativo?");
+                yesButton.setText("Yes");
+                noButton.setText("No");
+
+                // ------ Buttons ------
+                yesButton.setOnClickListener(subV -> {
+                    // Create Plan as Active
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
+                    planService.insertPlan(context, newPlan);
+                    planService.activePlan(context, newPlan);
+                    // Update Activity
+                    activity.LoadMyPlans();
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
+                    // Close Popup
+                    popupWindow.dismiss();
+                    subPopupWindow.dismiss();
+                });
+
+                noButton.setOnClickListener(subV -> {
+                    // Create Plan but Not Active
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
+                    planService.insertPlan(context, newPlan);
+                    // Update Activity
+                    activity.LoadMyPlans();
                     // Show Text on Screen
                     Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
                     // Close Popup
@@ -428,7 +516,7 @@ public class PopupService extends AppCompatActivity {
     }
 
 
-    public void addExercisePopup(Context context, Activity activity) {
+    public void addExercisePopup(Context context, WorkoutActivity activity) {
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
@@ -456,8 +544,6 @@ public class PopupService extends AppCompatActivity {
             public void run() {
 
                 // Initialize ListS
-                List<SavedExercise> myExercises = new ArrayList<>();
-                List<SavedExercise> databaseExercises = new ArrayList<>();
                 List<SavedExercise> allExercises;
 
                 // List All Exercises
@@ -489,12 +575,26 @@ public class PopupService extends AppCompatActivity {
                         SavedExerciseRVAdapter savedExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(SavedExercise item) {
-                                WorkoutActivity workoutActivity = new WorkoutActivity();
-                                workoutActivity.AddExerciseToWorkout(item);
+                                activity.AddExerciseToWorkout(item);
                                 // Show Text on Screen
-                                Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
-                                ///////////// If Changed to Popup Service, Alter context //////////////
+                                Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
                                 popupWindow.dismiss();
+                            }
+                        }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                            @Override
+                            public void onItemShare(SavedExercise item) {
+                                ShareService shareService = new ShareService();
+                                Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                            }
+                        }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                            @Override
+                            public void onItemEdit(SavedExercise item) {
+                                //Intent intent = new Intent(activity, ExerciseActivity.class);
+                               //intent.putExtra("SelectedPlan", thisPlan);
+                               // intent.putExtra("SelectedWorkout", thisWorkout);
+                               // intent.putExtra("SelectedExercise", item);
+                              //  startActivity(intent);
                             }
                         });
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -520,12 +620,26 @@ public class PopupService extends AppCompatActivity {
             SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(SavedExercise item) {
-                    WorkoutActivity workoutActivity = new WorkoutActivity();
-                    workoutActivity.AddExerciseToWorkout(item);
+                    activity.AddExerciseToWorkout(item);
                     // Show Text on Screen
-                    Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
-                    ///////////// If Changed to Popup Service, Alter context //////////////
+                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
                     popupWindow.dismiss();
+                }
+            }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                @Override
+                public void onItemShare(SavedExercise item) {
+                    ShareService shareService = new ShareService();
+                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                }
+            }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                @Override
+                public void onItemEdit(SavedExercise item) {
+                    //Intent intent = new Intent(activity, ExerciseActivity.class);
+                    //intent.putExtra("SelectedPlan", thisPlan);
+                    // intent.putExtra("SelectedWorkout", thisWorkout);
+                    // intent.putExtra("SelectedExercise", item);
+                    //  startActivity(intent);
                 }
             });
             // Display Exercises inside the Recycler View
@@ -538,12 +652,26 @@ public class PopupService extends AppCompatActivity {
             SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(SavedExercise item) {
-                    WorkoutActivity workoutActivity = new WorkoutActivity();
-                    workoutActivity.AddExerciseToWorkout(item);
+                    activity.AddExerciseToWorkout(item);
                     // Show Text on Screen
-                    Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
-                    ///////////// If Changed to Popup Service, Alter context //////////////
+                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
                     popupWindow.dismiss();
+                }
+            }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                @Override
+                public void onItemShare(SavedExercise item) {
+                    ShareService shareService = new ShareService();
+                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                }
+            }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                @Override
+                public void onItemEdit(SavedExercise item) {
+                    //Intent intent = new Intent(activity, ExerciseActivity.class);
+                    //intent.putExtra("SelectedPlan", thisPlan);
+                    // intent.putExtra("SelectedWorkout", thisWorkout);
+                    // intent.putExtra("SelectedExercise", item);
+                    //  startActivity(intent);
                 }
             });
             // Display Exercises inside the Recycler View

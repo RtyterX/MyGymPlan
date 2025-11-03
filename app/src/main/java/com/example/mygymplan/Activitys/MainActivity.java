@@ -8,8 +8,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,12 +61,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // UI Elements
     TextView planName;
-    Button emptyButton;
-    Button emptyWorkoutButton;
+    Button startButton;
+
+    // Buttons
+    Button newWorkout;
+    Button changePlan;
+    Button changePlan2;
 
     // RecyclerView
     RecyclerView recyclerView;
-    TextView emptyText;
     TextView count;
     WorkoutRVAdapter workoutAdapter;
 
@@ -103,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // --- Components ---
         planName = findViewById(R.id.PlanNameText);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
-        emptyText = findViewById(R.id.EmptyRVText);
-        emptyButton = findViewById(R.id.EmptyButton);
+        startButton = findViewById(R.id.StartButton);
         count = findViewById(R.id.RVCount);
         // Buttons
-        Button newPlan = findViewById(R.id.NewPlanButton);
-        Button newWorkout = findViewById(R.id.NewWorkout);
+        newWorkout = findViewById(R.id.NewWorkout);
+        changePlan = findViewById(R.id.ChangePlanButton);
+        changePlan2  = findViewById(R.id.ChangePlan2Button);
 
 
         // ---- Show Workouts in Recycle View or -----
@@ -146,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
         TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
         ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
-       userNameText.setText(username);
+        userNameText.setText(username);
         userEmailText.setText(email);
         // userPhoto.setImageResource();
 
@@ -162,9 +167,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ----------------- BUTTONS -----------------
         // -------------------------------------------
 
-        newPlan.setOnClickListener(new View.OnClickListener() {
+        changePlan.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { NewPlan(); }
+            public void onClick(View v) { ChangePlan(); }
+        });
+
+        changePlan2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { ChangePlan(); }
         });
 
         newWorkout.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------- Create New Plan  --------------------
     // ------------------------------------------------------
     public void NewPlan() {
-        popupService.NewPlanPopup(this, this, username);
+        popupService.NewPlanMainActivityPopup(this, this, username);
     }
 
 
@@ -234,6 +244,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         popupService.EditWorkoutPopup(this, this, workout);
     }
 
+    public void ChangePlan() {
+        Intent intent = new Intent(this, PlanActivity.class);
+        startActivity(intent);
+    }
+
 
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
@@ -248,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         // -----------------------------------------------------------------------------
-        if (menuItem.getItemId() == R.id.nav_change_plan) {
+        if (menuItem.getItemId() == R.id.nav_plans) {
             Intent intent = new Intent(this, PlanActivity.class);
             startActivity(intent);
         }
@@ -401,11 +416,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onItemLongClick(Workout item) {
                     // Do nothing
                 }
-            }, new WorkoutRVAdapter.OnItemLongClickSwapPositions() {
-                @Override
-                public void swapButtonLongClick(int position) {
-                    mIth.attachToRecyclerView(recyclerView);
-                }
             }, new WorkoutRVAdapter.OnClickEditListener() {
                 @Override
                 public void editButtonClick(Workout item) {
@@ -415,6 +425,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Display Workouts in Recycler View
             recyclerView.setAdapter(workoutAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+            // Attach Item Helper
+            mIth.attachToRecyclerView(recyclerView);
 
             ChangeUIVisibility();
         } else {
@@ -429,22 +441,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
     private void ChangeUIVisibility() {
-        Button newWorkout = findViewById(R.id.NewWorkout);
-        Button newPlan = findViewById(R.id.NewPlanButton);
-        emptyWorkoutButton = findViewById(R.id.EmptyButton);
-
         // -------------------
         // ----- NO PLAN -----
         // -------------------
         if (thisPlan == null) {
             // -- Recycler View --
             recyclerView.setVisibility(View.GONE);
-            emptyButton.setVisibility(View.VISIBLE);
-            emptyText.setVisibility(View.VISIBLE);
+            startButton.setVisibility(View.VISIBLE);
             // -- Buttons --
+            changePlan2.setVisibility(View.GONE);
             newWorkout.setVisibility(View.GONE);
-            newPlan.setVisibility(View.GONE);
-            emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+            changePlan.setVisibility(View.GONE);
+            startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     NewPlan();
@@ -461,13 +469,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (displayedWorkouts.isEmpty()) {
                 // -- Recycler View --
                 recyclerView.setVisibility(View.GONE);
-                emptyButton.setVisibility(View.VISIBLE);
-                emptyText.setVisibility(View.VISIBLE);
+                startButton.setVisibility(View.VISIBLE);
                 // -- Buttons --
-                newPlan.setVisibility(View.GONE);
+                changePlan2.setVisibility(View.VISIBLE);
+                changePlan.setVisibility(View.GONE);
                 newWorkout.setVisibility(View.GONE);
-                emptyWorkoutButton.setText("Create New Workout");
-                emptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+                startButton.setText("Create Workout");
+                startButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         NewWorkout();
@@ -481,9 +489,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // -----------------
                 recyclerView.setVisibility(View.VISIBLE);
                 // -- Buttons --
-                emptyButton.setVisibility(View.GONE);
-                emptyText.setVisibility(View.GONE);
-                newPlan.setVisibility(View.VISIBLE);
+                changePlan2.setVisibility(View.GONE);
+                startButton.setVisibility(View.GONE);
+                changePlan.setVisibility(View.VISIBLE);
                 newWorkout.setVisibility(View.VISIBLE);
 
                 CheckWorkoutLimit();
@@ -508,34 +516,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    // -------------------------------------------------------
-    // ---------- Display Another Plan on Screen  ------------
-    // -------------------------------------------------------
-    public void ShowAnotherPlan(Plan plan) {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                List<Plan> plansList = new ArrayList<>();
-                plansList = dao.listPlans();
-
-                for (Plan item : plansList) {
-                    if (item == plan) {
-                        thisPlan = item;
-                    }
-                }
-
-                // ReloadRecyclerView();
-            }
-        }).start();
-
-        db.close();
-
-    }
 
     //////////////////////// END ////////////////////////
 }
