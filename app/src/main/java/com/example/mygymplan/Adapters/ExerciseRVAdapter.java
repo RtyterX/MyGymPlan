@@ -114,8 +114,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewRest;
         TextView textViewLoad;
         TextView textViewLastMod;
-        ImageButton swapPositionButton;
-        ImageButton deleteExerciseButton;
+        ImageView swapPositionButton;
+        ImageView deleteExerciseButton;
         ImageView imageView;
 
         // Constructor

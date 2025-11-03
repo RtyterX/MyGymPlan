@@ -2,6 +2,7 @@ package com.example.mygymplan.Services;
 
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.mygymplan.Database.AppDatabase;
@@ -13,7 +14,38 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanService {
+public class PlanService extends AppCompatActivity {
+
+    public void getActivePlan(Context context, Plan plan) {
+
+        Plan activePlan = new Plan();
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<Plan> allPlans = dao.listPlans();
+
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Plan item : allPlans) {
+                            if (item.active == true) {
+                                //activePlan = item;
+                            }
+                        }
+                    }
+                });
+            }
+        }).start();
+
+        db.close();
+    }
 
     // ---------------------------------------------------------------------------------------------------
     public void insertPlan(Context context, Plan plan) {

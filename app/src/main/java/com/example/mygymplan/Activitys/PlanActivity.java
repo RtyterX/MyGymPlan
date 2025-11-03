@@ -32,6 +32,7 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -256,6 +257,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(PlanActivity.this, MainActivity.class);
                     intent.putExtra("SelectedPlan", item);
                     startActivity(intent);
+                }
+            }, new PlanRVAdapter.OnItemClickDelete() {
+                @Override
+                public void deleteButtonClick(Plan plan) {
+                    PlanService planService = new PlanService();
+                    planService.deletePlan(getApplicationContext(), plan);
+                    LoadMyPlans();
                 }
             });
             // Display Workouts in Recycler View

@@ -1,5 +1,6 @@
 package com.example.mygymplan.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.R;
 
@@ -19,17 +21,22 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
     public interface OnItemClickListener {
         void onItemClick(Plan item);
     }
+    public interface OnItemClickDelete {
+        void deleteButtonClick(Plan item);
+    }
 
     Context context;
     List<Plan> planList;
     OnItemClickListener onListener;
+    OnItemClickDelete deleteListener;
 
 
     // Constructor
-    public PlanRVAdapter(Context context, List<Plan> planList, OnItemClickListener onListener) {
+    public PlanRVAdapter(Context context, List<Plan> planList, OnItemClickListener onListener, OnItemClickDelete deleteListener) {
         this.context = context;
         this.planList = planList;
         this.onListener = onListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -44,7 +51,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlanRVAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlanRVAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
@@ -52,6 +59,13 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         holder.textViewDescription.setText(planList.get(position).planDescription);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
         //holder.textViewCreatedDate.setText(planList.get(position).createdDate);
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteListener.deleteButtonClick(planList.get(position));
+            }
+        });
 
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
@@ -74,6 +88,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         TextView textViewCreatedDate;
         //TextView textViewType;
         ImageView imageView;
+        ImageView deleteButton;
 
 
         // Constructor
@@ -83,7 +98,9 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             textViewName = itemView.findViewById(R.id.RecyclerPlanName);
             textViewDescription = itemView.findViewById(R.id.RecyclerPlanDescrip);
             //textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
+            imageView = itemView.findViewById(R.id.RecyclePlanImage);
+            deleteButton = itemView.findViewById(R.id.DeletePlanButton);
+
         }
 
         public void bind(Plan item, OnItemClickListener onlistener) {

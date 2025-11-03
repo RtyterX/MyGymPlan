@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.ShareService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
@@ -53,6 +54,10 @@ public class TesteActivity extends AppCompatActivity {
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
+        GetActivePlan();
+
+
+        // ------------------------------------------------------------------------------------
         resetPreferences.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +91,13 @@ public class TesteActivity extends AppCompatActivity {
         });
     }
 
+    private void GetActivePlan() {
+
+        PlanService planService = new PlanService();
+        planService.getActivePlan(getApplicationContext(), testPlan);
+
+    }
+
     public void DeleteDataBase(View view) {
         new Thread(new Runnable() {
             @Override
@@ -108,7 +120,6 @@ public class TesteActivity extends AppCompatActivity {
 
 
     public void SharePlan(View view) {
-
 
         new Thread(new Runnable() {
             @Override

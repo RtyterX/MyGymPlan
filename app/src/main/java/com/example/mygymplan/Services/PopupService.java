@@ -1,5 +1,6 @@
 package com.example.mygymplan.Services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,10 +24,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.mygymplan.Activitys.MainActivity;
+import com.example.mygymplan.Activitys.WorkoutActivity;
 import com.example.mygymplan.Adapters.PlanRVAdapter;
+import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
+import com.example.mygymplan.Database.SavedExerciseDao;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 
@@ -35,6 +41,8 @@ import java.util.List;
 
 public class PopupService extends AppCompatActivity {
     Workout newWorkout;
+    private List<SavedExercise> databaseExercises;
+    private List<SavedExercise> myExercises;
 
     public void NewPlanPopup(Context context, MainActivity mainActivity, String username) {
         // Inflate Activity with a new View
@@ -353,15 +361,21 @@ public class PopupService extends AppCompatActivity {
             @Override
             public void run() {
                 // Database
-                List<Plan> plansList = new ArrayList<>();
-                plansList = dao.listPlans();
+                List<Plan> planList = new ArrayList<>();
+                planList = dao.listPlans();
 
                 // Set Recycler View Adapter
-                PlanRVAdapter adapterPlan = new PlanRVAdapter(context, plansList, new PlanRVAdapter.OnItemClickListener() {
+                PlanRVAdapter adapterPlan = new PlanRVAdapter(context, planList, new PlanRVAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Plan item) {
                         // ShowAnotherPlan(item);
                         popupWindow.dismiss();
+                    }
+                }, new PlanRVAdapter.OnItemClickDelete() {
+                    @Override
+                    public void deleteButtonClick(Plan plan) {
+                        PlanService planService = new PlanService();
+                        planService.deletePlan(getApplicationContext(), plan);
                     }
                 });
 
@@ -401,6 +415,135 @@ public class PopupService extends AppCompatActivity {
 
         // Buttons
         confirmButton.setVisibility(View.GONE);
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+    }
+
+
+    public void addExercisePopup(Context context, Activity activity) {
+        // Open new Popup where user create a new Plan
+        // -------------------------------------------------------
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_add_exercise, null);
+
+        // Popup View UI Content
+        Button MyExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
+        Button DatabaseButton = popupView.findViewById(R.id.DatabaseExercisesButton);
+        Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
+        RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        SavedExerciseDao dao = db.savedExerciseDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Initialize ListS
+                List<SavedExercise> myExercises = new ArrayList<>();
+                List<SavedExercise> databaseExercises = new ArrayList<>();
+                List<SavedExercise> allExercises;
+
+                // List All Exercises
+                allExercises = dao.listSavedExercise();
+
+                // ---------- MY EXERCISES ----------
+                if (!allExercises.isEmpty()) {
+                    for (SavedExercise item : allExercises) {
+                        if (item.userCreated) {
+                            myExercises.add(item);
+                        }
+                    }
+                }
+
+                // ---------- DATABASE ----------
+                if (!allExercises.isEmpty()) {
+                    for (SavedExercise item : allExercises) {
+                        if (!item.userCreated) {
+                            databaseExercises.add(item);
+                        }
+                    }
+                }
+
+                // Run On UI When the above injection is applied
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ------ Show Recycler View (My Exercises when Open) ------
+                        SavedExerciseRVAdapter savedExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(SavedExercise item) {
+                                WorkoutActivity workoutActivity = new WorkoutActivity();
+                                workoutActivity.AddExerciseToWorkout(item);
+                                // Show Text on Screen
+                                Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
+                                ///////////// If Changed to Popup Service, Alter context //////////////
+                                popupWindow.dismiss();
+                            }
+                        });
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Display Exercises inside the Recycler View
+                                addExerciseRV.setAdapter(savedExerciseAdapter);
+                                addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+                            }
+                        }, 500); // 3000 milliseconds = 3 seconds
+
+                    }
+                });
+            }
+        }).start();
+
+        db.close();
+
+
+        // ------ Buttons ------
+        MyExercisesButton.setOnClickListener(v -> {
+            // ------ Show Recycler View (My Exercises when Open) ------
+            SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    WorkoutActivity workoutActivity = new WorkoutActivity();
+                    workoutActivity.AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
+                    ///////////// If Changed to Popup Service, Alter context //////////////
+                    popupWindow.dismiss();
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(myExerciseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+        });
+
+        DatabaseButton.setOnClickListener(v -> {
+            // ------ Show Recycler View (My Exercises when Open) ------
+            SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    WorkoutActivity workoutActivity = new WorkoutActivity();
+                    workoutActivity.AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(getApplicationContext(), "Exercise Add", Toast.LENGTH_SHORT).show();
+                    ///////////// If Changed to Popup Service, Alter context //////////////
+                    popupWindow.dismiss();
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(databaseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+        });
+
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });

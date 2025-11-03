@@ -18,6 +18,7 @@
         android:id="@+id/AddExerciseRV"
         android:layout_width="318dp"
         android:layout_height="326dp"
+        android:layout_marginTop="2sp"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
         app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
         app:layout_constraintTop_toBottomOf="@+id/DatabaseExercisesButton" />
@@ -41,8 +42,6 @@
         app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
         app:layout_constraintTop_toBottomOf="@+id/AddExerciseTitle" />
 
-
-
     <Button
         android:id="@+id/CloseAddExercise"
         android:layout_width="128dp"
@@ -60,12 +59,14 @@
         android:id="@+id/AddExerciseTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="Add Exercise"
         android:textAlignment="center"
         android:textSize="32sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundAddExercise" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/FindAddExerciseConstraint"
@@ -93,8 +94,9 @@
 
         <Button
             android:id="@+id/FindButtonAddExercise"
-            android:layout_width="64dp"
+            android:layout_width="54dp"
             android:layout_height="41dp"
+            android:layout_marginStart="2sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,6 +105,7 @@
             android:layout_width="55dp"
             android:layout_height="31dp"
             android:layout_marginTop="3sp"
+            android:layout_marginEnd="2sp"
             android:text="FIND"
             android:textAlignment="textEnd"
             android:textSize="24sp"

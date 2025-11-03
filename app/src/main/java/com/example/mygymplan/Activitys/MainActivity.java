@@ -301,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void CheckPlan() {
-
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
         new Thread(new Runnable() {
@@ -326,16 +325,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        GetWorkoutList();
+                        if (thisPlan != null) {
+                            GetWorkoutList();
+                        }
+                        else
+                        {
+                            ChangeUIVisibility();
+                        }
                     }
                 });
             }
         }).start();
 
         db.close();
-
     }
-
 
 
     // ---------------------------------------------------

@@ -96,7 +96,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // --> For Tests Only
     Button testButton;
 
-    PopupService popupService;
+    PopupService popupService = new PopupService();
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -185,9 +185,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         // --- Add Already Created Exercises ---
         addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AddExercise();
-            }
+            public void onClick(View v) { AddExercise(); }
         });
 
         // --- Back Button ---
@@ -282,13 +280,16 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ----------------------------------------------
     // --------- Add Exercise From Database ---------
     // ----------------------------------------------
+
     public void AddExercise() {
+        popupService.addExercisePopup(this, WorkoutActivity.this);
+    }
+
+    public void AddExercise2() {
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
         View popupView = View.inflate(this, R.layout.popup_add_exercise, null);
-
-        ExerciseService exerciseService = new ExerciseService();
 
         // Popup View UI Content
         Button MyExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
