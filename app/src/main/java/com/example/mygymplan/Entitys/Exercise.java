@@ -14,7 +14,8 @@ import java.util.Calendar;
 @Entity(tableName = "exercises", foreignKeys =
 @ForeignKey(entity = Workout.class,
         parentColumns = "id",
-        childColumns = "workout_Id"))
+        childColumns = "workout_Id",
+        onDelete = ForeignKey.CASCADE))
 public class Exercise implements Serializable {
 
     @PrimaryKey(autoGenerate = true)

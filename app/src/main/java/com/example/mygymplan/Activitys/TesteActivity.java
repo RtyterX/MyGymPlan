@@ -54,9 +54,6 @@ public class TesteActivity extends AppCompatActivity {
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
 
-        GetActivePlan();
-
-
         // ------------------------------------------------------------------------------------
         resetPreferences.setOnClickListener(new View.OnClickListener() {
             @Override

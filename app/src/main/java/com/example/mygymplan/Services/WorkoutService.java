@@ -81,19 +81,6 @@ public class WorkoutService extends AppCompatActivity {
             public void run() {
                 // Delete Workout
                 dao.deleteWorkout(workout);
-
-                // List All Workouts
-                List<Workout> allWorkouts = new ArrayList<>();
-                allWorkouts = dao.listWorkouts();
-
-                // Alter Workout List Order
-                List<Workout> newWorkouts = new ArrayList<>();
-                for (Workout item : allWorkouts) {
-                    if (item.order >= workout.order) {
-                        item.order -= 1;
-                        dao.updateWorkout(item);
-                    }
-                }
             }
         }).start();
 

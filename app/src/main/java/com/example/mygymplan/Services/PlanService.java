@@ -6,16 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Database.PlanDao;
+import com.example.mygymplan.Database.WorkoutDao;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Entitys.Workout;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlinx.coroutines.scheduling.WorkQueueKt;
+
 public class PlanService extends AppCompatActivity {
 
+    // ---------------------------------------------------------------------------------------------------
     public void getActivePlan(Context context, Plan plan) {
 
         Plan activePlan = new Plan();
@@ -28,7 +35,6 @@ public class PlanService extends AppCompatActivity {
             public void run() {
 
                 List<Plan> allPlans = dao.listPlans();
-
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
@@ -90,7 +96,6 @@ public class PlanService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 dao.deletePlan(plan);
             }
         }).start();

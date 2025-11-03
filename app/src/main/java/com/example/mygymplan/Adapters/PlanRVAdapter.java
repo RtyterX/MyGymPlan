@@ -22,7 +22,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         void onItemClick(Plan item);
     }
     public interface OnItemClickDelete {
-        void deleteButtonClick(Plan item);
+        void deleteButtonClick(int position);
     }
 
     Context context;
@@ -63,7 +63,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteListener.deleteButtonClick(planList.get(position));
+                deleteListener.deleteButtonClick(position);
             }
         });
 

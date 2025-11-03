@@ -2,6 +2,7 @@ package com.example.mygymplan.Entitys;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.example.mygymplan.Enums.WorkoutType;
@@ -9,7 +10,11 @@ import com.example.mygymplan.Enums.WorkoutType;
 import java.io.Serializable;
 import java.util.Calendar;
 
-@Entity(tableName = "workouts")
+@Entity(tableName = "workouts", foreignKeys =
+@ForeignKey(entity = Plan.class,
+        parentColumns = "id",
+        childColumns = "plan_Id",
+        onDelete = ForeignKey.CASCADE))
 public class Workout implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -36,6 +41,5 @@ public class Workout implements Serializable {
 
     @ColumnInfo(name = "plan_Id")
     public  int plan_Id;
-
 
 }

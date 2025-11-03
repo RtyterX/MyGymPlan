@@ -260,9 +260,12 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                 }
             }, new PlanRVAdapter.OnItemClickDelete() {
                 @Override
-                public void deleteButtonClick(Plan plan) {
+                public void deleteButtonClick(int position) {
                     PlanService planService = new PlanService();
-                    planService.deletePlan(getApplicationContext(), plan);
+                    planService.deletePlan(getApplicationContext(), planList.get(position));
+                    planList.remove(planList.get(position));
+                    adapter.notifyItemRemoved(position);
+
                     LoadMyPlans();
                 }
             });

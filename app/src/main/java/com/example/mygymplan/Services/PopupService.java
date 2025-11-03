@@ -102,7 +102,8 @@ public class PopupService extends AppCompatActivity {
                     Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
                     planService.insertPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.CheckPlan();
+                    mainActivity.recreate();
+                    //mainActivity.CheckPlan();
                     // Show Text on Screen
                     Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
                     // Close Popup
@@ -373,9 +374,9 @@ public class PopupService extends AppCompatActivity {
                     }
                 }, new PlanRVAdapter.OnItemClickDelete() {
                     @Override
-                    public void deleteButtonClick(Plan plan) {
+                    public void deleteButtonClick(int position) {
                         PlanService planService = new PlanService();
-                        planService.deletePlan(getApplicationContext(), plan);
+                       // planService.deletePlan(getApplicationContext(), planList.get(postion));
                     }
                 });
 
