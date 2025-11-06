@@ -292,25 +292,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                Uri imageUri = result.getData().getData();
-                naviBarImage.setImageURI(imageUri);
+                if (false) { //&& data != null && data.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    naviBarImage.setImageURI(imageUri);
 
-                // Convert Image to Bitmap
-                Drawable drawable = naviBarImage.getDrawable();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap = bitmapDrawable.getBitmap();
+                    // Convert Image to Bitmap
+                    Drawable drawable = naviBarImage.getDrawable();
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
 
-                // Convert to String
-                userImageString = imageConverter.ConvertToString(bitmap);
+                    // Convert to String
+                    userImageString = imageConverter.ConvertToString(bitmap);
 
-                // Check if its user First time opening App
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
-                editor.putString("userImageString", userImageString);
-                editor.apply();
+                    // Check if its user First time opening App
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                    editor.putString("userImageString", userImageString);
+                    editor.apply();
 
-                // Re Create App
-                recreate();
+                    // Re Create App
+                    recreate();
+
+                // } else if (resultCode == RESULT_CANCELED) {
+
+                }
             }
         });
     }
@@ -412,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Objects.equals(username, "")) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
             startActivity(intent);
+            finish();
         }
 
 

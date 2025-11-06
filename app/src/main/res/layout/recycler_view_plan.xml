@@ -97,6 +97,15 @@
             app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanDescrip"
             app:srcCompat="@drawable/delete_icon" />
 
+        <ImageView
+            android:id="@+id/EditPlanRV"
+            android:layout_width="37dp"
+            android:layout_height="33dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanDescrip"
+            app:layout_constraintTop_toTopOf="@+id/RecyclerPlanDescrip"
+            app:srcCompat="@drawable/edit_icon2" />
+
         <TextView
             android:id="@+id/BodyTypePlanRv"
             android:layout_width="17dp"

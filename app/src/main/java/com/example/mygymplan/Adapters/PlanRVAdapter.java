@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 
 import java.util.List;
@@ -29,21 +30,27 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         void setActiveButtonClick(Plan plan);
     }
 
+    public interface OnClickEditPlanListener {
+        void editButtonClick(Plan plan);
+    }
+
     Context context;
     List<Plan> planList;
     OnItemClickListener onListener;
     OnItemClickDelete deleteListener;
     OnItemClickSetActive setActiveListener;
+    OnClickEditPlanListener editListener;
 
 
 
     // Constructor
-    public PlanRVAdapter(Context context, List<Plan> planList, OnItemClickListener onListener, OnItemClickDelete deleteListener, OnItemClickSetActive setActiveListener) {
+    public PlanRVAdapter(Context context, List<Plan> planList, OnItemClickListener onListener, OnItemClickDelete deleteListener, OnItemClickSetActive setActiveListener, OnClickEditPlanListener editListener) {
         this.context = context;
         this.planList = planList;
         this.onListener = onListener;
         this.deleteListener = deleteListener;
         this.setActiveListener = setActiveListener;
+        this.editListener = editListener;
     }
 
     @NonNull
@@ -68,6 +75,14 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         // holder.textViewBodyType.setText(planList.get(position).bodyType);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
+
+        // Edit Plan
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editListener.editButtonClick(planList.get(position));
+            }
+        });
 
         // Delete Plan
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +121,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
 
         // TextView textViewWorkoutTypes;
         ImageView imageView;
+        ImageView editButton;
         ImageView deleteButton;
         Button setActiveButton;
 
@@ -121,6 +137,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             textViewBodyType = itemView.findViewById(R.id.BodyTypePlanRv);
             // textViewType = itemView.findViewById(R.id.BodyTypePlanRv);
             imageView = itemView.findViewById(R.id.RecyclePlanImage);
+            editButton = itemView.findViewById(R.id.EditPlanRV);
             deleteButton = itemView.findViewById(R.id.DeletePlanButton);
             setActiveButton = itemView.findViewById(R.id.SetPlanActiveRV);
         }

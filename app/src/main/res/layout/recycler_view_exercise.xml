@@ -24,11 +24,10 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="3dp"
         android:text="Sets"
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/RepsIconImage"
+        app:layout_constraintStart_toEndOf="@+id/SetsIconImage"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise" />
 
     <TextView
@@ -36,45 +35,44 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
         android:text="Reps"
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/DeleteWorkoutIcon"
+        app:layout_constraintStart_toEndOf="@+id/RepsIconImage"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise" />
 
     <TextView
         android:id="@+id/RecyclerExerciseRest"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="3dp"
         android:layout_marginBottom="28dp"
         android:text="Rest"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
-        app:layout_constraintEnd_toStartOf="@+id/LoadIconImage" />
+        app:layout_constraintStart_toEndOf="@+id/RestIconImage" />
 
     <TextView
         android:id="@+id/RecyclerExerciseLoad"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="28dp"
         android:text="Load"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
-        app:layout_constraintEnd_toStartOf="@+id/DeleteWorkoutIcon" />
+        app:layout_constraintStart_toEndOf="@+id/LoadIconImage" />
 
     <ImageView
         android:id="@+id/SwapPositionsExerciseRV"
         android:layout_width="39dp"
         android:layout_height="68dp"
+        android:layout_marginEnd="4dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/BackgroundRVExercise"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.441"
         app:srcCompat="@drawable/spheres_icon" />
 
     <TextView
@@ -99,15 +97,15 @@
             app:layout_constraintStart_toEndOf="@+id/RVWTypeTitle"
             app:layout_constraintTop_toBottomOf="@+id/RecyclerExerciseName" />
 
-        <ImageView
-            android:id="@+id/ImageRecyclerExercise"
-            android:layout_width="72dp"
-            android:layout_height="73dp"
-            android:layout_marginStart="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/SwapPositionsExerciseRV"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+    <ImageView
+        android:id="@+id/ImageRecyclerExercise"
+        android:layout_width="72dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundRVExercise"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/RVWTypeTitle"
@@ -123,37 +121,39 @@
         android:id="@+id/SetsIconImage"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toStartOf="@+id/RecyclerExerciseSets"
+        app:layout_constraintStart_toEndOf="@+id/RecyclerExerciseName"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
         app:srcCompat="@drawable/sets_icon" />
 
     <ImageView
-            android:id="@+id/RepsIconImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="28dp"
-            app:layout_constraintEnd_toStartOf="@+id/RecyclerExerciseReps"
-            app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
-            app:srcCompat="@drawable/reps_icon" />
+        android:id="@+id/RepsIconImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintStart_toEndOf="@+id/RecyclerExerciseSets"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
+        app:srcCompat="@drawable/reps_icon" />
 
     <ImageView
         android:id="@+id/RestIconImage"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_marginStart="12dp"
         android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
-        app:layout_constraintEnd_toStartOf="@+id/RecyclerExerciseRest"
+        app:layout_constraintStart_toEndOf="@+id/RecyclerExerciseName"
         app:srcCompat="@drawable/rest_icon" />
 
-        <ImageView
-            android:id="@+id/LoadIconImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="28dp"
-            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
-            app:layout_constraintEnd_toStartOf="@+id/RecyclerExerciseLoad"
-            app:srcCompat="@drawable/load_icon" />
+    <ImageView
+        android:id="@+id/LoadIconImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
+        app:layout_constraintStart_toEndOf="@+id/RecyclerExerciseRest"
+        app:srcCompat="@drawable/load_icon" />
 
         <TextView
             android:id="@+id/LastModifiedExercise"
@@ -181,11 +181,12 @@
         android:id="@+id/DeleteWorkoutIcon"
         android:layout_width="31dp"
         android:layout_height="44dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVExercise"
-        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVExercise"
+        app:layout_constraintEnd_toStartOf="@+id/SwapPositionsExerciseRV"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVExercise"
+        app:layout_constraintVertical_bias="0.492"
         app:srcCompat="@drawable/delete_icon" />
 
     <ImageView

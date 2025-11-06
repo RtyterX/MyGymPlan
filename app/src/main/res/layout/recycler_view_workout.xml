@@ -19,13 +19,26 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
+        android:id="@+id/WorkoutSwapButton"
+        android:layout_width="25dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="6dp"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintVertical_bias="0.487"
+        app:srcCompat="@drawable/spheres_icon" />
+
+    <ImageView
         android:id="@+id/RecyclerWorkoutImage"
         android:layout_width="92dp"
         android:layout_height="85dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/WorkoutSwapButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.375"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -56,12 +69,12 @@
         android:id="@+id/RecyclerWorkoutDescription"
         android:layout_width="132dp"
         android:layout_height="55dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
         android:maxLines="4"
         android:text="Descrição: Teste here"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutName"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <TextView
@@ -104,18 +117,6 @@
         android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/LastModifiedWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
-
-    <ImageView
-        android:id="@+id/WorkoutSwapButton"
-        android:layout_width="31dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="4dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintVertical_bias="0.484"
-        app:srcCompat="@drawable/spheres_icon" />
 
     <ImageView
         android:id="@+id/EditWorkoutRV"

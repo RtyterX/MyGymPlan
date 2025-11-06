@@ -2,6 +2,7 @@ package com.example.mygymplan.Services;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -471,6 +472,11 @@ public class PopupService extends AppCompatActivity {
                 }, new PlanRVAdapter.OnItemClickSetActive() {
                     @Override
                     public void setActiveButtonClick(Plan plan) {
+
+                    }
+                }, new PlanRVAdapter.OnClickEditPlanListener() {
+                    @Override
+                    public void editButtonClick(Plan plan) {
 
                     }
                 });

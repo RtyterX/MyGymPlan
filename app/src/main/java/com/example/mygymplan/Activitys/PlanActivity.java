@@ -157,7 +157,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         newPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                teste();
+                NewPlan();
             }
         });
 
@@ -177,10 +177,9 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
     // --------------------------------------------------------------------------------------------------
 
-    public void teste() {
+    public void NewPlan() {
         popupService.NewPlanActivityPopup(this, this, username);
     }
 
@@ -357,6 +356,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                     planService.activePlan(getApplicationContext(), plan);
 
                     LoadMyPlans();
+                }
+            }, new PlanRVAdapter.OnClickEditPlanListener() {
+                @Override
+                public void editButtonClick(Plan plan) {
+                    Intent intent = new Intent(PlanActivity.this, MainActivity.class);
+                    intent.putExtra("SelectedPlan", plan);
+                    startActivity(intent);
                 }
             });
             // Display Workouts in Recycler View

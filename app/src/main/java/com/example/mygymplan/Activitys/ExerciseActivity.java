@@ -313,6 +313,13 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
 
+    public void pickVideo() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        resultLauncher.launch(intent);
+    }
+
+
+
 
 
     // ---------------------------------------------------------------------------------------------------------
@@ -350,6 +357,7 @@ public class ExerciseActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(v -> {
             exerciseService.deleteExercise(getApplicationContext(), thisExercise);
             ChangeActivity();
+            finish();
         });
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();

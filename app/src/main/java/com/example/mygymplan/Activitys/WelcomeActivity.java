@@ -81,23 +81,23 @@ public class WelcomeActivity extends AppCompatActivity {
         });
 
 
-        next.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+       // next.setOnClickListener(new View.OnClickListener() {
+         //   public void onClick(View v) {
 
-                page++;
-                switchScreens();
+             //   page++;
+             //   switchScreens();
 
-            }
-        });
+           // }
+       // });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+       // back.setOnClickListener(new View.OnClickListener() {
+         //   public void onClick(View v) {
 
-                page--;
-                switchScreens();
+           //     page--;
+            //    switchScreens();
 
-            }
-        });
+          //  }
+      //  });
     }
 
 

@@ -71,7 +71,7 @@ public class WelcomePage5 extends AppCompatActivity {
                 // Change Activity
                 Intent intent = new Intent(WelcomePage5.this, MainActivity.class);
                 startActivity(intent);
-
+                finish();
             }
         });
 
