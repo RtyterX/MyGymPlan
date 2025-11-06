@@ -5,7 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.Toolbar;
 
 
@@ -39,10 +50,13 @@ import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.PopupService;
 import com.example.mygymplan.Services.WorkoutService;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,18 +64,20 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
+    // Entity's
     Plan thisPlan;
-    List<Workout> displayedWorkouts = new ArrayList<>();;
+    List<Workout> displayedWorkouts = new ArrayList<>();
+    PopupService popupService = new PopupService();
 
     // Shared Preferences
     String username;
     String email;
+    String userImageString;
 
     // UI Elements
     TextView planName;
     Button startButton;
+    ItemTouchHelper mIth;
 
     // Buttons
     Button newWorkout;
@@ -76,12 +92,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+
+    // Others
     Button testButton;
 
-    ItemTouchHelper mIth;
+    // Test
+    ActivityResultLauncher<Intent> resultLauncher;
+    ImageView naviBarImage;
 
-    PopupService popupService = new PopupService();
+    ImageConverter imageConverter = new ImageConverter();
 
+    
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -110,10 +131,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         startButton = findViewById(R.id.StartButton);
         count = findViewById(R.id.RVCount);
+        ImageView dbPlanIcon = findViewById(R.id.PlanFromDBIcon);
         // Buttons
         newWorkout = findViewById(R.id.NewWorkout);
         changePlan = findViewById(R.id.ChangePlanButton);
-        changePlan2  = findViewById(R.id.ChangePlan2Button);
+        changePlan2 = findViewById(R.id.ChangePlan2Button);
 
 
         // ---- Show Workouts in Recycle View or -----
@@ -146,14 +168,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
+
+        RegisterResult();
+
+
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
         TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
         TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
-        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+        naviBarImage = headerView.findViewById(R.id.UserPhotoNaviBar);
         userNameText.setText(username);
         userEmailText.setText(email);
-        // userPhoto.setImageResource();
+        // Set Image
+        Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
+        naviBarImage.setImageBitmap(bitmap2);
+
+
+        naviBarImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
+
+
+        // Check if plan is from app DB
+        if (thisPlan != null) {
+            if (Objects.equals(thisPlan.author, "My Gym Plan"))
+            {
+                dbPlanIcon.setVisibility(View.VISIBLE);
+            }
+        }
+        else
+        {
+            dbPlanIcon.setVisibility(View.GONE);
+        }
 
 
         //  --- Go to Test Activity ---
@@ -181,6 +230,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 NewWorkout();
+            }
+        });
+
+        planName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if plan inst from app DB
+                if (thisPlan != null) {
+                    if (!Objects.equals(thisPlan.author, "My Gym Plan")) {
+                        EditPlanName();
+                    }
+                }
             }
         });
 
@@ -216,8 +277,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // Has no Swipe action
                     }
                 });
-
+        //------------------
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+
+    public void pickImage() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+
+    public void RegisterResult() {
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Uri imageUri = result.getData().getData();
+                naviBarImage.setImageURI(imageUri);
+
+                // Convert Image to Bitmap
+                Drawable drawable = naviBarImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                // Convert to String
+                userImageString = imageConverter.ConvertToString(bitmap);
+
+                // Check if its user First time opening App
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                editor.putString("userImageString", userImageString);
+                editor.apply();
+
+                // Re Create App
+                recreate();
+            }
+        });
+    }
+
+
+
 
 
     // ------------------------------------------------------
@@ -227,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         popupService.NewPlanMainActivityPopup(this, this, username);
     }
 
-
     // ------------------------------------------------------
     // ---------------- Create New Workout ------------------
     // ------------------------------------------------------
@@ -235,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void NewWorkout() {
         popupService.NewWorkoutPopup(this, this, thisPlan.id);
     }
-
 
     // ------------------------------------------------------
     // ---------------- Edit Workout ------------------------
@@ -249,13 +346,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
+    // ------------------------------------------------------
+    // ------------- Edit User Plan Name  -------------------
+    // ------------------------------------------------------
+    public void EditPlanName() {
+        popupService.editUserPlanName(this, this, thisPlan);
+    }
+
+
 
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
     // ------------------------------------------------------
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
 
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_home) {
@@ -281,11 +385,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
 
-        // Close Drawer after Click
+        // --- Close Drawer after Click ---
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     // -------------------------------------------------------------------
@@ -303,11 +406,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         email = sharedPreferences.getString("email", "");
+        userImageString = sharedPreferences.getString("userImageString", "");
 
+        // If has no User, go to Welcome Page
         if (Objects.equals(username, "")) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
             startActivity(intent);
         }
+
 
         //////////////// NOT IMPLEMENTED //////////////
         // Check if User is Pro
@@ -430,7 +536,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             ChangeUIVisibility();
         } else {
-            Toast.makeText(getApplicationContext(), "Reload Recycler View Ok",Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), "Reload Recycler View Ok",Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -5,11 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +58,7 @@ import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Services.ExerciseService;
+import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.NavigationBar;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
@@ -80,10 +91,13 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
     // -------------------------------------------------------------
 
-
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    ImageView naviBarImage;
+    ImageConverter imageConverter = new ImageConverter();
+    String userImageString;
+    ActivityResultLauncher<Intent> resultLauncher;
 
     // Recycler Views
     RecyclerView recyclerView;                  // Exercise Recycler View (Vertical)
@@ -91,12 +105,13 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
     TextView emptyView;                         // Show Text When Recycler View is Empty
 
+    // Others
     ItemTouchHelper mIth;
+    PopupService popupService = new PopupService();
 
     // --> For Tests Only
     Button testButton;
 
-    PopupService popupService = new PopupService();
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -142,8 +157,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         setSupportActionBar(toolbar);                                                         // Set Toolbar as ActionBar
         drawerLayout = findViewById(R.id.DrawerLayout);                                       // Find DrawerLayout
         navigationView = findViewById(R.id.NavView);                                          // Find Navigation View
-        NavigationBar naviBar = new NavigationBar();                                          // Set Navigation Drawer
-        navigationView.setNavigationItemSelectedListener(naviBar);                            // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
+        navigationView.setNavigationItemSelectedListener(this);                               // Only Works if class: implements NavigationView.OnNavigationItemSelectedListener
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);            // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                               // Set Click on ActionBar
@@ -156,14 +170,26 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         toggle.syncState();                                                                           // Sync with drawer state (Open/Close)
 
+        RegisterResult();
+
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
         TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
         TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
-        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+        naviBarImage = headerView.findViewById(R.id.UserPhotoNaviBar);
         userNameText.setText(username);
         userEmailText.setText(email);
-        // userPhoto.setImageResource();
+        // Set Image
+        Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
+        naviBarImage.setImageBitmap(bitmap2);
+
+
+        naviBarImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
 
 
         // -------------------------------------------------------------------
@@ -236,6 +262,42 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
 
     // ------------------------------------------------------
+    // --------- Pick Image From Gallery (NaviBar) ----------
+    // ------------------------------------------------------
+    public void pickImage() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+
+    public void RegisterResult() {
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Uri imageUri = result.getData().getData();
+                naviBarImage.setImageURI(imageUri);
+
+                // Convert Image to Bitmap
+                Drawable drawable = naviBarImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                // Convert to String
+                userImageString = imageConverter.ConvertToString(bitmap);
+
+                // Check if its user First time opening App
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                editor.putString("userImageString", userImageString);
+                editor.apply();
+
+                // Re Create App
+                recreate();
+            }
+        });
+    }
+
+
+    // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------
     // ------------------------------------------------------
     @Override
@@ -300,6 +362,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         email = sharedPreferences.getString("email", "");
+        userImageString = sharedPreferences.getString("userImageString", "");
     }
 
 
@@ -342,6 +405,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public void onItemClick(Workout item) {
                                 UpdateRecyclerView(item);
+                                thisWorkout = item;
                                 WorkoutsHorizontalRecyclerView(item.order);  // Change Color
                             }
                         }, position);
@@ -446,6 +510,10 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         newExercise.eRest = 0;
         newExercise.eLoad = 0;
         newExercise.order = displayedExercises.size();
+        // Set Default Image
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.logo_fundoazul);
+        ImageConverter imageConverter = new ImageConverter();
+        newExercise.image = imageConverter.ConvertToString(bitmap1);
 
         // Change Activity
         ChangeToExercise(newExercise);

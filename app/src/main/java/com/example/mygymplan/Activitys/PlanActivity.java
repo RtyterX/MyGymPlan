@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +40,7 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
@@ -53,9 +63,15 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     TextView emptyText;
     TextView count;
 
+
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    ImageView naviBarImage;
+    ImageConverter imageConverter = new ImageConverter();
+    String userImageString;
+    ActivityResultLauncher<Intent> resultLauncher;
+
     PopupService popupService = new PopupService();
 
 
@@ -100,14 +116,27 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
+
+        RegisterResult();
+
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
         TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
         TextView userEmailText = headerView.findViewById(R.id.UserEmailNaviBar);
-        ImageView userPhoto = headerView.findViewById(R.id.UserPhotoNaviBar);
+        naviBarImage = headerView.findViewById(R.id.UserPhotoNaviBar);
         userNameText.setText(username);
         userEmailText.setText(email);
-        // userPhoto.setImageResource();
+        // Set Image
+        Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
+        naviBarImage.setImageBitmap(bitmap2);
+
+
+        naviBarImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
 
 
         // ----- Buttons -----
@@ -146,6 +175,11 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
+
+    // --------------------------------------------------------------------------------------------------
+
     public void teste() {
         popupService.NewPlanActivityPopup(this, this, username);
     }
@@ -155,6 +189,43 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         email = sharedPreferences.getString("email", "");
+        userImageString = sharedPreferences.getString("userImageString", "");
+    }
+
+
+    // ------------------------------------------------------
+    // --------- Pick Image From Gallery (NaviBar) ----------
+    // ------------------------------------------------------
+    public void pickImage() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+
+    public void RegisterResult() {
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Uri imageUri = result.getData().getData();
+                naviBarImage.setImageURI(imageUri);
+
+                // Convert Image to Bitmap
+                Drawable drawable = naviBarImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                // Convert to String
+                userImageString = imageConverter.ConvertToString(bitmap);
+
+                // Check if its user First time opening App
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                editor.putString("userImageString", userImageString);
+                editor.apply();
+
+                // Re Create App
+                recreate();
+            }
+        });
     }
 
 

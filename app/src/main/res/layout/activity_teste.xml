@@ -55,9 +55,10 @@
         android:id="@+id/ConvertTextBox"
         android:layout_width="224dp"
         android:layout_height="87dp"
-        android:text="Teste aqui"
         android:background="@drawable/text_box"
+        android:text="Teste aqui"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ShareServiceTitle" />
 
@@ -65,14 +66,14 @@
         android:id="@+id/ShareServiceTitle"
         android:layout_width="183dp"
         android:layout_height="31dp"
-        android:layout_marginTop="28dp"
         android:text="Convert / Share"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DarkThemeSwitch" />
+        app:layout_constraintTop_toBottomOf="@+id/TesteImage2" />
 
     <Button
         android:id="@+id/ShareTest"
@@ -92,6 +93,17 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ConvertTextBox" />
+
+    <ImageView
+        android:id="@+id/TesteImage2"
+        android:layout_width="165dp"
+        android:layout_height="129dp"
+        android:clickable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DarkThemeSwitch"
+        app:srcCompat="@drawable/createuserbg" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

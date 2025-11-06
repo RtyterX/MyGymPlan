@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ImageConverter;
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
     List<Exercise> exerciseList;
     OnItemClickListener onListener;
     OnItemClickDelete deleteListener;
+
+    ImageConverter imageConverter = new ImageConverter();
 
 
     // Constructor
@@ -75,7 +78,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         });
 
         // Image View
-        // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
+        holder.imageView.setImageBitmap(imageConverter.ConvertToBitmap(exerciseList.get(position).image));
 
         // On Item Click ( Everything inside "bind()" )
         holder.bind(exerciseList.get(position), onListener);

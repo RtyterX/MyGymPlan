@@ -1,5 +1,6 @@
 package com.example.mygymplan.Services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -490,12 +491,11 @@ public class PopupService extends AppCompatActivity {
     //----------------------------------------------------
     public void AboutUsPopup(Context context) {
         // Inflate Activity with a new View
-        View popupView = View.inflate(context, R.layout.popup_warning, null);
+        View popupView = View.inflate(context, R.layout.popup_about_us, null);
 
         // Popup View UI Content
-        TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
-        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
-        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+        TextView popupWarning = popupView.findViewById(R.id.AboutUsMessage);
+        Button closeButton = popupView.findViewById(R.id.CloseAboutUsButton);
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -506,10 +506,9 @@ public class PopupService extends AppCompatActivity {
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
         // Set Text Warning
-        popupWarning.setText("About Us. App desenvolvido por Ricardo Thiago Firmino :)");
+        popupWarning.setText("Aplicativo desenvolvido por \nRicardo Thiago Firmino");
 
-        // Buttons
-        confirmButton.setVisibility(View.GONE);
+        // Button
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });
@@ -682,6 +681,46 @@ public class PopupService extends AppCompatActivity {
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });
+    }
+
+    public void editUserPlanName(Context context, Activity activity, Plan plan) {
+        // Open new Popup where user create a new Plan
+        // -------------------------------------------------------
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_edit_plan_name, null);
+
+        // Popup View UI Content
+        EditText newPlanName = popupView.findViewById(R.id.EditUserPlanName);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmEditUserPlanName);
+
+        newPlanName.setText(plan.planName);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                plan.planName = newPlanName.toString();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() { dao.updatePlan(plan); }
+                }).start();
+                activity.recreate();
+                popupWindow.dismiss();
+            }
+        });
+
     }
 
 }

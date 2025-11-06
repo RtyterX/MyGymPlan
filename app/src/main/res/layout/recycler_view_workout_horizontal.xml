@@ -10,7 +10,7 @@
     <View
         android:id="@+id/BackgroundRVWorkout"
         android:layout_width="80dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:background="#F5EEFC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

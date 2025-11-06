@@ -90,10 +90,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/mygymplan_logo"
-                android:layout_marginEnd="48sp"/>
+                android:layout_marginEnd="48sp"
+                android:src="@drawable/mygymplan_logo" />
 
-            </androidx.appcompat.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
 
         <TextView
@@ -137,6 +137,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/PlanFromDBIcon"
+            android:layout_width="35dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toEndOf="@+id/PlanNameText"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+            app:srcCompat="@drawable/mygymplan_logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

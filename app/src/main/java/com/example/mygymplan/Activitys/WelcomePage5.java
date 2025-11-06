@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +22,8 @@ import androidx.room.Room;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Services.SavedExerciseService;
+
+import java.io.ByteArrayOutputStream;
 
 public class WelcomePage5 extends AppCompatActivity {
 
@@ -46,6 +51,11 @@ public class WelcomePage5 extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.createuserbg);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] bytesImageEncoded = byteArrayOutputStream.toByteArray();
+                bitmap1.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
+                String userImageString = Base64.encodeToString(bytesImageEncoded, Base64.DEFAULT);
 
                 // Insert in Shared Preferences
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -55,6 +65,7 @@ public class WelcomePage5 extends AppCompatActivity {
                 // All to Other Options
                 editor.putString("language", "English");
                 editor.putBoolean("poundsOverKg", false);
+                editor.putString("userImageString", userImageString);
                 editor.apply();
 
                 // Change Activity

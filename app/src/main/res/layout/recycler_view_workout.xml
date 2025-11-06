@@ -9,7 +9,7 @@
 
     <View
         android:id="@+id/BackgroundRVWorkout"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="99dp"
         android:background="#1EC1BFF8"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/RecyclerWorkoutImage"
-        android:layout_width="105dp"
-        android:layout_height="91dp"
+        android:layout_width="92dp"
+        android:layout_height="85dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/WorkoutSwapButton"
         app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +55,7 @@
     <TextView
         android:id="@+id/RecyclerWorkoutDescription"
         android:layout_width="132dp"
-        android:layout_height="68dp"
+        android:layout_height="55dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp"
         android:maxLines="4"
@@ -89,7 +89,7 @@
 
     <TextView
         android:id="@+id/LastModifiedWorkout"
-        android:layout_width="45dp"
+        android:layout_width="32dp"
         android:layout_height="14dp"
         android:text="TextView"
         android:textSize="10sp"
@@ -107,12 +107,14 @@
 
     <ImageView
         android:id="@+id/WorkoutSwapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="31dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="4dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
         app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
+        app:layout_constraintVertical_bias="0.484"
         app:srcCompat="@drawable/spheres_icon" />
 
     <ImageView

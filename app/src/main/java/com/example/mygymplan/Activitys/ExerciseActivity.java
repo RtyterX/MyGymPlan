@@ -1,10 +1,17 @@
 package com.example.mygymplan.Activitys;
 
 import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,11 +29,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -38,6 +50,7 @@ import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.TimerService;
 import com.example.mygymplan.Services.WorkoutService;
 
@@ -92,6 +105,12 @@ public class ExerciseActivity extends AppCompatActivity {
     // --- TIMER TEST ---
     double time;
     boolean timerUp;
+
+    // Image Test
+    Bitmap bitmap1;
+    Uri selectedImageUri;
+    ActivityResultLauncher<Intent> resultLauncher;
+    ImageConverter imageConverter = new ImageConverter();
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -159,6 +178,11 @@ public class ExerciseActivity extends AppCompatActivity {
             deleteButton.setVisibility(View.GONE); // Delete is no necessary when creating new
             saveExercise.setLayoutParams(layoutParams);
         }
+        // Set Image
+        ImageConverter imageConverter = new ImageConverter();
+        exerciseImage.setImageBitmap(imageConverter.ConvertToBitmap(thisExercise.image));
+
+        RegisterResult();
 
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
@@ -182,8 +206,7 @@ public class ExerciseActivity extends AppCompatActivity {
         exerciseImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 3);
+                pickImage();
             }
         });
 
@@ -265,6 +288,33 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
 
+    public void pickImage() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+
+    public void RegisterResult() {
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Uri imageUri = result.getData().getData();
+                exerciseImage.setImageURI(imageUri);
+
+                // Convert Image to Bitmap
+                Drawable drawable = exerciseImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                // Convert to String
+                thisExercise.image = imageConverter.ConvertToString(bitmap);
+
+            }
+        });
+    }
+
+
+
+
     // ---------------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------------
     // ------------------------------------------ BUTTONS ------------------------------------------------------
@@ -308,29 +358,28 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void OpenTimer() {
-    // Inflate Activity with a new View
-    View popupView = View.inflate(this, R.layout.popup_timer, null);
+        // Inflate Activity with a new View
+        View popupView = View.inflate(this, R.layout.popup_timer, null);
 
-    // Popup View UI Content
-    TextView timerText = popupView.findViewById(R.id.TimerText);
-    ImageView indicatorImage = popupView.findViewById(R.id.TimerImageIndicator);
-    Button startButton = popupView.findViewById(R.id.StartTimerButton);
-    Button closeButton = popupView.findViewById(R.id.CloseTimerButton);
+        // Popup View UI Content
+        TextView timerText = popupView.findViewById(R.id.TimerText);
+        ImageView indicatorImage = popupView.findViewById(R.id.TimerImageIndicator);
+        Button startButton = popupView.findViewById(R.id.StartTimerButton);
+        Button closeButton = popupView.findViewById(R.id.CloseTimerButton);
 
-    timerUp = false;
-    TimerService timerService = new TimerService();
-    timerText.setText(timerService.GetTimerTextInSeconds(Integer.parseInt(showRest.getText().toString())));
+        timerUp = false;
+        TimerService timerService = new TimerService();
+        timerText.setText(timerService.GetTimerTextInSeconds(Integer.parseInt(showRest.getText().toString())));
 
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
-    // Initialize new Popup View
-    PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-    // Set Shadow
-    popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-    popupWindow.setElevation(10.0f);
-    // Set Popup Location on Screen
-    popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-    // Set Buttons
+        // Set Buttons
         startButton.setOnClickListener(v -> {
 
             timerUp = !timerUp;
@@ -356,11 +405,9 @@ public class ExerciseActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Update UI elements here
-                                if (time >= 0)
-                                {
+                                if (time >= 0) {
                                     timerText.setText(timerService.GetTimerTextInSeconds(time));
-                                }
-                                else {
+                                } else {
                                     startButton.setText("Start");
                                     timerText.setText(timerService.GetTimerTextInSeconds(Integer.parseInt(showRest.getText().toString())));
                                     time = Double.parseDouble(showRest.getText().toString());
@@ -372,9 +419,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     }
 
                 }, 0, 1000);
-
-            }
-            else {
+            } else {
                 // Update UI on the main thread
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -385,21 +430,17 @@ public class ExerciseActivity extends AppCompatActivity {
                         timerText.setText(timerService.GetTimerTextInSeconds(Integer.parseInt(showRest.getText().toString())));
                         myTimer.cancel();
                     }
+
+                    // Toast.makeText(getApplicationContext(), "Timer: " + timerService.GetTimerTextInSeconds(time), Toast.LENGTH_LONG).show();
                 });
-
             }
+        });
 
+        closeButton.setOnClickListener(v2 -> {
+            popupWindow.dismiss();
+        });
+    }
 
-            // Toast.makeText(getApplicationContext(), "Timer: " + timerService.GetTimerTextInSeconds(time), Toast.LENGTH_LONG).show();
-
-
-    });
-
-        closeButton.setOnClickListener(v -> {
-        popupWindow.dismiss();
-    });
-
-}
 
 
     // ----------------------------------------
@@ -481,6 +522,31 @@ public class ExerciseActivity extends AppCompatActivity {
         }
     }
     //endregion
+
+
+
+    // --------------------------------------------------------------------------------
+    // TIMER PICKER TESTS
+    public void popTimePicker(View view) {
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+
+            }
+        };
+    }
+
+    public class CustomTimePickerDialog extends TimePickerDialog {
+        public CustomTimePickerDialog(Context context, OnTimeSetListener listener, int hourOfDay, int minute, boolean is24HourView) {
+            super(context, listener, hourOfDay, minute, is24HourView);
+        }
+
+        public CustomTimePickerDialog(Context context, int themeResId, OnTimeSetListener listener, int hourOfDay, int minute, boolean is24HourView) {
+            super(context, themeResId, listener, hourOfDay, minute, is24HourView);
+        }
+    }
+
 
 
 
@@ -568,7 +634,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    protected void onActivityResultOld(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
 
@@ -587,6 +653,43 @@ public class ExerciseActivity extends AppCompatActivity {
         }
   
     }
+
+
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(getApplicationContext(), "Image Selected", Toast.LENGTH_LONG).show();
+
+
+        // -------------------------------
+        // Check Permission
+        // Activity.Compat.requestPermissions((Activity.this, new String[]{READ_MEDIA_IMAGES}, PackageManager.PERMISSION_GRANTED);
+
+        // -------------------------------
+        // Open Gallery
+        if (resultCode == RESULT_OK) {
+            // compare the resultCode with the
+            // SELECT_PICTURE constant
+            if (requestCode == SELECT_PICTURE) {
+                // Get the url of the image from data
+                assert data != null;
+                selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                     // update the preview image in the layout
+                    exerciseImage.setImageURI(selectedImageUri);
+                    // or
+                    // exerciseImage.setImageBitmap(bitmap2);
+                }
+            }
+        }
+
+        // ----------------------------------------
+        // Set Image in Bitmap to use when saving
+        bitmap1 = BitmapFactory.decodeFile(String.valueOf(selectedImageUri));
+         // Need to be Image Path in ( )
+    }
+
+
 
     //////////////////////// END ////////////////////////
 }

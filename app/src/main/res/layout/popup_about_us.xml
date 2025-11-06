@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pop_Warning"
+    android:id="@+id/popup_about_us"
     android:background="#F1F1FF"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <View
-        android:id="@+id/viewTeste3"
+        android:id="@+id/AboutUsBackground"
         android:layout_width="284dp"
         android:layout_height="124dp"
         android:background="#F1F1FF"
@@ -16,38 +16,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/WarningMessage"
+        android:id="@+id/AboutUsMessage"
         android:layout_width="271dp"
         android:layout_height="61dp"
         android:layout_marginTop="8dp"
-        android:text="Warning Message"
+        android:text="Text"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/viewTeste3"
-        app:layout_constraintStart_toStartOf="@+id/viewTeste3"
-        app:layout_constraintTop_toTopOf="@+id/viewTeste3" />
+        app:layout_constraintEnd_toEndOf="@+id/AboutUsBackground"
+        app:layout_constraintStart_toStartOf="@+id/AboutUsBackground"
+        app:layout_constraintTop_toTopOf="@+id/AboutUsBackground" />
 
     <Button
-        android:id="@+id/CloseWarningButton"
+        android:id="@+id/CloseAboutUsButton"
         android:layout_width="103dp"
         android:layout_height="45dp"
-        android:layout_marginTop="4dp"
         android:text="Close"
         android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/ConfirmWarningButton"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WarningMessage" />
+        app:layout_constraintEnd_toEndOf="@+id/AboutUsBackground"
+        app:layout_constraintStart_toStartOf="@+id/AboutUsBackground"
+        app:layout_constraintTop_toBottomOf="@+id/AboutUsMessage" />
 
-    <Button
-        android:id="@+id/ConfirmWarningButton"
-        android:layout_width="103dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="44dp"
-        android:text="Confirm"
-        app:layout_constraintEnd_toEndOf="@+id/viewTeste3"
-        app:layout_constraintTop_toBottomOf="@+id/WarningMessage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

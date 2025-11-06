@@ -27,9 +27,6 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "description")
     public String eDescription;
 
-    //@ColumnInfo(name = "image")
-    // public int eImage;           // Later
-
     @ColumnInfo(name = "sets")
     public int eSets;
 
@@ -59,5 +56,8 @@ public class Exercise implements Serializable {
 
     @ColumnInfo(name = "savedExercise_Id")
     public int savedExercise_Id;
+
+    @ColumnInfo(name = "image")
+    public String image;
 
 }
