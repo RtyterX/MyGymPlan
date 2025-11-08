@@ -7,22 +7,17 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +44,6 @@ import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Adapters.ExerciseRVAdapter;
 import com.example.mygymplan.Adapters.WorkoutRVAdapterHorizontal;
 import com.example.mygymplan.Database.AppDatabase;
-import com.example.mygymplan.Database.SavedExerciseDao;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Entitys.Plan;
@@ -59,7 +53,6 @@ import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.Services.ImageConverter;
-import com.example.mygymplan.Services.NavigationBar;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -309,7 +302,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_plans) {
-            Intent intent = new Intent(this, PlanActivity.class);
+            Intent intent = new Intent(this, SelectPlanActivity.class);
             startActivity(intent);
         }
         // -----------------------------------------------------------------------------

@@ -46,14 +46,14 @@
         android:id="@+id/NewPlanDescription"
         android:layout_width="310dp"
         android:layout_height="81dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/text_box"
-        android:textCursorDrawable="@color/black"
         android:ems="10"
         android:gravity="start"
         android:hint="Describe your Plan..."
         android:inputType="textMultiLine"
         android:textColor="@color/black"
+        android:textCursorDrawable="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/viewTeste3"
         app:layout_constraintStart_toStartOf="@+id/viewTeste3"
@@ -102,5 +102,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/NewPlanDescription"
         app:layout_constraintStart_toStartOf="@+id/viewTeste3" />
+
+    <CheckBox
+        android:id="@+id/FixedDaysCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Fixed Days"
+        app:layout_constraintEnd_toEndOf="@+id/viewTeste3"
+        app:layout_constraintStart_toStartOf="@+id/viewTeste3"
+        app:layout_constraintTop_toBottomOf="@+id/NewPlanDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

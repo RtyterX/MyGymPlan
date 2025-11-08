@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import com.example.mygymplan.Enums.WorkoutType;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.Calendar;
 
 @Entity(tableName = "workouts", foreignKeys =
@@ -15,6 +16,7 @@ import java.util.Calendar;
         parentColumns = "id",
         childColumns = "plan_Id",
         onDelete = ForeignKey.CASCADE))
+
 public class Workout implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -26,15 +28,14 @@ public class Workout implements Serializable {
     @ColumnInfo(name = "description")
     public String wDescription;
 
-    // @ColumnInfo(name = "image")
-    // public int wImage;
-
     @ColumnInfo(name = "type")
     public WorkoutType wType;
 
     @ColumnInfo(name = "order")
     public int order;
 
+    @ColumnInfo(name = "dayOfWeek")
+    public DayOfWeek dayOfWeek;
 
     @ColumnInfo(name = "lastModified")
     public String lastModified;

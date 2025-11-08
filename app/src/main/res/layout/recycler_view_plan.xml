@@ -3,55 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RecycleExerciceImage"
-        android:layout_width="197dp"
-        android:layout_height="213dp"
+        android:layout_width="310dp"
+        android:layout_height="205dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:id="@+id/BackgroundRVPlan"
-            android:layout_width="183dp"
-            android:layout_height="196dp"
+            android:layout_width="284dp"
+            android:layout_height="176dp"
             android:background="#1EC1BFF8"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.47" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/RecyclerPlanName"
-            android:layout_width="72dp"
-            android:layout_height="28dp"
+            android:layout_width="146dp"
+            android:layout_height="19dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="28dp"
             android:ellipsize="end"
             android:text="Title"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintHorizontal_bias="0.279"
             app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
 
         <TextView
             android:id="@+id/RecyclerPlanDescrip"
             android:layout_width="174dp"
             android:layout_height="78dp"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="4"
             android:text="Desciption"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RecyclePlanImage" />
+            app:layout_constraintBottom_toTopOf="@+id/CreatedDateTitle"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan" />
 
         <ImageView
             android:id="@+id/RecyclePlanImage"
             android:layout_width="106dp"
             android:layout_height="98dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
             app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan"
             tools:srcCompat="@tools:sample/avatars" />
@@ -60,12 +58,13 @@
             android:id="@+id/RecyclerPlanAuthor"
             android:layout_width="43dp"
             android:layout_height="13dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="20dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Author"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/CreatedDateTitle"
+            app:layout_constraintBottom_toTopOf="@+id/CreatedDateTitle"
             app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan" />
 
         <TextView
@@ -75,8 +74,7 @@
             android:text="Create Date: "
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
-            app:layout_constraintEnd_toStartOf="@+id/CreatedDatePlan"
-            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanDescrip" />
+            app:layout_constraintEnd_toStartOf="@+id/CreatedDatePlan" />
 
         <TextView
             android:id="@+id/CreatedDatePlan"
@@ -86,8 +84,7 @@
             android:text="TextView"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
-            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
-            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanDescrip" />
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan" />
 
         <ImageView
             android:id="@+id/DeletePlanButton"
@@ -119,6 +116,7 @@
             android:id="@+id/BodyTypeTitleRV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="2dp"
             android:text="Body Type:"
             android:textSize="10sp"
@@ -133,8 +131,8 @@
             android:text="Set Active"
             android:textAlignment="gravity"
             android:textSize="6sp"
-            app:layout_constraintBottom_toTopOf="@+id/RecyclerPlanDescrip"
-            app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage" />
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

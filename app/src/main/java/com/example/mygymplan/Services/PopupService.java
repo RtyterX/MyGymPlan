@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -26,6 +27,7 @@ import androidx.room.Room;
 
 import com.example.mygymplan.Activitys.MainActivity;
 import com.example.mygymplan.Activitys.PlanActivity;
+import com.example.mygymplan.Activitys.SelectPlanActivity;
 import com.example.mygymplan.Activitys.WorkoutActivity;
 import com.example.mygymplan.Adapters.PlanRVAdapter;
 import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
@@ -41,11 +43,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PopupService extends AppCompatActivity {
+    Plan newPlan;
     Workout newWorkout;
     private List<SavedExercise> databaseExercises = new ArrayList<>();
     private List<SavedExercise> myExercises = new ArrayList<>();
 
-    public void NewPlanMainActivityPopup(Context context, MainActivity mainActivity, String username) {
+    public void NewPlanPopup(Context context, PlanActivity planActivity, String username) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_plan, null);
 
@@ -100,11 +103,11 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, true);
                     planService.insertPlan(context, newPlan);
                     planService.activePlan(context, newPlan);
                     // Update Activity
-                    mainActivity.recreate();
+                    planActivity.recreate();
                     //mainActivity.CheckPlan();
                     // Show Text on Screen
                     Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
@@ -115,10 +118,10 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,false);
                     planService.insertPlan(context, newPlan);
                     // Update Activity
-                    mainActivity.CheckPlan();
+                    planActivity.CheckPlan();
                     // Show Text on Screen
                     Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
                     // Close Popup
@@ -134,8 +137,107 @@ public class PopupService extends AppCompatActivity {
         });
     }
 
+    // --------------------------------------------------------------------------------------------
 
-    public void NewPlanActivityPopup(Context context, PlanActivity activity, String username) {
+    public void NewPlanMainPopup(Context context, MainActivity activity, String username) {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_new_plan, null);
+
+        // Popup View UI Content
+        EditText newPlanName = popupView.findViewById(R.id.NewPlanName);
+        EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
+        TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
+        TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
+        CheckBox fixedDays = popupView.findViewById(R.id.FixedDaysCheckBox);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // ------ Buttons ------
+        confirmButton.setOnClickListener(v -> {
+            // --------------------------------------------------------------------
+            if (newPlanName.getText().toString().isEmpty()) {
+                newPlanNameWarning.setVisibility(View.VISIBLE);
+            } else if (newPlanDescription.getText().toString().isEmpty()) {
+                newPlanDescripWarning.setVisibility(View.VISIBLE);
+            } else {
+
+                //--------------------------------------------------------------
+                PlanService planService = new PlanService();
+                // Plan newPlan = new Plan();
+                // Check if plan has Fixed Days
+                if (fixedDays.isChecked()) {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,true);
+                } else {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false,true);
+                }
+
+                // Inflate Activity with a new View
+                View subView = View.inflate(context, R.layout.popup_warning, null);
+
+                // Popup View UI Content
+                TextView popupText = subView.findViewById(R.id.WarningMessage);
+                Button yesButton = subView.findViewById(R.id.ConfirmWarningButton);
+                Button noButton = subView.findViewById(R.id.CloseWarningButton);
+
+                // Initialize new Popup View
+                PopupWindow subPopupWindow = new PopupWindow(subView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                // Set Shadow
+                subPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                subPopupWindow.setElevation(10.0f);
+                // Set Popup Location on Screen
+                subPopupWindow.showAtLocation(subView, Gravity.CENTER, 0, 0);
+
+                // Set Text Warning
+                popupText.setText("Gostaria de deixar o Plano como Ativo?");
+                yesButton.setText("Yes");
+                noButton.setText("No");
+
+                // ------ Buttons ------
+                yesButton.setOnClickListener(subV -> {
+                    newPlan.active = true;
+                    planService.insertPlan(context, newPlan);
+                    planService.activePlan(context, newPlan);
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
+                    // Close Popup
+                    subPopupWindow.dismiss();
+                    popupWindow.dismiss();
+                    // Change to Plan Activity
+                    activity.changeToPlan(newPlan);
+                });
+
+                noButton.setOnClickListener(subV -> {
+                    // Create Plan but Not Active
+                    newPlan.active = false;
+                    planService.insertPlan(context, newPlan);
+                    // Show Text on Screen
+                    Toast.makeText(context, "New Plan Created",Toast.LENGTH_SHORT).show();
+                    // Close Popup
+                    popupWindow.dismiss();
+                    subPopupWindow.dismiss();
+                    // Change Activity
+                    activity.CheckPlan();
+                });
+            }
+            // --------------------------------------------------------------------
+        });
+
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    public void NewPlanActivityPopup(Context context, SelectPlanActivity activity, String username) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_plan, null);
 
@@ -190,7 +292,7 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, true);
                     planService.insertPlan(context, newPlan);
                     planService.activePlan(context, newPlan);
                     // Update Activity
@@ -204,7 +306,7 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false);
+                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, false);
                     planService.insertPlan(context, newPlan);
                     // Update Activity
                     activity.LoadMyPlans();
@@ -224,7 +326,7 @@ public class PopupService extends AppCompatActivity {
     }
 
 
-    public void NewWorkoutPopup(Context context, MainActivity mainActivity, int planId) {
+    public void NewWorkoutPopup(Context context, PlanActivity planActivity, int planId) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -313,7 +415,7 @@ public class PopupService extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mainActivity.GetWorkoutList();
+                    planActivity.GetWorkoutList();
                     popupWindow.dismiss();     // Close Popup
                 }
             }, 300); // 3000 milliseconds = 3 seconds
@@ -326,7 +428,7 @@ public class PopupService extends AppCompatActivity {
 
     }
 
-    public void EditWorkoutPopup(Context context, MainActivity mainActivity, Workout workout) {
+    public void EditWorkoutPopup(Context context, PlanActivity planActivity, Workout workout) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -398,7 +500,7 @@ public class PopupService extends AppCompatActivity {
             WorkoutService workoutService = new WorkoutService();
             workoutService.updateWorkout(context, workout);
             // Change Activity
-            mainActivity.GetWorkoutList();
+            planActivity.GetWorkoutList();
             Toast.makeText(context, "Workout Modified",Toast.LENGTH_SHORT).show();
             // Close Popup
             popupWindow.dismiss();
@@ -409,7 +511,7 @@ public class PopupService extends AppCompatActivity {
             WorkoutService workoutService = new WorkoutService();
             workoutService.deleteWorkout(context, workout);
             // Change Activity
-            mainActivity.GetWorkoutList();
+            planActivity.GetWorkoutList();
             // Show Confirmation Text
             Toast.makeText(context, "Workout Deleted",Toast.LENGTH_SHORT).show();
             // Close Popup
@@ -716,7 +818,7 @@ public class PopupService extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                plan.planName = newPlanName.toString();
+                plan.planName = newPlanName.getText().toString();
 
                 new Thread(new Runnable() {
                     @Override

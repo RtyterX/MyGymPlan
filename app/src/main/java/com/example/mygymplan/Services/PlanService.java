@@ -129,20 +129,19 @@ public class PlanService extends AppCompatActivity {
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public Plan convertPlan(String name, String description, String author, boolean isActiveOrNot) {
-        // Get local Time Date
-        LocalDate date = LocalDate.now();
+    public Plan convertPlan(String name, String description, String author, boolean fixedDays, boolean isActiveOrNot) {
 
         // Create New Workout DataBase
-        Plan newPlan = new Plan();
-        newPlan.planName = name;
-        newPlan.planDescription = description;
-        newPlan.pro = false;
-        newPlan.author = author;
-        newPlan.active = isActiveOrNot;
-        newPlan.createdDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+        Plan convertPlan = new Plan();
+        convertPlan.planName = name;
+        convertPlan.planDescription = description;
+        convertPlan.fixedDays = fixedDays;
+        convertPlan.pro = false;
+        convertPlan.author = author;
+        convertPlan.active = isActiveOrNot;
+        convertPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
-        return newPlan;
+        return convertPlan;
     }
 
     // ---------------------------------------------------------------------------------------------------
