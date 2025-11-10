@@ -8,16 +8,16 @@
     android:padding="5dp" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="358dp"
-        android:layout_height="483dp"
+        android:layout_width="363dp"
+        android:layout_height="591dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/NewWorkoutBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="365dp"
+            android:layout_height="593dp"
             android:background="#F1F1FF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,11 +32,11 @@
             android:layout_height="31dp"
             android:layout_marginTop="44dp"
             android:background="@drawable/text_box"
-            android:textCursorDrawable="@color/black"
             android:ems="10"
             android:hint="Workout Name "
             android:inputType="text"
             android:textColor="@color/black"
+            android:textCursorDrawable="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.575"
@@ -60,12 +60,12 @@
             android:layout_height="82dp"
             android:layout_marginTop="52dp"
             android:background="@drawable/text_box"
-            android:textCursorDrawable="@color/black"
             android:ems="10"
             android:gravity="start"
             android:hint="Describe your Workout..."
             android:inputType="textMultiLine"
             android:textColor="@color/black"
+            android:textCursorDrawable="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
             android:layout_width="139dp"
             android:layout_height="41dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="16dp"
             android:text="Confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -108,7 +108,7 @@
             android:id="@+id/CloseWarningButton"
             android:layout_width="134dp"
             android:layout_height="41dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="16dp"
             android:text="Close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ConfirmWarningButton"
@@ -143,6 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:inputType="none"
+                android:textStyle="bold"
                 tools:layout_editor_absoluteX="23dp"
                 tools:layout_editor_absoluteY="328dp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -197,6 +198,95 @@
             android:text="Delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/NewWorkoutBackground" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/DaysOfWeekContainer"
+            android:layout_width="347dp"
+            android:layout_height="98dp"
+            android:layout_marginTop="36dp"
+            app:layout_constraintEnd_toEndOf="@+id/NewWorkoutBackground"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="@+id/NewWorkoutBackground"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+            <CheckBox
+                android:id="@+id/MondayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monday"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/TuesdayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/MondayCheckBox"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/WednesdayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday"
+                android:textAlignment="textStart"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/TuesdayCheckBox"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/ThurdayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Thursday"
+                android:textAlignment="textStart"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/WednesdayCheckBox"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/FridayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="56dp"
+                android:text="Friday"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <CheckBox
+                android:id="@+id/SaturdayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saturday"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/SundayCheckBox"
+                app:layout_constraintStart_toEndOf="@+id/FridayCheckBox" />
+
+            <CheckBox
+                android:id="@+id/SundayCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="52dp"
+                android:text="Sunday"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

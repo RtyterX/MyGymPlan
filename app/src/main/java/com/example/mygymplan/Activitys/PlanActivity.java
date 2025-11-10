@@ -315,7 +315,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
 
     public void NewWorkout() {
-        popupService.NewWorkoutPopup(this, this, thisPlan.id);
+        popupService.NewWorkoutPopup(this, this, thisPlan);
     }
 
     // ------------------------------------------------------

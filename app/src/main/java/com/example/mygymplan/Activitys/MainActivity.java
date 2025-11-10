@@ -64,48 +64,45 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // Entity's
-    Plan thisPlan;
+    Plan activePlan;
     Workout todaysWorkout;
-    PopupService popupService = new PopupService();
+    List<Plan> planList = new ArrayList<>();
+    List<Workout> workoutsList = new ArrayList<>();
+
+    AppDatabase db;
 
     // Shared Preferences
     String username;
     String email;
     String userImageString;
+    int activePlanId;
+    int todaysWorkoutId;
 
 
     // UI Elements
+    Button createPlan;
+    TextView noWorkout;
     ItemTouchHelper mIth;
-
 
     // RecyclerView
     RecyclerView plansRV;
     RecyclerView workoutRV;
-
-
-    List<Plan> planList = new ArrayList<>();;
-
-    List<Workout> workoutsList = new ArrayList<>();;
+    WorkoutRVAdapter workoutAdapter;
 
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    ImageView naviBarImage;
+    ActivityResultLauncher<Intent> resultLauncher;
 
-    Button createPlan;
-    TextView noWorkout;
 
     // Others
     Button testButton;
-
-    // Test
-    ActivityResultLauncher<Intent> resultLauncher;
-    ImageView naviBarImage;
-
+    PopupService popupService = new PopupService();
     ImageConverter imageConverter = new ImageConverter();
 
-    WorkoutRVAdapter workoutAdapter;
+    //------------------------------------------------------------------------
 
-    
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -118,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
 
         // Can't Rotate the Screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -134,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView info = findViewById(R.id.MainInfoButton);
         ImageView planImport = findViewById(R.id.ImportMainIcon);
 
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
@@ -145,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ----- Set UI Data-----
         mainText.setText("Bem vindo! " + username);
         String dayOfWeek2 = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-
 
 
         // --- Drawer Layout ---
@@ -160,8 +156,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
 
-        RegisterResult();
+        //  --- Go to Test Activity ---
+        testButton = navigationView.findViewById(R.id.TestButton);
+        // JUST FOR DEBUG ------------------------------------
+        // JUST FOR DEBUG ------------------------------------
 
+        //--------------------------------
+        RegisterResult();
 
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
@@ -175,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // naviBarImage.setImageBitmap(bitmap2);
 
 
+        // ----- Buttons -----
+
         naviBarImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         createPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                teste();
+                createPlan();
             }
         });
 
@@ -193,77 +196,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //--------------------------------------------------------------------------------------
 
-
-    public void teste() {
+    public void createPlan() {
         popupService.NewPlanMainPopup(this, MainActivity.this, username);
 
     }
-    private void CheckTodaysWorkout() {
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        WorkoutDao daoW = db.workoutDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // List all Workouts from Active Plan
-                List<Workout> allWorkouts = daoW.listWorkouts();
-
-                // --------------------------------------------------------------
-                if (thisPlan != null) {
-
-                    // If Plan workouts is set to fixed Days
-                    if (thisPlan.fixedDays) {
-                        if (!allWorkouts.isEmpty()) {
-                            for (Workout item : allWorkouts) {
-                                if (item.plan_Id == thisPlan.id) {
-                                    // Check Days of Week
-                                    if (item.dayOfWeek == LocalDate.now().getDayOfWeek()) {
-                                        todaysWorkout = item;
-                                    } else {
-                                        Log.d("Todays Workout", "Active Plan doesnt have workout for this day");
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        // Plans set NOT to Fixed Days
-                        if (!allWorkouts.isEmpty()) {
-                            for (Workout item : allWorkouts) {
-                                todaysWorkout = item;
-                            }
-                        }
-                    }
-                }
-                else {
-                    //Toast.makeText(getApplicationContext(), "Active Plan is Null", Toast.LENGTH_SHORT).show();
-                }
-
-                // -------------------------------------------------------------------------------
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //----------------------------------------------------------------
-                        // Set Todays Workout in List to use in Recycler View
-                        if (todaysWorkout != null) {
-                            workoutsList.add(todaysWorkout);
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Todays Workout is Null", Toast.LENGTH_SHORT).show();
-                        }
-                        // ------------------
-                        ApplyWorkoutRV();
-                    }
-                });
-            }
-        }).start();
-
-        db.close();
-    }
-
-
-
-    // --------------------------------------------------------------------------------------------
 
     public void pickImage() {
         Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
@@ -355,6 +292,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         username = sharedPreferences.getString("username", "");
         email = sharedPreferences.getString("email", "");
         userImageString = sharedPreferences.getString("userImageString", "");
+        todaysWorkoutId = sharedPreferences.getInt("todaysWorkoutId", 0);
+        activePlanId = sharedPreferences.getInt("activePlan", 0);
 
         // If has no User, go to Welcome Page
         if (Objects.equals(username, "")) {
@@ -369,25 +308,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // CheckPro();
     }
 
-
+    // --------------------------------------------
+    // ----------- Set User Active Plan -----------
+    // ------------- in Recycler View -------------
+    // --------------------------------------------
     public void CheckPlan() {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // ------------------------------------
-                // ----- Check if User has 1 Plan  ----
-                // ------------------------------------
-                List<Plan> planList = new ArrayList<>();
-
+                // -----------------------------------------
+                // ----- Check if User has Active Plan -----
+                // -----------------------------------------
                 PlanDao daoPlan = db.planDao();
                 List<Plan> allPlans = daoPlan.listPlans();
 
                 if (!allPlans.isEmpty()) {
                     for (Plan item : allPlans) {
-                        if (item.active == true) {
-                            thisPlan = item;
+                        if (item.id == activePlanId) {
+                            activePlan = item;
                             planList.add(item);
                         }
                     }
@@ -397,15 +335,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (thisPlan != null) {
-                            Log.d("teste", "Opa, chegamos aqui - " + thisPlan.planName);
+                        if (activePlan != null) {
+
+                            // Show Create New Button
+                            createPlan.setVisibility(View.GONE);
+                            Log.d("RV Plans", " User has Active Plan, then applying on RV... ");
+
                             // -------- Set Recycler View Horizontal --------
                             PlanRVAdapter planAdapter = new PlanRVAdapter(new MainActivity(), planList, new PlanRVAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(Plan item) {
 
                                     Intent intent = new Intent(MainActivity.this, PlanActivity.class);
-                                    intent.putExtra("SelectedPlan", thisPlan);
+                                    intent.putExtra("SelectedPlan", activePlan);
                                     startActivity(intent);
                                 }
 
@@ -434,8 +376,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }, 1000); // 3000 milliseconds = 3 seconds
                         } else {
-                            // Show Create New Button
-                            createPlan.setVisibility(View.VISIBLE);
+                            Log.d("RV Plans", " User has NO Active Plan");
                         }
                     }
                 });
@@ -446,12 +387,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // --------------------------------------------
+    // ----------- Check todays Workout -----------
+    // --------------------------------------------
+    private void CheckTodaysWorkout() {
+
+        WorkoutDao daoW = db.workoutDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // List all Workouts from Active Plan
+                List<Workout> allWorkouts = daoW.listWorkouts();
+
+                // --------------------------------------------------------------
+                if (activePlan != null) {
+
+                    // If Plan workouts is set to fixed Days
+                    if (activePlan.fixedDays) {
+                        if (!allWorkouts.isEmpty()) {
+                            for (Workout item : allWorkouts) {
+                                if (item.plan_Id == activePlan.id) {
+                                    // Check Days of Week
+                                    if (item.dayOfWeek == LocalDate.now().getDayOfWeek()) {
+                                        todaysWorkout = item;
+                                    } else {
+                                        Log.d("Todays Workout", "Active Plan doesnt have workout for this day");
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // Plans set NOT to Fixed Days
+                        if (!allWorkouts.isEmpty()) {
+                            for (Workout item : allWorkouts) {
+                                todaysWorkout = item;
+                            }
+                        }
+                    }
+                }
+                else {
+                    //Toast.makeText(getApplicationContext(), "Active Plan is Null", Toast.LENGTH_SHORT).show();
+                }
+
+                // -------------------------------------------------------------------------------
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //----------------------------------------------------------------
+                        // Set Todays Workout in List to use in Recycler View
+                        if (todaysWorkout != null) {
+                            workoutsList.add(todaysWorkout);
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Todays Workout is Null", Toast.LENGTH_SHORT).show();
+                        }
+                        // ------------------
+                        ApplyWorkoutRV();
+                    }
+                });
+            }
+        }).start();
+
+        db.close();
+    }
+
+
     // ---------------------------------------------------
-    // ---------------- Reload Workouts ------------------
+    // ------------- Apply Workout in RV -----------------
     // ---------------------------------------------------
     private void ApplyWorkoutRV() {
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
         WorkoutDao daoW = db.workoutDao();
 
         new Thread(new Runnable() {
@@ -509,6 +515,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db.close();
     }
 
+
+    // ---------------------------------------------------
+    // ------------- Change to Plan Activity -------------
+    // ---------------------------------------------------
     public void changeToPlan(Plan plan) {
         Intent intent = new Intent(this, PlanActivity.class);
         intent.putExtra("SelectedPlan", plan);

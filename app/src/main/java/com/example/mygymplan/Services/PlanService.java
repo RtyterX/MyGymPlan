@@ -1,6 +1,7 @@
 package com.example.mygymplan.Services;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -171,6 +172,19 @@ public class PlanService extends AppCompatActivity {
                     plan.active = true;
                     dao.updatePlan(plan);
                 }
+
+                // Insert in Shared Preferences
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                // Set Plans as Active
+                if (plan.id != null) {
+                    editor.putInt("activePlan", 1);
+                    editor.apply();
+                } else {
+                    editor.putInt("activePlan", plan.id);
+                    editor.apply();
+                }
+                editor.apply();
             }
         }).start();
 

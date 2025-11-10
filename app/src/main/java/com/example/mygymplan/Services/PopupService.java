@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,13 +15,16 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -39,6 +43,7 @@ import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +62,7 @@ public class PopupService extends AppCompatActivity {
         EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
         TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
         TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
+        CheckBox fixedDays = popupView.findViewById(R.id.FixedDaysCheckBox);
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
 
@@ -77,7 +83,15 @@ public class PopupService extends AppCompatActivity {
                 newPlanDescripWarning.setVisibility(View.VISIBLE);
             } else {
 
+                //--------------------------------------------------------------
                 PlanService planService = new PlanService();
+                // Plan newPlan = new Plan();
+                // Check if plan has Fixed Days
+                if (fixedDays.isChecked()) {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,true);
+                } else {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false,true);
+                }
 
                 // Inflate Activity with a new View
                 View subView = View.inflate(context, R.layout.popup_warning, null);
@@ -103,7 +117,7 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, true);
+                    newPlan.active = true;
                     planService.insertPlan(context, newPlan);
                     planService.activePlan(context, newPlan);
                     // Update Activity
@@ -118,7 +132,7 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,false);
+                    newPlan.active = false;
                     planService.insertPlan(context, newPlan);
                     // Update Activity
                     planActivity.CheckPlan();
@@ -246,6 +260,7 @@ public class PopupService extends AppCompatActivity {
         EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
         TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
         TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
+        CheckBox fixedDays = popupView.findViewById(R.id.FixedDaysCheckBox);
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
 
@@ -266,7 +281,16 @@ public class PopupService extends AppCompatActivity {
                 newPlanDescripWarning.setVisibility(View.VISIBLE);
             } else {
 
+                //--------------------------------------------------------------
                 PlanService planService = new PlanService();
+                // Plan newPlan = new Plan();
+                // Check if plan has Fixed Days
+                if (fixedDays.isChecked()) {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,true);
+                } else {
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false,true);
+                }
+
 
                 // Inflate Activity with a new View
                 View subView = View.inflate(context, R.layout.popup_warning, null);
@@ -292,9 +316,9 @@ public class PopupService extends AppCompatActivity {
                 // ------ Buttons ------
                 yesButton.setOnClickListener(subV -> {
                     // Create Plan as Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, true);
+                    newPlan.active = true;
                     planService.insertPlan(context, newPlan);
-                    planService.activePlan(context, newPlan);
+                    planService.activePlan(context,newPlan);
                     // Update Activity
                     activity.LoadMyPlans();
                     // Show Text on Screen
@@ -306,7 +330,7 @@ public class PopupService extends AppCompatActivity {
 
                 noButton.setOnClickListener(subV -> {
                     // Create Plan but Not Active
-                    Plan newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true, false);
+                    newPlan.active = false;
                     planService.insertPlan(context, newPlan);
                     // Update Activity
                     activity.LoadMyPlans();
@@ -326,7 +350,7 @@ public class PopupService extends AppCompatActivity {
     }
 
 
-    public void NewWorkoutPopup(Context context, PlanActivity planActivity, int planId) {
+    public void NewWorkoutPopup(Context context, PlanActivity planActivity, Plan plan) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -338,6 +362,14 @@ public class PopupService extends AppCompatActivity {
         TextView nameWarning = popupView.findViewById(R.id.NameWorkoutWarning);
         TextView descriptionWarning = popupView.findViewById(R.id.DescriptionWorkoutWarning);
         TextView typeWarning = popupView.findViewById(R.id.TypeWorkoutWarning);
+        // Check Box
+        CheckBox monday = popupView.findViewById(R.id.MondayCheckBox);
+        CheckBox tuesday = popupView.findViewById(R.id.TuesdayCheckBox);
+        CheckBox wednesday = popupView.findViewById(R.id.WednesdayCheckBox);
+        CheckBox thursday = popupView.findViewById(R.id.ThurdayCheckBox);
+        CheckBox friday = popupView.findViewById(R.id.FridayCheckBox);
+        CheckBox saturday = popupView.findViewById(R.id.SaturdayCheckBox);
+        CheckBox sunday = popupView.findViewById(R.id.SundayCheckBox);
         // Buttons
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
@@ -383,6 +415,109 @@ public class PopupService extends AppCompatActivity {
             }
         });
 
+
+        // ------------------- DAY OF WEEK ---------------------------
+        //region Days of Week Check Listener
+        monday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.MONDAY;
+                tuesday.setChecked(false);
+                wednesday.setChecked(false);
+                thursday.setChecked(false);
+                friday.setChecked(false);
+                saturday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        tuesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.TUESDAY;
+                monday.setChecked(false);
+                wednesday.setChecked(false);
+                thursday.setChecked(false);
+                friday.setChecked(false);
+                saturday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        wednesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.WEDNESDAY;
+                monday.setChecked(false);
+                tuesday.setChecked(false);
+                thursday.setChecked(false);
+                friday.setChecked(false);
+                saturday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        thursday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.THURSDAY;
+                monday.setChecked(false);
+                tuesday.setChecked(false);
+                wednesday.setChecked(false);
+                friday.setChecked(false);
+                saturday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        friday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.FRIDAY;
+                monday.setChecked(false);
+                tuesday.setChecked(false);
+                wednesday.setChecked(false);
+                thursday.setChecked(false);
+                saturday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        saturday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.SATURDAY;
+                monday.setChecked(false);
+                tuesday.setChecked(false);
+                wednesday.setChecked(false);
+                thursday.setChecked(false);
+                friday.setChecked(false);
+                sunday.setChecked(false);
+            }
+        });
+
+        sunday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                newWorkout.dayOfWeek = DayOfWeek.SUNDAY;
+                monday.setChecked(false);
+                tuesday.setChecked(false);
+                wednesday.setChecked(false);
+                thursday.setChecked(false);
+                friday.setChecked(false);
+                saturday.setChecked(false);
+            }
+        });
+        //endregion
+        // ----------------------------------------------------------
+
+        // If Plan does NOT have Fixed Days
+        if (!plan.fixedDays) {
+            ConstraintLayout allCheckBoxes = popupView.findViewById(R.id.DaysOfWeekContainer);
+            allCheckBoxes.setVisibility(View.GONE);
+        }
+
+
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
             ///////////////////// NEED REWORK /////////////////////
@@ -407,7 +542,7 @@ public class PopupService extends AppCompatActivity {
 
             // Inset New Workout in Database
             WorkoutService workoutService = new WorkoutService();
-            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, planId);
+            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, plan.id);
             workoutService.insertWorkout(context, newWorkout);
             // Show Text on Screen
             Toast.makeText(context, "Workout Created",Toast.LENGTH_SHORT).show();
