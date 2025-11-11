@@ -1,5 +1,6 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -94,6 +95,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     ImageConverter imageConverter = new ImageConverter();
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,9 +129,8 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
 
         // ---- Show Workouts in Recycle View or -----
-        // ---- Display Create From Scratch button --\
-        CheckUser();
-        CheckPlan();
+        // ---- Display Create From Scratch button ---
+        GetWorkoutList();
 
 
         // --- Drawer Layout ---
@@ -156,8 +157,8 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         userNameText.setText(username);
         userEmailText.setText(email);
         // Set Image
-        Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
-        naviBarImage.setImageBitmap(bitmap2);
+        //Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
+        //naviBarImage.setImageBitmap(bitmap2);
 
 
         naviBarImage.setOnClickListener(new View.OnClickListener() {
@@ -297,23 +298,17 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-
-
-
-
-
     // ------------------------------------------------------
-    // ---------------- Create New Plan  --------------------
+    // ---------------- Change Plan  ------------------------
     // ------------------------------------------------------
-    public void NewPlan() {
-        popupService.NewPlanPopup(this, this, username);
+    public void ChangePlan() {
+        Intent intent = new Intent(PlanActivity.this, SelectPlanActivity.class);
+        startActivity(intent);
     }
 
     // ------------------------------------------------------
     // ---------------- Create New Workout ------------------
     // ------------------------------------------------------
-
     public void NewWorkout() {
         popupService.NewWorkoutPopup(this, this, thisPlan);
     }
@@ -321,14 +316,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
     // ---------------- Edit Workout ------------------------
     // ------------------------------------------------------
-    private void EditWorkout(Workout workout) {
-        popupService.EditWorkoutPopup(this, this, workout);
-    }
-
-    public void ChangePlan() {
-        Intent intent = new Intent(this, SelectPlanActivity.class);
-        startActivity(intent);
-    }
+    private void EditWorkout(Workout workout) { popupService.EditWorkoutPopup(this, this, workout); }
 
     // ------------------------------------------------------
     // ------------- Edit User Plan Name  -------------------
@@ -336,7 +324,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     public void EditPlanName() {
         popupService.editUserPlanName(this, this, thisPlan);
     }
-
 
 
     // ------------------------------------------------------
@@ -385,71 +372,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ----------- Load Data and Display ----------
     // ------------- on Recycler View -------------
     // --------------------------------------------
-    public void CheckUser() {
-        // Check if its user First time opening App
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("username", "");
-        email = sharedPreferences.getString("email", "");
-        userImageString = sharedPreferences.getString("userImageString", "");
-
-        // If has no User, go to Welcome Page
-        if (Objects.equals(username, "")) {
-            Intent intent = new Intent(PlanActivity.this, WelcomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-
-        //////////////// NOT IMPLEMENTED //////////////
-        // Check if User is Pro
-        // CheckPro();
-    }
-
-
-    public void CheckPlan() {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // ------------------------------------
-                // ----- Check if User has 1 Plan  ----
-                // ------------------------------------
-                List<Plan> plansList = new ArrayList<>();
-                PlanDao daoPlan = db.planDao();
-                plansList = daoPlan.listPlans();
-
-                if (!plansList.isEmpty()) {
-                    for (Plan item : plansList) {
-                        if (item.active == true) {
-                            thisPlan = item;
-                        }
-                    }
-                }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (thisPlan != null) {
-                            GetWorkoutList();
-                        }
-                        else
-                        {
-                            ChangeUIVisibility();
-                        }
-                    }
-                });
-            }
-        }).start();
-
-        db.close();
-    }
-
-
-    // ---------------------------------------------------
-    // ---------------- Reload Workouts ------------------
-    // ---------------------------------------------------
     public void GetWorkoutList() {
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
@@ -492,11 +414,16 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // ---------------------------------------------------
+    // ---------------- Reload Workouts ------------------
+    // ---------------------------------------------------
     public void UpdateRecyclerView() {
         if (!displayedWorkouts.isEmpty()) {
             workoutAdapter = new WorkoutRVAdapter(PlanActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(Workout item) {
+                    SetNextWorkout(item, thisPlan);
+                    // Change Activity
                     Intent intent = new Intent(PlanActivity.this, WorkoutActivity.class);
                     intent.putExtra("SelectedPlan", thisPlan);
                     intent.putExtra("SelectedWorkout", item);
@@ -543,12 +470,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             changePlan2.setVisibility(View.GONE);
             newWorkout.setVisibility(View.GONE);
             changePlan.setVisibility(View.GONE);
-            startButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NewPlan();
-                }
-            });
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
             // -- Plan Name --
@@ -608,8 +529,46 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // --------------------------------------------------------
+    // --------------- Decide what will be the  ---------------
+    // ------------------ Next Day Workout  -------------------
+    // --------------------------------------------------------
+    private void SetNextWorkout(Workout workout, Plan plan) {
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        int activePlanId = sharedPreferences.getInt("activePlanId", 0);
+
+        // Block if Workout is not From Active Plan
+        if (plan.id == activePlanId) {
+            // Check if Active Plan haven't Fixed Days
+            if (!plan.fixedDays) {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ------------------------------------------------------
+                        WorkoutDao dao = db.workoutDao();
+                        List<Workout> allWorkouts = dao.listWorkouts();
+
+                        for (Workout item : allWorkouts) {
+                            if (item.plan_Id == activePlanId) {
+                                if (item.order == (workout.order + 1)) {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putInt("nextWorkoutId", item.id);
+                                    editor.apply();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }).start();
+
+                db.close();
+            }
+        }
+    }
+
     //////////////////////// END ////////////////////////
-
-
-
 }

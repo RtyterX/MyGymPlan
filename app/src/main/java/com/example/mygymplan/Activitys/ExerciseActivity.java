@@ -365,7 +365,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     }
 
-    public void OpenTimer() {
+    public void OpenTimerOld() {
         // Inflate Activity with a new View
         View popupView = View.inflate(this, R.layout.popup_timer, null);
 
@@ -449,6 +449,75 @@ public class ExerciseActivity extends AppCompatActivity {
         });
     }
 
+
+    public void OpenTimer() {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(this, R.layout.popup_timer, null);
+
+        // Popup View UI Content
+        TextView timerText = popupView.findViewById(R.id.TimerText);
+        ImageView indicatorImage = popupView.findViewById(R.id.TimerImageIndicator);
+        Button startButton = popupView.findViewById(R.id.StartTimerButton);
+        Button closeButton = popupView.findViewById(R.id.CloseTimerButton);
+
+        // Variables
+        TimerService timerService = new TimerService();
+        timerUp = false;
+        String startTime = timerService.GetTimerTextInSeconds(Integer.parseInt(showRest.getText().toString()));
+        timerText.setText(startTime);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // Set Buttons
+        startButton.setOnClickListener(v -> {
+
+            Timer myTimer = new Timer();
+
+            if (!timerUp) {
+                timerUp = true;
+                startButton.setText("Stop");
+
+                // Start Timer
+                myTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (time >= 1) {
+                            // Perform background work
+                            time--;
+
+                                    // Perform background work
+                                    timerText.setText(timerService.GetTimerTextInSeconds(time));
+                                } else {
+                            myTimer.cancel();
+                            time = Double.parseDouble(startTime);
+                                    startButton.setText("Start");
+                                    timerUp = false;
+                                    myTimer.cancel();
+                                    timerText.setText(startTime);
+                            time = Double.parseDouble(showRest.getText().toString());
+                                }
+
+                    }
+                }, 0, 1000);
+            } else {
+                timerUp = false;
+                startButton.setText("Start");
+                myTimer.cancel();
+                timerText.setText(startTime);
+                time = Double.parseDouble(startTime);
+            }
+        });
+
+        closeButton.setOnClickListener(v2 -> {
+            popupWindow.dismiss();
+        });
+    }
 
 
     // ----------------------------------------

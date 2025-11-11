@@ -32,7 +32,6 @@ public class ExerciseService extends AppCompatActivity {
             @Override
             public void run() {
                 // Set Variables
-                LocalDate date = LocalDate.now();
                 SavedExercise newUserExercise = new SavedExercise();
                 List<SavedExercise> allSavedExercises = new ArrayList<>();
 
@@ -48,7 +47,7 @@ public class ExerciseService extends AppCompatActivity {
                 newUserExercise.reps = exercise.eReps;
                 newUserExercise.rest = exercise.eRest;
                 newUserExercise.load = exercise.eLoad;
-                newUserExercise.createdDate = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+                newUserExercise.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
                 newUserExercise.userCreated = true;
                 newUserExercise.id = allSavedExercises.size() + 1;
 
@@ -105,7 +104,6 @@ public class ExerciseService extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------
     public void deleteExercise(Context context, Exercise exercise) {
 
-        LocalDate date = LocalDate.now();
         savedExercise = new SavedExercise();
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         ExerciseDao dao = db.exerciseDao();
@@ -148,7 +146,7 @@ public class ExerciseService extends AppCompatActivity {
                                 savedExercise.rest = exercise.eRest;
                                 savedExercise.load = exercise.eLoad;
                                 savedExercise.type = exercise.eType;
-                                savedExercise.deleteDate = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+                                savedExercise.deleteDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
                                 secondDao.updateSavedExercise(item);
                             }
                         }
@@ -179,7 +177,6 @@ public class ExerciseService extends AppCompatActivity {
     public Exercise convertExercise(SavedExercise savedExercise, int workoutOrder, int planId, int workoutId) {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
-        LocalDate date = LocalDate.now();
         newExercise = new Exercise();
         newExercise.eName = savedExercise.name;
         newExercise.eDescription = savedExercise.description;
@@ -192,13 +189,13 @@ public class ExerciseService extends AppCompatActivity {
         newExercise.plan_Id = planId;
         newExercise.workout_Id = workoutId;
         newExercise.savedExercise_Id = savedExercise.id;
-        newExercise.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+        newExercise.lastModified = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
 
         return newExercise;
     }
 
     // ---------------------------------------------------------------------------------------------------
-    public WorkoutType applyExerciseType(Exercise exercise, String item){
+    public void applyExerciseType(Exercise exercise, String item){
         switch(item)  {
             case "Chest":
                 exercise.eType = WorkoutType.Chest;
@@ -222,8 +219,44 @@ public class ExerciseService extends AppCompatActivity {
                 exercise.eType = WorkoutType.Legs;
                 break;
         }
+    }
 
-        return exercise.eType;
+
+    // ---------------------------------------------------------------------------------------------------
+    public void switchAllExercisesName(Context context, String  language) {
+        // switch(item)  ???
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        SavedExerciseDao dao = db.savedExerciseDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                String[] newNames = new String[0];
+                /////////// Language String ///////////////
+                List<SavedExercise> allExercises = dao.listSavedExercise();
+                List<SavedExercise> dbExercises = dao.listSavedExercise();
+
+                // -------------------------------------
+                if (!allExercises.isEmpty()) {
+
+                    for (SavedExercise item : allExercises) {
+                        if (!item.userCreated) {
+                            dbExercises.add(item);
+                        }
+                    }
+
+                    for (int i = 0; i < dbExercises.size(); i++) {
+                        dbExercises.get(i).name = newNames[i];
+                        // Update Exercise Name
+                        dao.updateSavedExercise(allExercises.get(i));
+                    }
+                }
+            }
+        }).start();
+
+        db.close();
     }
 
 }

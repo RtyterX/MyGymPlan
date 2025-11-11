@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +35,6 @@ import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 public class TesteActivity extends AppCompatActivity {
 
@@ -158,7 +156,7 @@ public class TesteActivity extends AppCompatActivity {
     private void GetActivePlan() {
 
         PlanService planService = new PlanService();
-        planService.getActivePlan(getApplicationContext(), testPlan);
+        planService.setActivePlan(getApplicationContext(), testPlan);
 
     }
 

@@ -2,31 +2,23 @@ package com.example.mygymplan.Services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.mygymplan.Database.AppDatabase;
-import com.example.mygymplan.Database.ExerciseDao;
 import com.example.mygymplan.Database.PlanDao;
-import com.example.mygymplan.Database.WorkoutDao;
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
-import com.example.mygymplan.Entitys.Workout;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-
-import kotlinx.coroutines.scheduling.WorkQueueKt;
 
 public class PlanService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
-    public void getActivePlan(Context context, Plan plan) {
-
-        Plan activePlan = new Plan();
+    public void setActivePlan(Context context, Plan plan) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
@@ -35,19 +27,31 @@ public class PlanService extends AppCompatActivity {
             @Override
             public void run() {
 
-                List<Plan> allPlans = dao.listPlans();
+                plan.active = true;
 
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Plan item : allPlans) {
-                            if (item.active == true) {
-                                //activePlan = item;
-                            }
+                // Deactivate any other Active Plan
+                List<Plan> allPlans = dao.listPlans();
+                for (Plan item : allPlans) {
+                    if (item.id != plan.id) {
+                        if (item.active == true) {
+                            item.active = false;
+                            dao.updatePlan(item);
                         }
                     }
-                });
+                }
+
+                plan.active = true;
+
+                // Set Active in Database
+                dao.updatePlan(plan);
+
+                // Save Active Plan Id for later use...
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("activePlanId", plan.id);
+                editor.apply();
+
+                Log.d("Active Plan Id", "Salvo ID como: " + plan.id);
             }
         }).start();
 
@@ -56,6 +60,53 @@ public class PlanService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void insertPlan(Context context, Plan plan) {
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // If Plan set Active...
+                if (plan.active) {
+                    // Deactivate any other Active Plan
+                    List<Plan> allPlans = dao.listPlans();
+                    for (Plan item : allPlans) {
+                        if (item.active == true) {
+                            item.active = false;
+                            dao.updatePlan(item);
+                        }
+                    }
+
+                    int newPlanId = 0;
+
+                    // Get Higher id value
+                    for (int i = 0; i < allPlans.size(); i++) {
+                        if (newPlanId < allPlans.get(i).id) {
+                            newPlanId = allPlans.get(i).id;
+                        }
+                    }
+
+                    // Save Active Plan Id for later use...
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("activePlanId", (newPlanId + 1));
+                    editor.apply();
+
+                    Log.d("Active Plan Id", "Salvo ID como: " + (newPlanId + 1));
+                }
+
+                // Insert Plan in Database
+                dao.insertPlan(plan);
+            }
+        }).start();
+
+        db.close();
+    }
+
+    // ---------------------------------------------------------------------------------------------------
+    public void insertPlanold(Context context, Plan plan) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
@@ -143,52 +194,6 @@ public class PlanService extends AppCompatActivity {
         convertPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
         return convertPlan;
-    }
-
-    // ---------------------------------------------------------------------------------------------------
-    public void activePlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // List All Plans from Database
-                List<Plan> allPlans = dao.listPlans();
-
-                // Deactivate any other Active Plan
-                for (Plan item : allPlans) {
-                    if (item != plan) {
-                        if (item.active == true) {
-                            item.active = false;
-                            dao.updatePlan(item);
-                        }
-                    }
-                }
-
-                if (plan.active != true) {
-                    // Active only the selected Plan
-                    plan.active = true;
-                    dao.updatePlan(plan);
-                }
-
-                // Insert in Shared Preferences
-                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                // Set Plans as Active
-                if (plan.id != null) {
-                    editor.putInt("activePlan", 1);
-                    editor.apply();
-                } else {
-                    editor.putInt("activePlan", plan.id);
-                    editor.apply();
-                }
-                editor.apply();
-            }
-        }).start();
-
-        db.close();
     }
 
 }

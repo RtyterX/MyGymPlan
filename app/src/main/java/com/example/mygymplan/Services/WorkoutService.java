@@ -8,6 +8,7 @@ import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class WorkoutService extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------------
-    public Workout converterWorkout(String name, String description, WorkoutType type, int planId) {
+    public Workout converterWorkout(String name, String description, WorkoutType type, DayOfWeek dayOfWeek, int planId) {
         // Create New Workout DataBase
         LocalDate date = LocalDate.now();
         Workout newWorkout = new Workout();

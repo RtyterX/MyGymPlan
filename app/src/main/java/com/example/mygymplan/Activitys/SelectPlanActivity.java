@@ -353,7 +353,7 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void setActiveButtonClick(Plan plan) {
                     PlanService planService = new PlanService();
-                    planService.activePlan(getApplicationContext(), plan);
+                    planService.setActivePlan(getApplicationContext(), plan);
 
                     LoadMyPlans();
                 }

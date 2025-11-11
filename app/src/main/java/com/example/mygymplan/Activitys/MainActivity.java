@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     // UI Elements
+    TextView mainText;
     Button createPlan;
     TextView noWorkout;
     ItemTouchHelper mIth;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // --- Components ---
-        TextView mainText = findViewById(R.id.MainTitle);
+        mainText = findViewById(R.id.MainTitle);
         workoutRV = findViewById(R.id.MainRVWorkouts);
         plansRV = findViewById(R.id.MainRVPlans);
         createPlan = findViewById(R.id.MainCreatePlanButton);
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ---- Display Create From Scratch button --\
         CheckUser();
         CheckPlan();
-        CheckTodaysWorkout();
 
 
         // ----- Set UI Data-----
@@ -212,30 +212,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onActivityResult(ActivityResult result) {
                 //if (false) { //&& data != null && data.getData() != null) {
-                    Uri imageUri = result.getData().getData();
-                    naviBarImage.setImageURI(imageUri);
+                Uri imageUri = result.getData().getData();
+                naviBarImage.setImageURI(imageUri);
 
-                    // Convert Image to Bitmap
-                    Drawable drawable = naviBarImage.getDrawable();
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                // Convert Image to Bitmap
+                Drawable drawable = naviBarImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
 
-                    // Convert to String
-                    userImageString = imageConverter.ConvertToString(bitmap);
+                // Convert to String
+                userImageString = imageConverter.ConvertToString(bitmap);
 
-                    // Check if its user First time opening App
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
-                    editor.putString("userImageString", userImageString);
-                    editor.apply();
+                // Check if its user First time opening App
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                editor.putString("userImageString", userImageString);
+                editor.apply();
 
-                    // Re Create App
-                    recreate();
+                // Re Create App
+                recreate();
 
                 // } else if (resultCode == RESULT_CANCELED) {
 
-                }
-           // }
+            }
+            // }
         });
     }
 
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = sharedPreferences.getString("email", "");
         userImageString = sharedPreferences.getString("userImageString", "");
         todaysWorkoutId = sharedPreferences.getInt("todaysWorkoutId", 0);
-        activePlanId = sharedPreferences.getInt("activePlan", 0);
+        activePlanId = sharedPreferences.getInt("activePlanId", 0);
 
         // If has no User, go to Welcome Page
         if (Objects.equals(username, "")) {
@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (item.id == activePlanId) {
                             activePlan = item;
                             planList.add(item);
+                            break;
                         }
                     }
                 }
@@ -384,72 +385,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }).start();
 
         db.close();
+
+        GetTodaysWorkout();
     }
 
 
     // --------------------------------------------
-    // ----------- Check todays Workout -----------
+    // ------------ Get todays Workout ------------
     // --------------------------------------------
-    private void CheckTodaysWorkout() {
+    private void GetTodaysWorkout() {
 
-        WorkoutDao daoW = db.workoutDao();
+        if (activePlan != null) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // List all Workouts from Active Plan
-                List<Workout> allWorkouts = daoW.listWorkouts();
+            AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
-                // --------------------------------------------------------------
-                if (activePlan != null) {
+            // Check if Active Plan haven't Fixed Days
+            if (activePlan.fixedDays) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    // If Plan workouts is set to fixed Days
-                    if (activePlan.fixedDays) {
-                        if (!allWorkouts.isEmpty()) {
-                            for (Workout item : allWorkouts) {
-                                if (item.plan_Id == activePlan.id) {
-                                    // Check Days of Week
-                                    if (item.dayOfWeek == LocalDate.now().getDayOfWeek()) {
-                                        todaysWorkout = item;
-                                    } else {
-                                        Log.d("Todays Workout", "Active Plan doesnt have workout for this day");
-                                    }
+                        mainText.setText(LocalDate.now().getDayOfWeek().toString());
+
+                        // ------------------------------------------------------
+                        WorkoutDao dao = db.workoutDao();
+                        List<Workout> allWorkouts = dao.listWorkouts();
+
+                        for (Workout item : allWorkouts) {
+                            if (item.plan_Id == activePlan.id) {
+                                if (item.dayOfWeek == LocalDate.now().getDayOfWeek()) {
+                                    todaysWorkout = item;
+                                    break;
                                 }
                             }
                         }
-                    } else {
-                        // Plans set NOT to Fixed Days
-                        if (!allWorkouts.isEmpty()) {
-                            for (Workout item : allWorkouts) {
-                                todaysWorkout = item;
+                    }
+                }).start();
+
+                db.close();
+
+            } else {  // --------------------------------------------------------------------------------------------------------
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ------------------------------------------------------
+                        WorkoutDao dao = db.workoutDao();
+                        List<Workout> allWorkouts = dao.listWorkouts();
+
+                        for (Workout item : allWorkouts) {
+                            if (item.plan_Id == activePlan.id) {
+                                if (item.id == todaysWorkoutId) {
+                                    todaysWorkout = item;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-                else {
-                    //Toast.makeText(getApplicationContext(), "Active Plan is Null", Toast.LENGTH_SHORT).show();
-                }
+                }).start();
 
-                // -------------------------------------------------------------------------------
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //----------------------------------------------------------------
-                        // Set Todays Workout in List to use in Recycler View
-                        if (todaysWorkout != null) {
-                            workoutsList.add(todaysWorkout);
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Todays Workout is Null", Toast.LENGTH_SHORT).show();
-                        }
-                        // ------------------
-                        ApplyWorkoutRV();
-                    }
-                });
+                db.close();
             }
-        }).start();
 
-        db.close();
+            ApplyWorkoutRV();
+        }
     }
 
 
@@ -487,6 +485,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     intent.putExtra("SelectedWorkout", item);
                                     startActivity(intent);
                                 }
+
                                 // --------------------------------------
                                 @Override
                                 public void onItemLongClick(Workout item) {
@@ -504,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             // Attach Item Helper
                             mIth.attachToRecyclerView(workoutRV);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Todays Workout NOT found",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Todays Workout NOT found", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
