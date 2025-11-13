@@ -57,7 +57,7 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
            holder.backgroundView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.selectedBG));
         }
 
-        holder.textViewName.setText(workoutList.get(position).wName);
+        holder.textViewName.setText(workoutList.get(position).name);
 
         // On Item Click
         holder.bind(workoutList.get(position), onListener);

@@ -18,6 +18,7 @@ public class ImageConverter {
         byte[] bytesImageEncoded = byteArrayOutputStream.toByteArray();
 
         return android.util.Base64.encodeToString(bytesImageEncoded, android.util.Base64.DEFAULT);
+
     }
 
     // ---------------------------------------------------------------------------------------------------

@@ -2,13 +2,12 @@ package com.example.mygymplan.Services;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.example.mygymplan.Activitys.ExerciseActivity;
 import com.example.mygymplan.Activitys.MainActivity;
 import com.example.mygymplan.Activitys.PlanActivity;
 import com.example.mygymplan.Activitys.SelectPlanActivity;
@@ -39,6 +39,7 @@ import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Database.SavedExerciseDao;
+import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
@@ -88,6 +89,7 @@ public class PopupService extends AppCompatActivity {
 
                 //--------------------------------------------------------------
                 PlanService planService = new PlanService();
+
                 // Plan newPlan = new Plan();
                 // Check if plan has Fixed Days
                 if (fixedDays.isChecked()) {
@@ -95,7 +97,6 @@ public class PopupService extends AppCompatActivity {
                 } else {
                     newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false,true);
                 }
-
                 SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 int activePlanId = sharedPreferences.getInt("activePlanId", 0);
                 if (activePlanId != 0) {
@@ -124,14 +125,20 @@ public class PopupService extends AppCompatActivity {
                     // ------ Buttons ------
                     yesButton.setOnClickListener(subV -> {
                         newPlan.active = true;
-                        planService.insertPlan(context, newPlan);
+                        newPlan = planService.insertPlan(context, newPlan);
                         // Show Text on Screen
                         Toast.makeText(context, "New Plan Created", Toast.LENGTH_SHORT).show();
-                        // Close Popup
-                        subPopupWindow.dismiss();
-                        popupWindow.dismiss();
-                        // Change to Plan Activity
-                        activity.changeToPlan(newPlan);
+                        // Delay for ID transfer from DB
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Change to Plan Activity
+                                activity.changeToPlan(newPlan);
+                                // Close Popup
+                                subPopupWindow.dismiss();
+                                popupWindow.dismiss();
+                            }
+                        }, 50);
                     });
 
                     noButton.setOnClickListener(subV -> {
@@ -140,23 +147,35 @@ public class PopupService extends AppCompatActivity {
                         planService.insertPlan(context, newPlan);
                         // Show Text on Screen
                         Toast.makeText(context, "New Plan Created", Toast.LENGTH_SHORT).show();
-                        // Close Popup
-                        popupWindow.dismiss();
-                        subPopupWindow.dismiss();
-                        // Change Activity
-                        activity.CheckPlan();
+                        // Delay for ID transfer from DB
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Change to Plan Activity
+                                activity.changeToPlan(newPlan);
+                                // Close Popup
+                                subPopupWindow.dismiss();
+                                popupWindow.dismiss();
+                            }
+                        }, 50);
                     });
                 }
+                // Apply Active automatically, if its First Plan
                 else {
                     newPlan.active = true;
                     planService.insertPlan(context, newPlan);
                     // Show Text on Screen
                     Toast.makeText(context, "First Plan Created", Toast.LENGTH_SHORT).show();
-                    // Change to Plan Activity
-                    activity.changeToPlan(newPlan);
-                    // Close Popup
-                    popupWindow.dismiss();
-
+                    // Delay for ID transfer from DB
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Change to Plan Activity
+                            activity.changeToPlan(newPlan);
+                            // Close Popup
+                            popupWindow.dismiss();
+                        }
+                    }, 50);
                 }
             }
             // --------------------------------------------------------------------
@@ -239,28 +258,39 @@ public class PopupService extends AppCompatActivity {
                         // Create Plan as Active
                         newPlan.active = true;
                         planService.insertPlan(context, newPlan);
-                        // Update Activity
-                        activity.LoadMyPlans();
                         // Show Text on Screen
                         Toast.makeText(context, "New Plan Created", Toast.LENGTH_SHORT).show();
-                        // Close Popup
-                        subPopupWindow.dismiss();
-                        popupWindow.dismiss();
+                        // Delay for ID transfer from DB
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Update Activity
+                                activity.LoadMyPlans();
+                                // Close Popup
+                                popupWindow.dismiss();
+                            }
+                        }, 50);
                     });
 
                     noButton.setOnClickListener(subV -> {
                         // Create Plan but Not Active
                         newPlan.active = false;
                         planService.insertPlan(context, newPlan);
-                        // Update Activity
-                        activity.LoadMyPlans();
                         // Show Text on Screen
                         Toast.makeText(context, "New Plan Created", Toast.LENGTH_SHORT).show();
-                        // Close Popup
-                        subPopupWindow.dismiss();
-                        popupWindow.dismiss();
+                        // Delay for ID transfer from DB
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Update Activity
+                                activity.LoadMyPlans();
+                                // Close Popup
+                                popupWindow.dismiss();
+                            }
+                        }, 50);
                     });
                 }
+                // Apply Active automatically, if its First Plan
                 else {
                     // Create Plan as Active
                     newPlan.active = true;
@@ -269,8 +299,16 @@ public class PopupService extends AppCompatActivity {
                     activity.LoadMyPlans();
                     // Show Text on Screen
                     Toast.makeText(context, "First Plan Created", Toast.LENGTH_SHORT).show();
-                    // Close Popup
-                    popupWindow.dismiss();
+                    // Delay for ID transfer from DB
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Update Activity
+                            activity.LoadMyPlans();
+                            // Close Popup
+                            popupWindow.dismiss();
+                        }
+                    }, 50);
                 }
             }
             // --------------------------------------------------------------------
@@ -355,7 +393,6 @@ public class PopupService extends AppCompatActivity {
             @Override
             public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
                 newWorkout.dayOfWeek = DayOfWeek.MONDAY;
-                monday.setChecked(true);
                 tuesday.setChecked(false);
                 wednesday.setChecked(false);
                 thursday.setChecked(false);
@@ -370,7 +407,6 @@ public class PopupService extends AppCompatActivity {
             public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
                 newWorkout.dayOfWeek = DayOfWeek.TUESDAY;
                 monday.setChecked(false);
-                tuesday.setChecked(true);
                 wednesday.setChecked(false);
                 thursday.setChecked(false);
                 friday.setChecked(false);
@@ -385,7 +421,6 @@ public class PopupService extends AppCompatActivity {
                 newWorkout.dayOfWeek = DayOfWeek.WEDNESDAY;
                 monday.setChecked(false);
                 tuesday.setChecked(false);
-                wednesday.setChecked(true);
                 thursday.setChecked(false);
                 friday.setChecked(false);
                 saturday.setChecked(false);
@@ -400,7 +435,6 @@ public class PopupService extends AppCompatActivity {
                 monday.setChecked(false);
                 tuesday.setChecked(false);
                 wednesday.setChecked(false);
-                thursday.setChecked(true);
                 friday.setChecked(false);
                 saturday.setChecked(false);
                 sunday.setChecked(false);
@@ -415,7 +449,6 @@ public class PopupService extends AppCompatActivity {
                 tuesday.setChecked(false);
                 wednesday.setChecked(false);
                 thursday.setChecked(false);
-                friday.setChecked(true);
                 saturday.setChecked(false);
                 sunday.setChecked(false);
             }
@@ -471,7 +504,7 @@ public class PopupService extends AppCompatActivity {
                     descriptionWarning.setVisibility(View.VISIBLE);
                 }
                 // ---------------------------------------------------------
-                if (newWorkout.wType == null) {
+                if (newWorkout.type == null) {
                     typeWarning.setVisibility(View.VISIBLE);
                 }
             } else {
@@ -484,7 +517,7 @@ public class PopupService extends AppCompatActivity {
 
             // Inset New Workout in Database
             WorkoutService workoutService = new WorkoutService();
-            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.wType, newWorkout.dayOfWeek, plan.id);
+            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.type, newWorkout.dayOfWeek, plan.id);
             workoutService.insertWorkout(context, newWorkout);
             // Show Text on Screen
             Toast.makeText(context, "Workout Created",Toast.LENGTH_SHORT).show();
@@ -495,7 +528,7 @@ public class PopupService extends AppCompatActivity {
                     planActivity.GetWorkoutList();
                     popupWindow.dismiss();     // Close Popup
                 }
-            }, 300); // 3000 milliseconds = 3 seconds
+            }, 50); // 3000 milliseconds = 3 seconds
 
         });
 
@@ -546,8 +579,8 @@ public class PopupService extends AppCompatActivity {
 
 
         // --- Set Values ---
-        newWorkoutName.setText(workout.wName);
-        newWorkoutDescription.setText(workout.wDescription);
+        newWorkoutName.setText(workout.name);
+        newWorkoutDescription.setText(workout.description);
 
         // ----------------------------------
 
@@ -555,7 +588,7 @@ public class PopupService extends AppCompatActivity {
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
         // ------------------------------------------------------
-        autoComplete.setText(workout.wType.toString());
+        autoComplete.setText(workout.type.toString());
         adapterItem = new ArrayAdapter<String>(context, R.layout.enum_list, typeInView);
         autoComplete.setAdapter(adapterItem);
 
@@ -573,8 +606,8 @@ public class PopupService extends AppCompatActivity {
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
             // Set Variables
-            workout.wName = newWorkoutName.getText().toString();
-            workout.wDescription = newWorkoutDescription.getText().toString();
+            workout.name = newWorkoutName.getText().toString();
+            workout.description = newWorkoutDescription.getText().toString();
             // Update Workout
             WorkoutService workoutService = new WorkoutService();
             workoutService.updateWorkout(context, workout);
@@ -883,7 +916,7 @@ public class PopupService extends AppCompatActivity {
         EditText newPlanName = popupView.findViewById(R.id.EditUserPlanName);
         Button confirmButton = popupView.findViewById(R.id.ConfirmEditUserPlanName);
 
-        newPlanName.setText(plan.planName);
+        newPlanName.setText(plan.name);
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -900,7 +933,7 @@ public class PopupService extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                plan.planName = newPlanName.getText().toString();
+                plan.name = newPlanName.getText().toString();
 
                 new Thread(new Runnable() {
                     @Override
@@ -913,4 +946,37 @@ public class PopupService extends AppCompatActivity {
 
     }
 
+    public void DeleteWarning(Context context, ExerciseActivity activity, Exercise exercise) {
+        // Inflate Activity with a new View
+        View popupView = View.inflate(context, R.layout.popup_warning, null);
+
+        // Popup View UI Content
+        TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
+        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
+        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
+
+        // Initialize new Popup View
+        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        // Set Shadow
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setElevation(10.0f);
+        // Set Popup Location on Screen
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+        // Set Text Warning
+        popupWarning.setText("Voce confirma que vai deletar?");
+
+        // Set Buttons
+        confirmButton.setOnClickListener(v -> {
+            ExerciseService exerciseService = new ExerciseService();
+            exerciseService.deleteExercise(context, exercise);
+            activity.ChangeActivity();
+            activity.finish();
+            popupWindow.dismiss();
+        });
+        closeButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+
+    }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,9 +62,9 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
         WorkoutDuration workoutDuration = new WorkoutDuration();    // needs to be here to work properly
 
-        holder.textViewName.setText(workoutList.get(position).wName);
-        holder.textViewDescription.setText(workoutList.get(position).wDescription);
-        holder.textViewType.setText(workoutList.get(position).wType.toString());
+        holder.textViewName.setText(workoutList.get(position).name);
+        holder.textViewDescription.setText(workoutList.get(position).description);
+        holder.textViewType.setText(workoutList.get(position).type.toString());
         holder.textViewLastMod.setText(workoutList.get(position).lastModified);
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 

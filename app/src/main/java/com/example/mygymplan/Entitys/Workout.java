@@ -9,7 +9,6 @@ import com.example.mygymplan.Enums.WorkoutType;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
-import java.util.Calendar;
 
 @Entity(tableName = "workouts", foreignKeys =
 @ForeignKey(entity = Plan.class,
@@ -23,13 +22,13 @@ public class Workout implements Serializable {
     public int id;
 
     @ColumnInfo(name = "name")
-    public String wName;
+    public String name;
 
     @ColumnInfo(name = "description")
-    public String wDescription;
+    public String description;
 
     @ColumnInfo(name = "type")
-    public WorkoutType wType;
+    public WorkoutType type;
 
     @ColumnInfo(name = "order")
     public int order;

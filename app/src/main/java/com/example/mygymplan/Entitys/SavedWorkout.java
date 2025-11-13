@@ -24,9 +24,6 @@ public class SavedWorkout implements Serializable {
     @ColumnInfo(name = "type")
     public WorkoutType type;
 
-    // @ColumnInfo(name = "image")
-    // public int wImage;
-
     @ColumnInfo(name = "createdDate")
     public String createdDate;
 

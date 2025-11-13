@@ -2,6 +2,8 @@ package com.example.mygymplan.Services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,49 +19,9 @@ import java.util.List;
 
 public class PlanService extends AppCompatActivity {
 
-    // ---------------------------------------------------------------------------------------------------
-    public void setActivePlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                plan.active = true;
-
-                // Deactivate any other Active Plan
-                List<Plan> allPlans = dao.listPlans();
-                for (Plan item : allPlans) {
-                    if (item.id != plan.id) {
-                        if (item.active == true) {
-                            item.active = false;
-                            dao.updatePlan(item);
-                        }
-                    }
-                }
-
-                plan.active = true;
-
-                // Set Active in Database
-                dao.updatePlan(plan);
-
-                // Save Active Plan Id for later use...
-                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("activePlanId", plan.id);
-                editor.apply();
-
-                Log.d("Active Plan Id", "Salvo ID como: " + plan.id);
-            }
-        }).start();
-
-        db.close();
-    }
 
     // ---------------------------------------------------------------------------------------------------
-    public void insertPlan(Context context, Plan plan) {
+    public Plan insertPlan(Context context, Plan plan) {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
@@ -88,14 +50,16 @@ public class PlanService extends AppCompatActivity {
                         }
                     }
 
+                    plan.id = newPlanId + 1;
+
                     // Save Active Plan Id for later use...
                     SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("activePlanId", (newPlanId + 1));
+                    editor.putInt("activePlanId", (plan.id));
                     editor.apply();
-
-                    Log.d("Active Plan Id", "Salvo ID como: " + (newPlanId + 1));
                 }
+
+                Log.d("Active Plan Id", "no DB foi salvo como ID: " + plan.id);
 
                 // Insert Plan in Database
                 dao.insertPlan(plan);
@@ -103,22 +67,12 @@ public class PlanService extends AppCompatActivity {
         }).start();
 
         db.close();
-    }
 
-    // ---------------------------------------------------------------------------------------------------
-    public void insertPlanold(Context context, Plan plan) {
 
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
+        Log.d("Active Plan Id", "no DB depois de 3s: " + plan.id);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                dao.insertPlan(plan);
-            }
-        }).start();
 
-        db.close();
+        return plan;
     }
 
 
@@ -165,8 +119,8 @@ public class PlanService extends AppCompatActivity {
 
                 // Create New Workout DataBase
                 Plan newPlan = new Plan();
-                newPlan.planName = name;
-                newPlan.planDescription = description;
+                newPlan.name = name;
+                newPlan.description = description;
                 newPlan.pro = false;
                 newPlan.author = username;
                 newPlan.active = isActiveOrNot;
@@ -185,8 +139,8 @@ public class PlanService extends AppCompatActivity {
 
         // Create New Workout DataBase
         Plan convertPlan = new Plan();
-        convertPlan.planName = name;
-        convertPlan.planDescription = description;
+        convertPlan.name = name;
+        convertPlan.description = description;
         convertPlan.fixedDays = fixedDays;
         convertPlan.pro = false;
         convertPlan.author = author;
@@ -194,6 +148,47 @@ public class PlanService extends AppCompatActivity {
         convertPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
         return convertPlan;
+    }
+
+    // ---------------------------------------------------------------------------------------------------
+    public void setActivePlan(Context context, Plan plan) {
+
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        PlanDao dao = db.planDao();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                plan.active = true;
+
+                // Deactivate any other Active Plan
+                List<Plan> allPlans = dao.listPlans();
+                for (Plan item : allPlans) {
+                    if (item.id != plan.id) {
+                        if (item.active == true) {
+                            item.active = false;
+                            dao.updatePlan(item);
+                        }
+                    }
+                }
+
+                plan.active = true;
+
+                // Set Active in Database
+                dao.updatePlan(plan);
+
+                // Save Active Plan Id for later use...
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("activePlanId", plan.id);
+                editor.apply();
+
+                Log.d("Active Plan Id", "Salvo ID como: " + plan.id);
+            }
+        }).start();
+
+        db.close();
     }
 
 }

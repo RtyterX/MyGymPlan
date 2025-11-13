@@ -3,10 +3,13 @@ package com.example.mygymplan.Services;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 import com.example.mygymplan.Database.AppDatabase;
+import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Database.WorkoutDao;
+import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
+import android.util.Log;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class WorkoutService extends AppCompatActivity {
+
+    int newWorkoutId = 0;
 
 
     // ---------------------------------------------------------------------------------------------------
@@ -38,6 +43,7 @@ public class WorkoutService extends AppCompatActivity {
 
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         WorkoutDao dao = db.workoutDao();
+        PlanDao planDao = db.planDao();
 
         new Thread(new Runnable() {
             @Override
@@ -45,7 +51,42 @@ public class WorkoutService extends AppCompatActivity {
                 List<Workout> allWorkouts = new ArrayList<>();
                 allWorkouts = dao.listWorkouts();
 
-                workout.order = allWorkouts.size();
+                // Get Higher id value
+                for (Workout item : allWorkouts) {
+                    if (newWorkoutId < item.id) {
+                        newWorkoutId = item.id;
+                    }
+                }
+
+
+                workout.id = newWorkoutId + 1;
+
+                // ----------------------------------------
+
+                Plan plan = new Plan();
+
+                List<Plan> allPlans = planDao.listPlans();
+                for (Plan item : allPlans) {
+                    if (item.id == workout.plan_Id) {
+                        plan = item;
+                    }
+                }
+
+
+                List<Workout> planWorkouts = new ArrayList<>();
+                for (Workout item : allWorkouts) {
+                    if (item.plan_Id == plan.id) {
+                        planWorkouts.add(item);
+                    }
+                }
+
+                if (!planWorkouts.isEmpty()) {
+                    workout.order = planWorkouts.size();
+                }
+                else {
+                    workout.order = 0;
+                }
+
                 dao.insertWorkout(workout);
             }
         }).start();
@@ -103,13 +144,13 @@ public class WorkoutService extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------
     public Workout converterWorkout(String name, String description, WorkoutType type, DayOfWeek dayOfWeek, int planId) {
         // Create New Workout DataBase
-        LocalDate date = LocalDate.now();
         Workout newWorkout = new Workout();
         newWorkout.plan_Id = planId;
-        newWorkout.wName = name;
-        newWorkout.wDescription = description;
-        newWorkout.wType = Objects.requireNonNullElse(type, WorkoutType.NA);
-        newWorkout.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+        newWorkout.name = name;
+        newWorkout.dayOfWeek = dayOfWeek;
+        newWorkout.description = description;
+        newWorkout.type = Objects.requireNonNullElse(type, WorkoutType.NA);
+        newWorkout.lastModified = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
 
         return newWorkout;
     }
@@ -119,29 +160,29 @@ public class WorkoutService extends AppCompatActivity {
     public WorkoutType applyWorkoutType(Workout workout, String item){
         switch(item)  {
             case "Chest":
-                workout.wType = WorkoutType.Chest;
+                workout.type = WorkoutType.Chest;
                 break;
             case "Back":
-                workout.wType = WorkoutType.Back;
+                workout.type = WorkoutType.Back;
                 break;
             case "Shoulder":
-                workout.wType = WorkoutType.Shoulder;
+                workout.type = WorkoutType.Shoulder;
                 break;
             case "Arms":
-                workout.wType = WorkoutType.Arms;
+                workout.type = WorkoutType.Arms;
                 break;
             case "Biceps":
-                workout.wType = WorkoutType.Biceps;
+                workout.type = WorkoutType.Biceps;
                 break;
             case "Triceps":
-                workout.wType = WorkoutType.Triceps;
+                workout.type = WorkoutType.Triceps;
                 break;
             case "Legs":
-                workout.wType = WorkoutType.Legs;
+                workout.type = WorkoutType.Legs;
                 break;
         }
 
-        return workout.wType;
+        return workout.type;
     }
 
 }

@@ -56,8 +56,8 @@ public class ShareService extends AppCompatActivity {
 
                 Plan newPlan = new Plan();
                 newPlan.id = totalPlans;
-                newPlan.planName = planParts[0];
-                newPlan.planDescription = planParts[1];
+                newPlan.name = planParts[0];
+                newPlan.description = planParts[1];
                 newPlan.active = Boolean.valueOf(planParts[2]);
                 newPlan.author = planParts[3];
                 newPlan.createdDate = planParts[4];
@@ -81,10 +81,10 @@ public class ShareService extends AppCompatActivity {
 
                     Workout newWorkout = new Workout();
                     newWorkout.id = totalWorkouts;
-                    newWorkout.wName = parts[0];
-                    newWorkout.wDescription = parts[1];
+                    newWorkout.name = parts[0];
+                    newWorkout.description = parts[1];
                     // newWorkout.image = parts[1];
-                    newWorkout.wType = WorkoutType.valueOf(parts[2]);
+                    newWorkout.type = WorkoutType.valueOf(parts[2]);
                     newWorkout.order = Integer.parseInt(parts[3]);
                     newWorkout.lastModified = LocalDate.now().toString();
                     newWorkout.plan_Id = newPlan.id;
@@ -106,14 +106,14 @@ public class ShareService extends AppCompatActivity {
                     String[] parts = exercisesList[i].split(",");
 
                     Exercise newExercise = new Exercise();
-                    newExercise.eName = parts[0];
-                    newExercise.eDescription = parts[1];
+                    newExercise.name = parts[0];
+                    newExercise.description = parts[1];
                     // newExercise.image = parts[2];
-                    newExercise.eSets = Integer.parseInt(parts[3]);
-                    newExercise.eReps = Integer.parseInt(parts[4]);
-                    newExercise.eRest = Integer.parseInt(parts[5]);
-                    newExercise.eLoad = Integer.parseInt(parts[6]);
-                    newExercise.eType = WorkoutType.valueOf(parts[7]);
+                    newExercise.sets = Integer.parseInt(parts[3]);
+                    newExercise.reps = Integer.parseInt(parts[4]);
+                    newExercise.rest = Integer.parseInt(parts[5]);
+                    newExercise.load = Integer.parseInt(parts[6]);
+                    newExercise.type = WorkoutType.valueOf(parts[7]);
                     newExercise.order = Integer.parseInt(parts[8]);
                     newExercise.lastModified = LocalDate.now().toString();
                     newExercise.plan_Id = newPlan.id;
@@ -158,10 +158,10 @@ public class ShareService extends AppCompatActivity {
 
                 // String bloc for Workouts
                 for (Workout w : workoutList) {
-                    workoutString.insert(0, w.wName + ","
-                            + w.wDescription + ","
+                    workoutString.insert(0, w.name + ","
+                            + w.description + ","
                             // + w.wImage + ","
-                            + w.wType + ","
+                            + w.type + ","
                             + w.order + ","
                             + LocalDate.now().toString() + ","
                             // Foreign Key doesn't Matter
@@ -183,14 +183,14 @@ public class ShareService extends AppCompatActivity {
 
                     for (int i = 0; i < exerciseList.size(); i++) {
 
-                        exerciseString = exerciseList.get(i).eName + ","
-                                + exerciseList.get(i).eDescription + ","
+                        exerciseString = exerciseList.get(i).name + ","
+                                + exerciseList.get(i).description + ","
                                 // + exerciseList.get(i).image + ","
-                                + exerciseList.get(i).eSets + ","
-                                + exerciseList.get(i).eReps + ","
-                                + exerciseList.get(i).eRest + ","
-                                + exerciseList.get(i).eLoad + ","
-                                + exerciseList.get(i).eType + ","
+                                + exerciseList.get(i).sets + ","
+                                + exerciseList.get(i).reps + ","
+                                + exerciseList.get(i).rest + ","
+                                + exerciseList.get(i).load + ","
+                                + exerciseList.get(i).type + ","
                                 + exerciseList.get(i).order + ","
                                 + LocalDate.now().toString() + ","
                                 // Foreign Key doesn't Matter
@@ -200,8 +200,8 @@ public class ShareService extends AppCompatActivity {
 
                 // --------------------------
                 // Final String
-                finalString = plan.planName + ","
-                        + plan.planDescription + ","
+                finalString = plan.name + ","
+                        + plan.description + ","
                         //  + plan.image + ","
                         + plan.active + ","
                         + plan.author + ","

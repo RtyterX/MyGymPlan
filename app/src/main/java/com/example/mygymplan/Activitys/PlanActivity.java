@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +40,6 @@ import androidx.room.Room;
 
 import com.example.mygymplan.Adapters.WorkoutRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
-import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
@@ -171,14 +171,11 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
         // Check if plan is from app DB
         if (thisPlan != null) {
-            if (Objects.equals(thisPlan.author, "My Gym Plan"))
-            {
+            if (Objects.equals(thisPlan.author, "My Gym Plan")) {
                 dbPlanIcon.setVisibility(View.VISIBLE);
+            } else {
+                dbPlanIcon.setVisibility(View.GONE);
             }
-        }
-        else
-        {
-            dbPlanIcon.setVisibility(View.GONE);
         }
 
 
@@ -509,7 +506,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                 CheckWorkoutLimit();
             }
             // Set Plan Name with or without workouts
-            planName.setText(thisPlan.planName);
+            planName.setText(thisPlan.name);
         }
     }
 

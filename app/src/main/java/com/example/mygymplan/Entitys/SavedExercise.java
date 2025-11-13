@@ -13,9 +13,6 @@ public class SavedExercise {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    @ColumnInfo(name = "userCreated")
-    public boolean userCreated;
-
     @ColumnInfo(name = "name")
     public String name;
 
@@ -37,13 +34,20 @@ public class SavedExercise {
     @ColumnInfo(name = "type")
     public WorkoutType type;
 
-    //@ColumnInfo(name = "image")
-    // public int eImage;
+    @ColumnInfo(name = "userCreated")
+    public boolean userCreated;
+
 
     @ColumnInfo(name = "createdDate")
     public String createdDate;
 
-    @ColumnInfo(name = "deleteDate")
-    public String deleteDate;
+    @ColumnInfo(name = "modDate")
+    public String modDate;
+
+    @ColumnInfo(name = "image")
+    public String image;
+
+    @ColumnInfo(name = "video")
+    public String video;
 
 }

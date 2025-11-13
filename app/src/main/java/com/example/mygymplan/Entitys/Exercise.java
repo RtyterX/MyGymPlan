@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey;
 import com.example.mygymplan.Enums.WorkoutType;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 
 @Entity(tableName = "exercises", foreignKeys =
@@ -22,25 +21,25 @@ public class Exercise implements Serializable {
     public int id;
 
     @ColumnInfo(name = "name")
-    public String eName;
+    public String name;
 
     @ColumnInfo(name = "description")
-    public String eDescription;
+    public String description;
 
     @ColumnInfo(name = "sets")
-    public int eSets;
+    public int sets;
 
     @ColumnInfo(name = "reps")
-    public int eReps;
+    public int reps;
 
     @ColumnInfo(name = "rest")
-    public int eRest; // Time
+    public int rest; // Time
 
     @ColumnInfo(name = "load")
-    public int eLoad;
+    public int load;
 
     @ColumnInfo(name = "type")
-    public WorkoutType eType;    // Enum
+    public WorkoutType type;    // Enum
 
     @ColumnInfo(name = "order")
     public int order;
@@ -59,5 +58,8 @@ public class Exercise implements Serializable {
 
     @ColumnInfo(name = "image")
     public String image;
+
+    @ColumnInfo(name = "video")
+    public String video;
 
 }

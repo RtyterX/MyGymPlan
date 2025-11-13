@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +50,7 @@ import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Services.ImageConverter;
+import com.example.mygymplan.Services.PopupService;
 import com.example.mygymplan.Services.TimerService;
 import com.example.mygymplan.Services.WorkoutService;
 
@@ -159,17 +159,17 @@ public class ExerciseActivity extends AppCompatActivity {
 
 
         // --- Set UI Values ---
-        NewExerciseCompareString = thisExercise.eName;                         // Just to check if it's a New Exercise or Not
+        NewExerciseCompareString = thisExercise.name;                         // Just to check if it's a New Exercise or Not
         // If Exercise isn't New...
         if (!Objects.equals(NewExerciseCompareString, "1")) {
             // Show already storage Values
-            showName.setText(thisExercise.eName);
-            showDescription.setText(thisExercise.eDescription);
-            showSets.setText(String.valueOf(thisExercise.eSets));
-            showReps.setText(String.valueOf(thisExercise.eReps));
-            showRest.setText(String.valueOf(thisExercise.eRest));
-            showLoad.setText(String.valueOf(thisExercise.eLoad));
-            autoComplete.setText(thisExercise.eType.toString());
+            showName.setText(thisExercise.name);
+            showDescription.setText(thisExercise.description);
+            showSets.setText(String.valueOf(thisExercise.sets));
+            showReps.setText(String.valueOf(thisExercise.reps));
+            showRest.setText(String.valueOf(thisExercise.rest));
+            showLoad.setText(String.valueOf(thisExercise.load));
+            autoComplete.setText(thisExercise.type.toString());
             // exerciseImage =
             // exerciseVideo =
 
@@ -332,37 +332,9 @@ public class ExerciseActivity extends AppCompatActivity {
     // ------------------------------------------------------
     // ---------- Delete Exercise Popup  --------------------
     // ------------------------------------------------------
-
     private void DeleteWarning() {
-        // Inflate Activity with a new View
-        View popupView = View.inflate(this, R.layout.popup_warning, null);
-
-        // Popup View UI Content
-        TextView popupWarning = popupView.findViewById(R.id.WarningMessage);
-        Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
-        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
-
-        // Initialize new Popup View
-        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        // Set Shadow
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setElevation(10.0f);
-        // Set Popup Location on Screen
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-        // Set Text Warning
-        popupWarning.setText("Voce confirma que vai deletar?");
-
-        // Set Buttons
-        confirmButton.setOnClickListener(v -> {
-            exerciseService.deleteExercise(getApplicationContext(), thisExercise);
-            ChangeActivity();
-            finish();
-        });
-        closeButton.setOnClickListener(v -> {
-            popupWindow.dismiss();
-        });
-
+        PopupService popupService = new PopupService();
+        popupService.DeleteWarning(this, this, thisExercise);
     }
 
     public void OpenTimerOld() {
@@ -525,77 +497,77 @@ public class ExerciseActivity extends AppCompatActivity {
     // ----------------------------------------
     //region Plus/Minus Functions
     public void SetsMinus(View view) {
-        if (thisExercise.eSets > 1) {
-            thisExercise.eSets -= 1;
-            showSets.setText(String.valueOf(thisExercise.eSets));
+        if (thisExercise.sets > 1) {
+            thisExercise.sets -= 1;
+            showSets.setText(String.valueOf(thisExercise.sets));
         }
-        else if (thisExercise.eSets == 0) {
-            thisExercise.eSets = 1;
-            showSets.setText(String.valueOf(thisExercise.eSets));
+        else if (thisExercise.sets == 0) {
+            thisExercise.sets = 1;
+            showSets.setText(String.valueOf(thisExercise.sets));
         }
     }
 
     public void SetsPlus(View view) {
-        if (thisExercise.eSets < 20) {
-            thisExercise.eSets += 1;
-            showSets.setText(String.valueOf(thisExercise.eSets));
+        if (thisExercise.sets < 20) {
+            thisExercise.sets += 1;
+            showSets.setText(String.valueOf(thisExercise.sets));
         }
     }
 
     public void RepsMinus(View view) {
-        if (thisExercise.eReps > 1) {
-            thisExercise.eReps -= 1;
-            showReps.setText(String.valueOf(thisExercise.eReps));
+        if (thisExercise.reps > 1) {
+            thisExercise.reps -= 1;
+            showReps.setText(String.valueOf(thisExercise.reps));
         }
-        else if (thisExercise.eReps == 0) {
-            thisExercise.eReps = 1;
-            showReps.setText(String.valueOf(thisExercise.eReps));
+        else if (thisExercise.reps == 0) {
+            thisExercise.reps = 1;
+            showReps.setText(String.valueOf(thisExercise.reps));
         }
     }
 
     public void RepsPlus(View view) {
-        if (thisExercise.eReps < 1000) {
-            thisExercise.eReps += 1;
-            showReps.setText(String.valueOf(thisExercise.eReps));
+        if (thisExercise.reps < 1000) {
+            thisExercise.reps += 1;
+            showReps.setText(String.valueOf(thisExercise.reps));
         }
     }
 
     public void RestMinus(View view) {
-        if (thisExercise.eRest > 0) {
-            thisExercise.eRest -= 1;
-            showRest.setText(String.valueOf(thisExercise.eRest));
+        if (thisExercise.rest > 0) {
+            thisExercise.rest -= 1;
+            showRest.setText(String.valueOf(thisExercise.rest));
         }
-        if (thisExercise.eRest <= 0) {
-            thisExercise.eRest = 0;
+        if (thisExercise.rest <= 0) {
+            thisExercise.rest = 0;
             showRest.setText("-");
         }
     }
 
     public void RestPlus(View view) {
-        if (thisExercise.eRest < 100) {
-            thisExercise.eRest += 1;
-            showRest.setText(String.valueOf(thisExercise.eRest));
+        if (thisExercise.rest < 100) {
+            thisExercise.rest += 1;
+            showRest.setText(String.valueOf(thisExercise.rest));
         }
     }
 
     public void LoadMinus(View view) {
-        if (thisExercise.eLoad > 0) {
-            thisExercise.eLoad -= 1;
-            showLoad.setText(String.valueOf(thisExercise.eLoad));
+        if (thisExercise.load > 0) {
+            thisExercise.load -= 1;
+            showLoad.setText(String.valueOf(thisExercise.load));
         }
-        if (thisExercise.eLoad <= 0) {
-            thisExercise.eLoad = 0 ;
+        if (thisExercise.load <= 0) {
+            thisExercise.load = 0 ;
             showLoad.setText("-");
         }
     }
 
     public void LoadPlus(View view) {
         if (!Objects.equals(NewExerciseCompareString, "1")) {
-            thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+            thisExercise.load = Integer.parseInt(showLoad.getText().toString());
         }
-        if (thisExercise.eLoad < 1000) {
-            thisExercise.eLoad += 1;
-            showLoad.setText(String.valueOf(thisExercise.eLoad));
+        if (thisExercise.load < 1000) {
+            thisExercise.load += 1;
+            showLoad.setText(String.valueOf(thisExercise.load));
         }
     }
     //endregion
@@ -641,24 +613,25 @@ public class ExerciseActivity extends AppCompatActivity {
         LocalDate date = LocalDate.now();
 
         // Get Exercise Values
-        thisExercise.eName = showName.getText().toString();
-        thisExercise.eDescription = showDescription.getText().toString();
-        thisExercise.eSets = Integer.parseInt(showSets.getText().toString());
-        thisExercise.eReps = Integer.parseInt(showReps.getText().toString());
-        thisExercise.eRest = Integer.parseInt(showRest.getText().toString());
-        thisExercise.eLoad = Integer.parseInt(showLoad.getText().toString());
+        thisExercise.name = showName.getText().toString();
+        thisExercise.description = showDescription.getText().toString();
+        thisExercise.sets = Integer.parseInt(showSets.getText().toString());
+        thisExercise.reps = Integer.parseInt(showReps.getText().toString());
+        thisExercise.rest = Integer.parseInt(showRest.getText().toString());
+        thisExercise.load = Integer.parseInt(showLoad.getText().toString());
         thisExercise.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+        // Type get from dropdown menu
 
 
         //----------------------------------------------
         //-------------- NEED MORES TESTS --------------
         //----------------------------------------------
         // ------ If Variable has not values -----
-        if (thisExercise.eName.isEmpty()) {
-            thisExercise.eName = "New Exercise";
+        if (thisExercise.name.isEmpty()) {
+            thisExercise.name = "New Exercise";
         }
-        if (thisExercise.eDescription.isEmpty()) {
-            thisExercise.eDescription = "";
+        if (thisExercise.description.isEmpty()) {
+            thisExercise.description = "";
         }
         //if (thisExercise.eSets == Integer.parseInt(null)) {
         // thisExercise.eSets = 1;
@@ -693,7 +666,7 @@ public class ExerciseActivity extends AppCompatActivity {
     // ----------------------------------------------------------
     // ---------------- Change Activity Back  -------------------
     // ----------------------------------------------------------
-    private void ChangeActivity() {
+    public void ChangeActivity() {
 
         Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
         intent.putExtra("SelectedPlan", thisPlan);

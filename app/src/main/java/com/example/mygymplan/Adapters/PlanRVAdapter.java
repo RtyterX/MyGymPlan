@@ -12,9 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
-import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 
 import java.util.List;
@@ -69,8 +67,8 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
 
-        holder.textViewName.setText(planList.get(position).planName);
-        holder.textViewDescription.setText(planList.get(position).planDescription);
+        holder.textViewName.setText(planList.get(position).name);
+        holder.textViewDescription.setText(planList.get(position).description);
         holder.textViewCreatedDate.setText(planList.get(position).createdDate);
         // holder.textViewBodyType.setText(planList.get(position).bodyType);
         // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);

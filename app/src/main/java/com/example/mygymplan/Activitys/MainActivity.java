@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
-        CheckUser();
-        CheckPlan();
+       // CheckUser();
+       // CheckPlan();
 
 
         // ----- Set UI Data-----

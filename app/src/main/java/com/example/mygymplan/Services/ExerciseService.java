@@ -32,30 +32,30 @@ public class ExerciseService extends AppCompatActivity {
             @Override
             public void run() {
                 // Set Variables
-                SavedExercise newUserExercise = new SavedExercise();
-                List<SavedExercise> allSavedExercises = new ArrayList<>();
+                SavedExercise savedExercise = new SavedExercise();
 
                 // Access Dao and All Saved Exercises
                 SavedExerciseDao dao2 = db.savedExerciseDao();
-                allSavedExercises = dao2.listSavedExercise();
 
                 // Set SavedExercise Values
-                newUserExercise.name = exercise.eName;
-                newUserExercise.description = exercise.eDescription;
-                newUserExercise.type = exercise.eType;
-                newUserExercise.sets = exercise.eSets;
-                newUserExercise.reps = exercise.eReps;
-                newUserExercise.rest = exercise.eRest;
-                newUserExercise.load = exercise.eLoad;
-                newUserExercise.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
-                newUserExercise.userCreated = true;
-                newUserExercise.id = allSavedExercises.size() + 1;
+                savedExercise.name = exercise.name;
+                savedExercise.description = exercise.description;
+                savedExercise.type = exercise.type;
+                savedExercise.sets = exercise.sets;
+                savedExercise.reps = exercise.reps;
+                savedExercise.rest = exercise.rest;
+                savedExercise.load = exercise.load;
+                savedExercise.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
+                savedExercise.modDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
+                savedExercise.userCreated = true;
+                savedExercise.image = exercise.image;
+                savedExercise.video = exercise.video;
 
                 // Create Exercise and Saved Exercise Link
-                exercise.savedExercise_Id = newUserExercise.id;
+                exercise.savedExercise_Id = savedExercise.id;
 
                 // Save Exercise Pattern
-                dao2.insertSavedExercise(newUserExercise);
+                dao2.insertSavedExercise(savedExercise);
 
                 // Save Exercise in Workout
                 dao.insertExercise(exercise);
@@ -139,14 +139,15 @@ public class ExerciseService extends AppCompatActivity {
                                 // Save Variable Values
                                 savedExercise = item;
 
-                                savedExercise.name = exercise.eName;
-                                savedExercise.description = exercise.eDescription;
-                                savedExercise.sets = exercise.eSets;
-                                savedExercise.reps = exercise.eReps;
-                                savedExercise.rest = exercise.eRest;
-                                savedExercise.load = exercise.eLoad;
-                                savedExercise.type = exercise.eType;
-                                savedExercise.deleteDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
+                                savedExercise.name = exercise.name;
+                                savedExercise.description = exercise.description;
+                                savedExercise.image = exercise.image;
+                                savedExercise.sets = exercise.sets;
+                                savedExercise.reps = exercise.reps;
+                                savedExercise.rest = exercise.rest;
+                                savedExercise.load = exercise.load;
+                                savedExercise.type = exercise.type;
+                                savedExercise.modDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
                                 secondDao.updateSavedExercise(item);
                             }
                         }
@@ -178,13 +179,14 @@ public class ExerciseService extends AppCompatActivity {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
         newExercise = new Exercise();
-        newExercise.eName = savedExercise.name;
-        newExercise.eDescription = savedExercise.description;
-        newExercise.eSets = savedExercise.sets;
-        newExercise.eReps = savedExercise.reps;
-        newExercise.eRest = savedExercise.rest;
-        newExercise.eLoad = savedExercise.load;
-        newExercise.eType = savedExercise.type;
+        newExercise.name = savedExercise.name;
+        newExercise.description = savedExercise.description;
+        newExercise.sets = savedExercise.sets;
+        newExercise.reps = savedExercise.reps;
+        newExercise.rest = savedExercise.rest;
+        newExercise.load = savedExercise.load;
+        newExercise.type = savedExercise.type;
+        newExercise.image = savedExercise.image;
         newExercise.order = workoutOrder;
         newExercise.plan_Id = planId;
         newExercise.workout_Id = workoutId;
@@ -198,25 +200,25 @@ public class ExerciseService extends AppCompatActivity {
     public void applyExerciseType(Exercise exercise, String item){
         switch(item)  {
             case "Chest":
-                exercise.eType = WorkoutType.Chest;
+                exercise.type = WorkoutType.Chest;
                 break;
             case "Back":
-                exercise.eType = WorkoutType.Back;
+                exercise.type = WorkoutType.Back;
                 break;
             case "Shoulder":
-                exercise.eType = WorkoutType.Shoulder;
+                exercise.type = WorkoutType.Shoulder;
                 break;
             case "Arms":
-                exercise.eType = WorkoutType.Arms;
+                exercise.type = WorkoutType.Arms;
                 break;
             case "Biceps":
-                exercise.eType = WorkoutType.Biceps;
+                exercise.type = WorkoutType.Biceps;
                 break;
             case "Triceps":
-                exercise.eType = WorkoutType.Triceps;
+                exercise.type = WorkoutType.Triceps;
                 break;
             case "Legs":
-                exercise.eType = WorkoutType.Legs;
+                exercise.type = WorkoutType.Legs;
                 break;
         }
     }

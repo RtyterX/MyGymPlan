@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,12 +60,12 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // Based on the position of the Recycler View
 
         // Text Views
-        holder.textViewName.setText(exerciseList.get(position).eName);
-        holder.textViewType.setText(exerciseList.get(position).eType.toString());
-        holder.textViewSets.setText(String.valueOf(exerciseList.get(position).eSets));
-        holder.textViewReps.setText(String.valueOf(exerciseList.get(position).eReps));
-        holder.textViewRest.setText(String.valueOf(exerciseList.get(position).eRest));
-        holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).eLoad));
+        holder.textViewName.setText(exerciseList.get(position).name);
+        holder.textViewType.setText(exerciseList.get(position).type.toString());
+        holder.textViewSets.setText(String.valueOf(exerciseList.get(position).sets));
+        holder.textViewReps.setText(String.valueOf(exerciseList.get(position).reps));
+        holder.textViewRest.setText(String.valueOf(exerciseList.get(position).rest));
+        holder.textViewLoad.setText(String.valueOf(exerciseList.get(position).load));
         holder.textViewLastMod.setText(String.valueOf(exerciseList.get(position).lastModified));
 
         // Delete Button
@@ -78,7 +77,9 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         });
 
         // Image View
-        holder.imageView.setImageBitmap(imageConverter.ConvertToBitmap(exerciseList.get(position).image));
+        if (exerciseList.get(position).image != null) {
+            holder.imageView.setImageBitmap(imageConverter.ConvertToBitmap(exerciseList.get(position).image));
+        }
 
         // On Item Click ( Everything inside "bind()" )
         holder.bind(exerciseList.get(position), onListener);

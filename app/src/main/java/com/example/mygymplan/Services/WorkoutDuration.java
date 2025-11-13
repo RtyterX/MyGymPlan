@@ -28,8 +28,8 @@ public class WorkoutDuration extends AppCompatActivity {
 
         for (Exercise item : list) {
             // Calculate Individually by each Exercise inside the Workout
-            minTime += ((item.eSets * (item.eReps * 4)) + (item.eSets * item.eRest));
-            maxTime += ((item.eSets * (item.eReps * 12)) + (item.eSets * item.eRest));
+            minTime += ((item.sets * (item.reps * 4)) + (item.sets * item.rest));
+            maxTime += ((item.sets * (item.reps * 12)) + (item.sets * item.rest));
         }
 
         // Divide by Minute
@@ -56,8 +56,8 @@ public class WorkoutDuration extends AppCompatActivity {
 
                 for (Exercise item : allExercises) {
                     // Calculate Individually by each Exercise inside the Workout
-                    minTime += ((item.eSets * (item.eReps * 4)) + (item.eSets * item.eRest));
-                    maxTime += ((item.eSets * (item.eReps * 12)) + (item.eSets * item.eRest));
+                    minTime += ((item.sets * (item.reps * 4)) + (item.sets * item.rest));
+                    maxTime += ((item.sets * (item.reps * 12)) + (item.sets * item.rest));
                 }
 
                 // Divide by Minute

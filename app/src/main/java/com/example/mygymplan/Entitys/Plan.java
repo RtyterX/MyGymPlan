@@ -5,9 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Entity(tableName = "plans")
 public class Plan implements Serializable {
@@ -16,10 +13,10 @@ public class Plan implements Serializable {
     public int id;
 
     @ColumnInfo(name = "name")
-    public String planName;
+    public String name;
 
     @ColumnInfo(name = "description")
-    public String planDescription;
+    public String description;
 
     @ColumnInfo(name = "active")
     public Boolean active;

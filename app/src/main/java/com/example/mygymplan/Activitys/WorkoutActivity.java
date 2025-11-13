@@ -187,7 +187,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         // -------------------------------------------------------------------
         // ---  Set Values based on Received Data  ---
-        showName.setText(thisPlan.planName);
+        showName.setText(thisPlan.name);
 
 
 
@@ -496,12 +496,12 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // New Exercise default values
         newExercise.plan_Id = thisPlan.id;
         newExercise.workout_Id = thisWorkout.id;
-        newExercise.eName = "1";
-        newExercise.eDescription = "Description Here...";
-        newExercise.eSets = 0;
-        newExercise.eReps = 0;
-        newExercise.eRest = 0;
-        newExercise.eLoad = 0;
+        newExercise.name = "1";
+        newExercise.description = "Description Here...";
+        newExercise.sets = 0;
+        newExercise.reps = 0;
+        newExercise.rest = 0;
+        newExercise.load = 0;
         newExercise.order = displayedExercises.size();
         // Set Default Image
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.logo_fundoazul);
