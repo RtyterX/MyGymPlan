@@ -82,6 +82,14 @@ public class PlanService extends AppCompatActivity {
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         PlanDao dao = db.planDao();
 
+        if (plan.active) {
+            // Save Active Plan Id for later use...
+            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("activePlanId", 0);
+            editor.apply();
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -69,9 +69,9 @@
 
     <TextView
         android:id="@+id/DeletedDateTitle"
-        android:layout_width="56dp"
-        android:layout_height="14dp"
-        android:text="Delete Date:"
+        android:layout_width="71dp"
+        android:layout_height="15dp"
+        android:text="Modified Date:"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVAddExercise"
         app:layout_constraintEnd_toStartOf="@+id/AddExerciseRVDelete" />

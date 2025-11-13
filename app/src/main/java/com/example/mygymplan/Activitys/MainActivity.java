@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     PopupService popupService = new PopupService();
     ImageConverter imageConverter = new ImageConverter();
 
+    PlanRVAdapter planAdapter;
+
     //------------------------------------------------------------------------
 
 
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_new_main);
+        setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -135,14 +137,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
-       // CheckUser();
-       // CheckPlan();
+        CheckUser();
+        CheckPlan();
 
 
         // ----- Set UI Data-----
         mainText.setText("Bem vindo! " + username);
         String dayOfWeek2 = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-
+        TextView dayOfWeekText = findViewById(R.id.DayOfWeekText);
+        dayOfWeekText.setText(dayOfWeek2);
 
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                         // Find Toolbar
@@ -295,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         todaysWorkoutId = sharedPreferences.getInt("todaysWorkoutId", 0);
         activePlanId = sharedPreferences.getInt("activePlanId", 0);
 
+        Log.d("RV Plans", "Active Plan ID = " + sharedPreferences.getInt("activePlanId", 0));
+
         // If has no User, go to Welcome Page
         if (Objects.equals(username, "")) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
@@ -322,6 +327,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PlanDao daoPlan = db.planDao();
                 List<Plan> allPlans = daoPlan.listPlans();
 
+
+
                 if (!allPlans.isEmpty()) {
                     for (Plan item : allPlans) {
                         if (item.id == activePlanId) {
@@ -343,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Log.d("RV Plans", " User has Active Plan, then applying on RV... ");
 
                             // -------- Set Recycler View Horizontal --------
-                            PlanRVAdapter planAdapter = new PlanRVAdapter(new MainActivity(), planList, new PlanRVAdapter.OnItemClickListener() {
+                            planAdapter = new PlanRVAdapter(new MainActivity(), planList, new PlanRVAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(Plan item) {
 
@@ -373,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 @Override
                                 public void run() {
                                     plansRV.setAdapter(planAdapter);
-                                    //plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                                    // plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                                 }
                             }, 1000); // 3000 milliseconds = 3 seconds
                         } else {

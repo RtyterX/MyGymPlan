@@ -18,10 +18,10 @@
         android:id="@+id/AddExerciseRV"
         android:layout_width="318dp"
         android:layout_height="326dp"
-        android:layout_marginTop="2sp"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
-        app:layout_constraintTop_toBottomOf="@+id/DatabaseExercisesButton" />
+        app:layout_constraintTop_toBottomOf="@+id/SortSavedExercises" />
 
     <Button
         android:id="@+id/MyExercisesButton"
@@ -113,6 +113,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/ExerciseListTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="List Size Number"
+        app:layout_constraintBottom_toTopOf="@+id/AddExerciseRV"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/DatabaseExercisesButton" />
+
+    <ImageView
+        android:id="@+id/SortSavedExercises"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintTop_toBottomOf="@+id/MyExercisesButton"
+        app:srcCompat="@drawable/bug" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

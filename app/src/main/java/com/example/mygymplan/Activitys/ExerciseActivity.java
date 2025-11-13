@@ -147,6 +147,7 @@ public class ExerciseActivity extends AppCompatActivity {
         // Image
         exerciseImage = findViewById(R.id.ExerciseImage);
         exerciseVideo = findViewById(R.id.videoView);
+        TextView noVideoImage = findViewById(R.id.NoVideoText);
         // Buttons
         Button saveExercise = findViewById(R.id.SaveExercise);
         Button deleteButton = findViewById(R.id.DeleteExerciseButton);
@@ -170,9 +171,6 @@ public class ExerciseActivity extends AppCompatActivity {
             showRest.setText(String.valueOf(thisExercise.rest));
             showLoad.setText(String.valueOf(thisExercise.load));
             autoComplete.setText(thisExercise.type.toString());
-            // exerciseImage =
-            // exerciseVideo =
-
         } else {
             timerButton.setVisibility(View.GONE); // Delete is no necessary when creating new
             deleteButton.setVisibility(View.GONE); // Delete is no necessary when creating new
@@ -181,6 +179,16 @@ public class ExerciseActivity extends AppCompatActivity {
         // Set Image
         ImageConverter imageConverter = new ImageConverter();
         exerciseImage.setImageBitmap(imageConverter.ConvertToBitmap(thisExercise.image));
+
+        // Set Video
+        if (thisExercise.video != null) {
+            noVideoImage.setVisibility(View.GONE);
+            exerciseVideo.setVideoPath("Teste");
+        }
+        else {
+            exerciseVideo.setVisibility(View.GONE);
+            noVideoImage.setVisibility(View.VISIBLE);
+        }
 
         RegisterResult();
 

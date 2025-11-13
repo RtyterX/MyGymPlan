@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ImageConverter;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
     OnItemClickListener onListener;
     OnShareClickListener shareListener ;
     OnEditClickListener editListener;
+
+    ImageConverter imageConverter = new ImageConverter();
 
 
     // Constructor
@@ -67,6 +70,11 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         holder.textViewType.setText(savedExerciseList.get(position).type.toString());
         holder.textViewDeleteDate.setText(String.valueOf(savedExerciseList.get(position).createdDate));
         // holder.imageView.setImageResource(exerciseList.get(position).geteImage());
+
+        // Image View
+        if (savedExerciseList.get(position).image != null) {
+            holder.imageView.setImageBitmap(imageConverter.ConvertToBitmap(savedExerciseList.get(position).image));
+        }
 
         // Edit Button
         holder.editButton.setOnClickListener(new View.OnClickListener() {

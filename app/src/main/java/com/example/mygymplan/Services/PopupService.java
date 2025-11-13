@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -747,6 +748,8 @@ public class PopupService extends AppCompatActivity {
         Button DatabaseButton = popupView.findViewById(R.id.DatabaseExercisesButton);
         Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
         RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
+        TextView listTotal = popupView.findViewById(R.id.ExerciseListTotal);
+        ImageView sortButton = popupView.findViewById(R.id.SortSavedExercises);
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -791,6 +794,13 @@ public class PopupService extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // Show Number of items in List
+                        if (myExercises.isEmpty()) {
+                            listTotal.setText("Total: " + myExercises.size());
+                        }
+                        else {
+                            listTotal.setText("Total: " + myExercises.size());
+                        }
                         // ------ Show Recycler View (My Exercises when Open) ------
                         SavedExerciseRVAdapter savedExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                             @Override
@@ -835,7 +845,24 @@ public class PopupService extends AppCompatActivity {
 
 
         // ------ Buttons ------
+        sortButton.setOnClickListener(v -> {
+            // Sort by Name
+            // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+            // databaseExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+            // Sort by Type
+            // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+            // databaseExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+        });
+
+
         MyExercisesButton.setOnClickListener(v -> {
+            // Show Number of items in List
+            if (myExercises.isEmpty()) {
+                listTotal.setText("Total: " + myExercises.size());
+            }
+            else {
+                listTotal.setText("Total: " + myExercises.size());
+            }
             // ------ Show Recycler View (My Exercises when Open) ------
             SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override
@@ -868,6 +895,13 @@ public class PopupService extends AppCompatActivity {
         });
 
         DatabaseButton.setOnClickListener(v -> {
+            // Show Number of items in List
+            if (databaseExercises.isEmpty()) {
+                listTotal.setText("Total: " + databaseExercises.size());
+            }
+            else {
+                listTotal.setText("Total: " + databaseExercises.size());
+            }
             // ------ Show Recycler View (My Exercises when Open) ------
             SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override

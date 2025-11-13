@@ -11,74 +11,28 @@
     tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main2"
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Activitys.MainActivity">
 
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RecycleViewWorkouts"
-            android:layout_width="394dp"
-            android:layout_height="600dp"
-            android:onClick="ChangePlan"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/MainRVWorkouts"
+            android:layout_width="349dp"
+            android:layout_height="89dp"
+            android:layout_marginTop="52dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.47"
+            app:layout_constraintHorizontal_bias="0.403"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PlanNameText">
+            app:layout_constraintTop_toBottomOf="@+id/MainTitle">
 
         </androidx.recyclerview.widget.RecyclerView>
-
-
-        <TextView
-            android:id="@+id/PlanNameText"
-            android:layout_width="213dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="My Workout Plan"
-            android:textAlignment="center"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
-
-        <Button
-            android:id="@+id/StartButton"
-            android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:layout_marginTop="320dp"
-            android:onClick="NewPlan"
-            android:text="Start"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar2"
-            app:layout_constraintVertical_bias="0.133" />
-
-        <Button
-            android:id="@+id/ChangePlan2Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="Change Plan"
-            android:textColor="@color/blue2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/StartButton" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
             android:layout_width="412dp"
             android:layout_height="60dp"
-            android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:textColor="@color/white"
             android:theme="@style/ToolbarTheme"
@@ -96,66 +50,124 @@
         </androidx.appcompat.widget.Toolbar>
 
 
-        <TextView
-            android:id="@+id/RVCount"
-            android:layout_width="40dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:text="Count"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/RecycleViewWorkouts"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
-            android:layout_width="361dp"
-            android:layout_height="69dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-
-            <Button
-                android:id="@+id/ChangePlanButton"
-                android:layout_width="177dp"
-                android:layout_height="49dp"
-                android:text="Change Plan"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/NewWorkout"
-                android:layout_width="177dp"
-                android:layout_height="49dp"
-                android:text="New Workout"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ChangePlanButton"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <ImageView
-            android:id="@+id/PlanFromDBIcon"
-            android:layout_width="35dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toEndOf="@+id/PlanNameText"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-            app:srcCompat="@drawable/mygymplan_logo" />
-
-        <ImageView
-            android:id="@+id/PlanInfoButton"
+            android:id="@+id/MainInfoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/ImportMainIcon"
             app:layout_constraintTop_toTopOf="@+id/toolbar2"
             app:srcCompat="@drawable/nav_info" />
+
+        <TextView
+            android:id="@+id/MainTitle"
+            android:layout_width="309dp"
+            android:layout_height="59dp"
+            android:layout_marginTop="28dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+
+        <TextView
+            android:id="@+id/TodayWorkoutTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seu treino de hoje:"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/MainRVWorkouts"
+            app:layout_constraintStart_toStartOf="@+id/MainRVWorkouts" />
+
+        <TextView
+            android:id="@+id/MainRVPlansTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Plano Ativo"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/MainRVPlans"
+            app:layout_constraintStart_toStartOf="@+id/MainRVPlans" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/MainRVPlans"
+            android:layout_width="337dp"
+            android:layout_height="149dp"
+            android:layout_marginTop="72dp"
+            app:layout_constraintBottom_toTopOf="@+id/MainFilterView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/MainRVWorkouts"
+            app:layout_constraintVertical_bias="0.297" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/MainFilterView"
+            android:layout_width="246dp"
+            android:layout_height="138dp"
+            android:layout_marginBottom="28dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:srcCompat="@drawable/createuserbg" />
+
+        <ImageView
+            android:id="@+id/ImportMainIcon"
+            android:layout_width="46dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2"
+            app:srcCompat="@drawable/load_icon" />
+
+        <TextView
+            android:id="@+id/ImportMainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Import"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ImportMainIcon" />
+
+        <Button
+            android:id="@+id/MainCreatePlanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Plan"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/MainRVPlans"
+            app:layout_constraintEnd_toEndOf="@+id/MainRVPlans"
+            app:layout_constraintStart_toStartOf="@+id/MainRVPlans"
+            app:layout_constraintTop_toTopOf="@+id/MainRVPlans" />
+
+        <TextView
+            android:id="@+id/MainNoWorkoutText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Workouts"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/MainRVPlans"
+            app:layout_constraintEnd_toEndOf="@+id/MainRVWorkouts"
+            app:layout_constraintHorizontal_bias="0.524"
+            app:layout_constraintStart_toStartOf="@+id/MainRVWorkouts"
+            app:layout_constraintTop_toTopOf="@+id/MainRVWorkouts"
+            app:layout_constraintVertical_bias="0.363" />
+
+        <TextView
+            android:id="@+id/DayOfWeekText"
+            android:layout_width="118dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="16dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
