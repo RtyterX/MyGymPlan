@@ -56,6 +56,8 @@ public class PopupService extends AppCompatActivity {
     private List<SavedExercise> databaseExercises = new ArrayList<>();
     private List<SavedExercise> myExercises = new ArrayList<>();
 
+    boolean sortBool = true;
+
 
     // --------------------------------------------------------------------------------------------
     public void NewPlanMainPopup(Context context, MainActivity activity, String username) {
@@ -846,12 +848,18 @@ public class PopupService extends AppCompatActivity {
 
         // ------ Buttons ------
         sortButton.setOnClickListener(v -> {
-            // Sort by Name
-            // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
-            // databaseExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
-            // Sort by Type
-            // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
-            // databaseExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+
+            if (sortBool) {
+                // Sort by Name
+                 myExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
+                 databaseExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
+            } else {
+                // Sort by Type
+                // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                // databaseExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+            }
+
+            sortBool = !sortBool;
         });
 
 

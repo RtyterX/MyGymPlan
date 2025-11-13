@@ -19,11 +19,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/MainRVWorkouts"
-            android:layout_width="349dp"
-            android:layout_height="89dp"
+            android:layout_width="366dp"
+            android:layout_height="133dp"
             android:layout_marginTop="52dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.403"
+            app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MainTitle">
 
@@ -96,14 +96,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/MainRVPlans"
-            android:layout_width="337dp"
-            android:layout_height="149dp"
-            android:layout_marginTop="72dp"
-            app:layout_constraintBottom_toTopOf="@+id/MainFilterView"
+            android:layout_width="347dp"
+            android:layout_height="179dp"
+            android:layout_marginTop="44dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.445"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/MainRVWorkouts"
-            app:layout_constraintVertical_bias="0.297" />
+            app:layout_constraintTop_toBottomOf="@+id/MainRVWorkouts" />
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/MainFilterView"

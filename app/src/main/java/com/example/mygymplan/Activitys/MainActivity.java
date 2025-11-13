@@ -51,9 +51,11 @@ import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Services.ImageConverter;
+import com.example.mygymplan.Services.PlanService;
 import com.example.mygymplan.Services.PopupService;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -327,8 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PlanDao daoPlan = db.planDao();
                 List<Plan> allPlans = daoPlan.listPlans();
 
-
-
                 if (!allPlans.isEmpty()) {
                     for (Plan item : allPlans) {
                         if (item.id == activePlanId) {
@@ -338,62 +338,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (activePlan != null) {
-
-                            // Show Create New Button
-                            createPlan.setVisibility(View.GONE);
-                            Log.d("RV Plans", " User has Active Plan, then applying on RV... ");
-
-                            // -------- Set Recycler View Horizontal --------
-                            planAdapter = new PlanRVAdapter(new MainActivity(), planList, new PlanRVAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(Plan item) {
-
-                                    Intent intent = new Intent(MainActivity.this, PlanActivity.class);
-                                    intent.putExtra("SelectedPlan", activePlan);
-                                    startActivity(intent);
-                                }
-
-                            }, new PlanRVAdapter.OnItemClickDelete() {
-                                @Override
-                                public void deleteButtonClick(int position) {
-
-                                }
-                            }, new PlanRVAdapter.OnItemClickSetActive() {
-                                @Override
-                                public void setActiveButtonClick(Plan plan) {
-
-                                }
-                            }, new PlanRVAdapter.OnClickEditPlanListener() {
-                                @Override
-                                public void editButtonClick(Plan plan) {
-
-                                }
-                            });
-                            // Display Workouts inside the Recycler View
-                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    plansRV.setAdapter(planAdapter);
-                                    // plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                                }
-                            }, 1000); // 3000 milliseconds = 3 seconds
-                        } else {
-                            Log.d("RV Plans", " User has NO Active Plan");
-                        }
-                    }
-                });
             }
+
         }).start();
 
-        db.close();
+        // ----------------------------------------------------------------------
+        // Wait before Apply Plans RV and Get Today Workout
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ApplyPlanRV();
+                GetTodaysWorkout();
+            }
+        }, 500);
 
-        GetTodaysWorkout();
+    }
+
+
+    public void ApplyPlanRV() {
+        if (!planList.isEmpty()) {
+            Log.d("RV Plans", " Applying Plan Recycler View... ");
+
+            // Change UI
+            createPlan.setVisibility(View.GONE);
+            plansRV.setVisibility(View.VISIBLE);
+
+            // Inflate Plan Recycler View
+            planAdapter = new PlanRVAdapter(MainActivity.this, planList, new PlanRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(Plan item) {
+                    Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                    intent.putExtra("SelectedPlan", activePlan);
+                    startActivity(intent);
+                }
+            }, new PlanRVAdapter.OnItemClickDelete() {
+                @Override
+                public void deleteButtonClick(int position) {
+
+                }
+            }, new PlanRVAdapter.OnItemClickSetActive() {
+                @Override
+                public void setActiveButtonClick(Plan plan) {
+
+                }
+            }, new PlanRVAdapter.OnClickEditPlanListener() {
+                @Override
+                public void editButtonClick(Plan plan) {
+
+                }
+            });
+            // Display Workouts in Recycler View
+            plansRV.setAdapter(planAdapter);
+            plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        } else {
+            Log.d("RV Plans", " No Plans in Recycler View");
+        }
+
     }
 
 
@@ -408,30 +409,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // Check if Active Plan haven't Fixed Days
             if (activePlan.fixedDays) {
+
+                Log.d("Teste", "Active Plan " + activePlan.id + " has fixed days");
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        mainText.setText(LocalDate.now().getDayOfWeek().toString());
-
                         // ------------------------------------------------------
                         WorkoutDao dao = db.workoutDao();
                         List<Workout> allWorkouts = dao.listWorkouts();
 
                         for (Workout item : allWorkouts) {
                             if (item.plan_Id == activePlan.id) {
+
                                 if (item.dayOfWeek == LocalDate.now().getDayOfWeek()) {
+
                                     todaysWorkout = item;
+                                    workoutsList.add(item);
                                     break;
                                 }
                             }
                         }
                     }
+
                 }).start();
 
                 db.close();
 
             } else {  // --------------------------------------------------------------------------------------------------------
+                Log.d("Teste", "Active Plan " + activePlan.id + " HASN'T fixed days");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -443,6 +449,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (item.plan_Id == activePlan.id) {
                                 if (item.id == todaysWorkoutId) {
                                     todaysWorkout = item;
+                                    workoutsList.add(item);
                                     break;
                                 }
                             }
@@ -452,9 +459,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 db.close();
             }
-
-            ApplyWorkoutRV();
         }
+
+        // Wait before Apply Recycler View
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ApplyWorkoutRV();
+            }
+        }, 500);
     }
 
 
@@ -462,28 +475,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- Apply Workout in RV -----------------
     // ---------------------------------------------------
     private void ApplyWorkoutRV() {
-
-        WorkoutDao daoW = db.workoutDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                List<Workout> allWorkouts = daoW.listWorkouts();
-
-                if (!allWorkouts.isEmpty()) {
-                    for (Workout item : allWorkouts) {
-                        if (item.id == todaysWorkout.id) {
-                            workoutsList.add(item);
-                        }
-                    }
-                }
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (!workoutsList.isEmpty()) {
                             Log.d("Teste RV", "Workout encontrado");
+
+                            noWorkout.setVisibility(View.GONE);
+
+                            //Applie Recycler View
                             workoutAdapter = new WorkoutRVAdapter(MainActivity.this, workoutsList, new WorkoutRVAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(Workout item) {
@@ -508,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             workoutRV.setAdapter(workoutAdapter);
                             workoutRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                             // Attach Item Helper
-                            mIth.attachToRecyclerView(workoutRV);
+                           // mIth.attachToRecyclerView(workoutRV);
                         } else {
                             Toast.makeText(getApplicationContext(), "Todays Workout NOT found", Toast.LENGTH_SHORT).show();
                         }
