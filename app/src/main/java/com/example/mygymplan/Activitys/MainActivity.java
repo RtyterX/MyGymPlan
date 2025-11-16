@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<Plan> planList = new ArrayList<>();
     List<Workout> workoutsList = new ArrayList<>();
 
-    AppDatabase db;
 
     // Shared Preferences
     String username;
@@ -131,16 +131,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         plansRV = findViewById(R.id.MainRVPlans);
         createPlan = findViewById(R.id.MainCreatePlanButton);
         noWorkout = findViewById(R.id.MainNoWorkoutText);
-        // ViewFlipper flipper = findViewById(R.id.MainFilterView);
         ImageView info = findViewById(R.id.MainInfoButton);
         ImageView planImport = findViewById(R.id.ImportMainIcon);
+        Button otherPlans = findViewById(R.id.OtherPlansButton);
+        // Set View Flipper
+        ViewFlipper flipper = findViewById(R.id.MainFlipperView);
+        flipper.setVisibility(View.VISIBLE);
+        flipper.startFlipping();
+        createPlan.setVisibility(View.GONE);
+        noWorkout.setVisibility(View.GONE);
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
         // ---- Show Workouts in Recycle View or -----
         // ---- Display Create From Scratch button --\
         CheckUser();
-        CheckPlan();
 
 
         // ----- Set UI Data-----
@@ -148,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String dayOfWeek2 = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         TextView dayOfWeekText = findViewById(R.id.DayOfWeekText);
         dayOfWeekText.setText(dayOfWeek2);
+
 
         // --- Drawer Layout ---
         Toolbar toolbar = findViewById(R.id.toolbar2);                                         // Find Toolbar
@@ -197,13 +202,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        otherPlans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeToPlanSelection();
+            }
+        });
+
     }
 
     //--------------------------------------------------------------------------------------
 
     public void createPlan() {
         popupService.NewPlanMainPopup(this, MainActivity.this, username);
+    }
 
+    public void changeToPlanSelection() {
+        Intent intent = new Intent(this, SelectPlanActivity.class);
+        startActivity(intent);
     }
 
 
@@ -309,6 +325,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
         }
 
+        if (activePlanId == 0) {
+            Log.d("Active Plan", "User have no Plans");
+
+            createPlan.setVisibility(View.VISIBLE);
+            noWorkout.setVisibility(View.VISIBLE);
+            noWorkout.setText("You have no Active Plan.\n Create one or choose from list!");
+        }
+        else {
+            CheckPlan();
+        }
 
         //////////////// NOT IMPLEMENTED //////////////
         // Check if User is Pro
@@ -320,6 +346,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- in Recycler View -------------
     // --------------------------------------------
     public void CheckPlan() {
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -342,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }).start();
 
+        db.close();
+
         // ----------------------------------------------------------------------
         // Wait before Apply Plans RV and Get Today Workout
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -356,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void ApplyPlanRV() {
+
         if (!planList.isEmpty()) {
             Log.d("RV Plans", " Applying Plan Recycler View... ");
 
@@ -405,12 +437,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (activePlan != null) {
 
-            AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
             // Check if Active Plan haven't Fixed Days
             if (activePlan.fixedDays) {
-
                 Log.d("Teste", "Active Plan " + activePlan.id + " has fixed days");
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
                 new Thread(new Runnable() {
                     @Override
@@ -438,9 +469,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             } else {  // --------------------------------------------------------------------------------------------------------
                 Log.d("Teste", "Active Plan " + activePlan.id + " HASN'T fixed days");
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
                         // ------------------------------------------------------
                         WorkoutDao dao = db.workoutDao();
                         List<Workout> allWorkouts = dao.listWorkouts();
@@ -467,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void run() {
                 ApplyWorkoutRV();
             }
-        }, 500);
+        }, 50);
     }
 
 
@@ -493,15 +528,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 @Override
                                 public void onItemClick(Workout item) {
                                     Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-                                    //intent.putExtra("SelectedPlan", thisPlan);
+                                    intent.putExtra("SelectedPlan", activePlan);
                                     intent.putExtra("SelectedWorkout", item);
                                     startActivity(intent);
-                                }
-
-                                // --------------------------------------
-                                @Override
-                                public void onItemLongClick(Workout item) {
-                                    // Do nothing
                                 }
                             }, new WorkoutRVAdapter.OnClickEditListener() {
                                 @Override
@@ -515,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             // Attach Item Helper
                            // mIth.attachToRecyclerView(workoutRV);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Todays Workout NOT found", Toast.LENGTH_SHORT).show();
+                            Log.d("Teste RV", "Todays Workout NOT found");
                         }
                     }
                 });
@@ -523,7 +552,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }).start();
 
-        db.close();
     }
 
 

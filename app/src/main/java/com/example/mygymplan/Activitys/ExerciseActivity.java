@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
@@ -95,11 +97,20 @@ public class ExerciseActivity extends AppCompatActivity {
     String[] types = {
             "Chest",
             "Back",
+            "Leg",
             "Shoulder",
-            "Arms",
-            "Legs",
             "Biceps",
-            "Triceps"};
+            "Triceps",
+            "Abs",
+            "Quadriceps",
+            "Hamstrings",
+            "Adductors",
+            "Glutes",
+            "Cardio",
+            "Stretching",
+            "Strength",
+            "Calisthenics"
+    };
 
 
     // --- TIMER TEST ---
@@ -134,6 +145,9 @@ public class ExerciseActivity extends AppCompatActivity {
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
 
+        Log.d("Selected Plan", "Selected Plan ID is: " + thisPlan.id);
+        Log.d("Selected Workout", "Selected Workout ID is: " + thisWorkout.id);
+        Log.d("Selected Exercise", "Selected Exercise ID is: " + thisExercise.id);
 
         // --- Components ---
         showName = findViewById(R.id.ExerciseName);
@@ -645,6 +659,9 @@ public class ExerciseActivity extends AppCompatActivity {
         // thisExercise.eSets = 1;
         // }
 
+        if (thisExercise.type == null) {
+            thisExercise.type = WorkoutType.NA;
+        }
 
         // ------------------------------------------------------------------------
         // Create if Exercise is New

@@ -14,7 +14,6 @@ import android.content.Context;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseService extends AppCompatActivity {
@@ -209,7 +208,7 @@ public class ExerciseService extends AppCompatActivity {
                 exercise.type = WorkoutType.Shoulder;
                 break;
             case "Arms":
-                exercise.type = WorkoutType.Arms;
+                exercise.type = WorkoutType.Arm;
                 break;
             case "Biceps":
                 exercise.type = WorkoutType.Biceps;
@@ -218,7 +217,7 @@ public class ExerciseService extends AppCompatActivity {
                 exercise.type = WorkoutType.Triceps;
                 break;
             case "Legs":
-                exercise.type = WorkoutType.Legs;
+                exercise.type = WorkoutType.Leg;
                 break;
         }
     }

@@ -5,6 +5,7 @@
     <color name="blue1">#1f5ded</color>
     <color name="blue2">#012b94</color>
     <color name="grayBG">#efebfc</color>
-    <color name="selectedBG">#dfdaed</color>
+    <color name="noSelectedBG">#dfdaed</color>
+    <color name="oldGreyBG">#F5EEFC</color>
 
 </resources>

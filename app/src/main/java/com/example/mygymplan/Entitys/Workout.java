@@ -33,6 +33,9 @@ public class Workout implements Serializable {
     @ColumnInfo(name = "order")
     public int order;
 
+    @ColumnInfo(name = "duration")
+    public String duration;
+
     @ColumnInfo(name = "dayOfWeek")
     public DayOfWeek dayOfWeek;
 

@@ -53,9 +53,7 @@ public class SavedExerciseService extends AppCompatActivity {
 
         new Thread(new Runnable() {
             @Override
-            public void run() {
-                dao.deleteSavedExercise(savedExercise);
-            }
+            public void run() { dao.deleteSavedExercise(savedExercise);}
         }).start();
 
         db.close();

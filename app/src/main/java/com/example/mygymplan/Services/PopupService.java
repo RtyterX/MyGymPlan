@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +43,7 @@ import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
 
 import java.time.DayOfWeek;
@@ -269,7 +269,8 @@ public class PopupService extends AppCompatActivity {
                             public void run() {
                                 // Update Activity
                                 activity.LoadMyPlans();
-                                // Close Popup
+                                // Close Popups
+                                subPopupWindow.dismiss();
                                 popupWindow.dismiss();
                             }
                         }, 50);
@@ -287,7 +288,8 @@ public class PopupService extends AppCompatActivity {
                             public void run() {
                                 // Update Activity
                                 activity.LoadMyPlans();
-                                // Close Popup
+                                // Close Popups
+                                subPopupWindow.dismiss();
                                 popupWindow.dismiss();
                             }
                         }, 50);
@@ -354,14 +356,18 @@ public class PopupService extends AppCompatActivity {
         ArrayAdapter<String> adapterItem;
         // ------------ Enum ------------------
         String[] typeInView = {
-                "Chest",
+                "Arm",
                 "Back",
+                "Chest",
+                "Leg",
                 "Shoulder",
-                "Arms",
-                "Legs",
-                "Biceps",
-                "Triceps"};
-
+                "Quadriceps",
+                "Hamstrings",
+                "FullBody",
+                "UpperBody",
+                "Cardio",
+                "Calisthenics",
+        };
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -520,6 +526,11 @@ public class PopupService extends AppCompatActivity {
 
             // Inset New Workout in Database
             WorkoutService workoutService = new WorkoutService();
+
+            if (newWorkout.type == null) {
+                newWorkout.type = WorkoutType.NA;
+            }
+
             newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.type, newWorkout.dayOfWeek, plan.id);
             workoutService.insertWorkout(context, newWorkout);
             // Show Text on Screen
@@ -543,7 +554,7 @@ public class PopupService extends AppCompatActivity {
 
 
     // --------------------------------------------------------------------------------------------
-    public void EditWorkoutPopup(Context context, PlanActivity planActivity, Workout workout) {
+    public void EditWorkoutPopup(Context context, PlanActivity planActivity, Plan plan, Workout workout) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -555,6 +566,14 @@ public class PopupService extends AppCompatActivity {
         TextView nameWarning = popupView.findViewById(R.id.NameWorkoutWarning);
         TextView descriptionWarning = popupView.findViewById(R.id.DescriptionWorkoutWarning);
         TextView typeWarning = popupView.findViewById(R.id.TypeWorkoutWarning);
+        // Check Box
+        CheckBox monday = popupView.findViewById(R.id.MondayCheckBox);
+        CheckBox tuesday = popupView.findViewById(R.id.TuesdayCheckBox);
+        CheckBox wednesday = popupView.findViewById(R.id.WednesdayCheckBox);
+        CheckBox thursday = popupView.findViewById(R.id.ThurdayCheckBox);
+        CheckBox friday = popupView.findViewById(R.id.FridayCheckBox);
+        CheckBox saturday = popupView.findViewById(R.id.SaturdayCheckBox);
+        CheckBox sunday = popupView.findViewById(R.id.SundayCheckBox);
         // Buttons
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
@@ -605,6 +624,14 @@ public class PopupService extends AppCompatActivity {
                 workoutService.applyWorkoutType(workout, item);
             }
         });
+
+
+        // If Plan does NOT have Fixed Days
+        if (!plan.fixedDays) {
+            ConstraintLayout allCheckBoxes = popupView.findViewById(R.id.DaysOfWeekContainer);
+            allCheckBoxes.setVisibility(View.GONE);
+        }
+
 
         // ------------- Buttons -------------
         confirmButton.setOnClickListener(v -> {
@@ -823,10 +850,17 @@ public class PopupService extends AppCompatActivity {
                             @Override
                             public void onItemEdit(SavedExercise item) {
                                 //Intent intent = new Intent(activity, ExerciseActivity.class);
-                               //intent.putExtra("SelectedPlan", thisPlan);
-                               // intent.putExtra("SelectedWorkout", thisWorkout);
-                               // intent.putExtra("SelectedExercise", item);
-                              //  startActivity(intent);
+                                //intent.putExtra("SelectedPlan", thisPlan);
+                                // intent.putExtra("SelectedWorkout", thisWorkout);
+                                // intent.putExtra("SelectedExercise", item);
+                                //  startActivity(intent);
+                            }
+                        }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                            @Override
+                            public void onItemDelete( int position) {
+                                SavedExerciseService savedExerciseService = new SavedExerciseService();
+                                savedExerciseService.deleteSavedExercise(context, myExercises.get(position));
+                                //teste(context, myExerciseAdapter, myExercises.get(position), position);
                             }
                         });
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -860,6 +894,7 @@ public class PopupService extends AppCompatActivity {
             }
 
             sortBool = !sortBool;
+
         });
 
 
@@ -895,6 +930,13 @@ public class PopupService extends AppCompatActivity {
                     // intent.putExtra("SelectedWorkout", thisWorkout);
                     // intent.putExtra("SelectedExercise", item);
                     //  startActivity(intent);
+                }
+            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                @Override
+                public void onItemDelete(int position) {
+                    SavedExerciseService savedExerciseService = new SavedExerciseService();
+                    savedExerciseService.deleteSavedExercise(context, myExercises.get(position));
+                    //teste(context, myExerciseAdapter, myExercises.get(position), position);
                 }
             });
             // Display Exercises inside the Recycler View
@@ -935,6 +977,12 @@ public class PopupService extends AppCompatActivity {
                     // intent.putExtra("SelectedExercise", item);
                     //  startActivity(intent);
                 }
+            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                @Override
+                public void onItemDelete(int position) {
+                    SavedExerciseService savedExerciseService = new SavedExerciseService();
+                    savedExerciseService.deleteSavedExercise(context, databaseExercises.get(position));
+                }
             });
             // Display Exercises inside the Recycler View
             addExerciseRV.setAdapter(databaseAdapter);
@@ -944,6 +992,8 @@ public class PopupService extends AppCompatActivity {
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });
+
+
     }
 
 
@@ -1020,5 +1070,11 @@ public class PopupService extends AppCompatActivity {
             popupWindow.dismiss();
         });
 
+    }
+
+    public void teste(Context context, SavedExerciseRVAdapter savedExerciseRVAdapter, SavedExercise savedExercise, int position) {
+        SavedExerciseService savedExerciseService = new SavedExerciseService();
+        savedExerciseService.deleteSavedExercise(context, savedExercise);
+        savedExerciseRVAdapter.notifyItemRemoved(position);
     }
 }

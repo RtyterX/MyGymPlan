@@ -6,12 +6,11 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-
     <View
         android:id="@+id/BackgroundRVExercise"
         android:layout_width="407dp"
         android:layout_height="111dp"
-        android:background="#F5EEFC"
+        android:background="@color/grayBG"
         android:outlineAmbientShadowColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

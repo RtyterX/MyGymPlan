@@ -7,8 +7,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RecycleExerciceImage"
-        android:layout_width="310dp"
-        android:layout_height="205dp"
+        android:layout_width="308dp"
+        android:layout_height="192dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,7 +19,6 @@
             android:layout_width="284dp"
             android:layout_height="176dp"
             android:background="#1EC1BFF8"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -26,46 +27,55 @@
             android:id="@+id/RecyclerPlanName"
             android:layout_width="146dp"
             android:layout_height="19dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="32dp"
             android:ellipsize="end"
             android:text="Title"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
-            app:layout_constraintHorizontal_bias="0.279"
-            app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage"
+            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
             app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
 
         <TextView
             android:id="@+id/RecyclerPlanDescrip"
-            android:layout_width="174dp"
-            android:layout_height="78dp"
+            android:layout_width="132dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="4"
             android:text="Desciption"
-            app:layout_constraintBottom_toTopOf="@+id/CreatedDateTitle"
-            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan" />
+            android:textAlignment="textStart"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
+            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan" />
 
         <ImageView
             android:id="@+id/RecyclePlanImage"
             android:layout_width="106dp"
             android:layout_height="98dp"
             android:layout_marginTop="4dp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
             app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/RecyclerPlanAuthor"
-            android:layout_width="43dp"
-            android:layout_height="13dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="20dp"
+            android:id="@+id/RVAuthorTitle"
+            android:layout_width="55dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="28dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Author"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/CreatedDateTitle"
-            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan" />
+            android:text="Author:"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName" />
 
         <TextView
             android:id="@+id/CreatedDateTitle"
@@ -73,34 +83,29 @@
             android:layout_height="14dp"
             android:text="Create Date: "
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
-            app:layout_constraintEnd_toStartOf="@+id/CreatedDatePlan" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
 
         <TextView
             android:id="@+id/CreatedDatePlan"
             android:layout_width="45dp"
             android:layout_height="14dp"
-            android:layout_marginEnd="4dp"
             android:text="TextView"
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
-            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan" />
-
-        <ImageView
-            android:id="@+id/DeletePlanButton"
-            android:layout_width="31dp"
-            android:layout_height="35dp"
-            app:layout_constraintBottom_toBottomOf="@+id/RecyclerPlanDescrip"
-            app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanDescrip"
-            app:srcCompat="@drawable/delete_icon" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/CreatedDateTitle"
+            app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
 
         <ImageView
             android:id="@+id/EditPlanRV"
             android:layout_width="37dp"
             android:layout_height="33dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="4dp"
             android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanDescrip"
-            app:layout_constraintTop_toTopOf="@+id/RecyclerPlanDescrip"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan"
             app:srcCompat="@drawable/edit_icon2" />
 
         <TextView
@@ -108,7 +113,9 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:text="TextView"
+            android:textAlignment="center"
             android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/BodyTypeTitleRV"
             app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName" />
 
@@ -116,23 +123,63 @@
             android:id="@+id/BodyTypeTitleRV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="2dp"
             android:text="Body Type:"
+            android:textAlignment="textStart"
             android:textSize="10sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toEndOf="@+id/RecyclePlanImage"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toEndOf="@+id/RecyclerPlanName"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="@+id/RecyclerPlanName"
             app:layout_constraintTop_toBottomOf="@+id/RecyclerPlanName" />
 
         <Button
             android:id="@+id/SetPlanActiveRV"
-            android:layout_width="76dp"
-            android:layout_height="29dp"
-            android:text="Set Active"
+            android:layout_width="74dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:text="Active"
             android:textAlignment="gravity"
-            android:textSize="6sp"
+            android:textSize="8sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
             app:layout_constraintTop_toTopOf="@+id/BackgroundRVPlan" />
+
+        <TextView
+            android:id="@+id/PlanRVAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/RVAuthorTitle"
+            app:layout_constraintStart_toStartOf="@+id/RVAuthorTitle"
+            app:layout_constraintTop_toBottomOf="@+id/RVAuthorTitle" />
+
+        <TextView
+            android:id="@+id/FixedDaysText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#37993C"
+            android:textSize="14sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVPlan"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan" />
+
+        <ImageView
+            android:id="@+id/DeletePlanButton"
+            android:layout_width="31dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/FixedDaysText"
+            app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
+            app:srcCompat="@drawable/delete_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,11 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="99dp"
         android:background="#1EC1BFF8"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/WorkoutSwapButton"
@@ -126,15 +125,5 @@
         app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout"
         app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout"
         app:srcCompat="@drawable/edit_icon2" />
-
-    <Button
-        android:id="@+id/DropdownExercisesListWRV"
-        android:layout_width="55dp"
-        android:layout_height="29dp"
-        android:text="V"
-        android:textAlignment="center"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
-        app:layout_constraintEnd_toEndOf="@+id/BackgroundRVWorkout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

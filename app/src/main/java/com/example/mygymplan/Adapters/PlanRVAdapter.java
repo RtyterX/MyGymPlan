@@ -70,9 +70,24 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         holder.textViewName.setText(planList.get(position).name);
         holder.textViewDescription.setText(planList.get(position).description);
         holder.textViewCreatedDate.setText(planList.get(position).createdDate);
-        // holder.textViewBodyType.setText(planList.get(position).bodyType);
-        // holder.textViewType.setText(Arrays.toString(workoutList.get(position).wType);
-        // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
+        holder.textViewAuthor.setText(planList.get(position).author);
+
+        // Body Type
+        if (planList.get(position).bodyType != 0) {
+            holder.textViewBodyType.setText(String.valueOf(planList.get(position).bodyType));
+        }
+        else {
+            holder.textViewBodyType.setVisibility(View.GONE);
+            holder.textViewBodyTypeTitle.setVisibility(View.GONE);
+        }
+
+        // Fixed Days
+        if (planList.get(position).fixedDays == true) {
+            holder.hasFixedDays.setText("Fixed Days");
+        }
+        else {
+            holder.hasFixedDays.setText("NO Fixed Days");
+        }
 
         // Edit Plan
         holder.editButton.setOnClickListener(new View.OnClickListener() {
@@ -83,20 +98,30 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         });
 
         // Delete Plan
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteListener.deleteButtonClick(position);
-            }
-        });
+        if (planList.size() >= 2) {
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteListener.deleteButtonClick(position);
+                }
+            });
+        }
+        else {
+            holder.deleteButton.setVisibility(View.GONE);
+        }
 
         // Set Active
-        holder.setActiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setActiveListener.setActiveButtonClick(planList.get(position));
-            }
-        });
+        if (!planList.get(position).active) {
+            holder.setActiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setActiveListener.setActiveButtonClick(planList.get(position));
+                }
+            });
+        }
+        else {
+            holder.setActiveButton.setVisibility(View.GONE);
+        }
 
         // On Item Click
         holder.bind(planList.get(position), onListener);
@@ -116,6 +141,9 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         TextView textViewDescription;
         TextView textViewCreatedDate;
         TextView textViewBodyType;
+        TextView textViewBodyTypeTitle;
+        TextView textViewAuthor;
+        TextView hasFixedDays;
 
         // TextView textViewWorkoutTypes;
         ImageView imageView;
@@ -133,11 +161,14 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             textViewDescription = itemView.findViewById(R.id.RecyclerPlanDescrip);
             textViewCreatedDate = itemView.findViewById(R.id.CreatedDatePlan);
             textViewBodyType = itemView.findViewById(R.id.BodyTypePlanRv);
-            // textViewType = itemView.findViewById(R.id.BodyTypePlanRv);
+            textViewBodyTypeTitle = itemView.findViewById(R.id.BodyTypeTitleRV);
+            hasFixedDays = itemView.findViewById(R.id.FixedDaysText);
+            // textViewType = itemView.findViewById(R.id.WorkoutTypePlanRv);
             imageView = itemView.findViewById(R.id.RecyclePlanImage);
             editButton = itemView.findViewById(R.id.EditPlanRV);
             deleteButton = itemView.findViewById(R.id.DeletePlanButton);
             setActiveButton = itemView.findViewById(R.id.SetPlanActiveRV);
+            textViewAuthor = itemView.findViewById(R.id.PlanRVAuthor);
         }
 
         public void bind(Plan item, OnItemClickListener onlistener) {

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -96,7 +97,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     RecyclerView recyclerView;                  // Exercise Recycler View (Vertical)
     RecyclerView horizontalRecyclerView;        // Workout Recycler View (Horizontal)
     ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
-    TextView emptyView;                         // Show Text When Recycler View is Empty
+    Button emptyButton1;                         // Show Button when Recycler View is Empty
+    Button emptyButton2;                         // Show Button when Recycler View is Empty
 
     // Others
     ItemTouchHelper mIth;
@@ -128,6 +130,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
 
+        Log.d("Selected Plan", "Selected Plan ID is: " + thisPlan.id);
+        Log.d("Selected Workout", "Selected Workout ID is: " + thisWorkout.id);
 
         // --- UI Elements ---
         showName = findViewById(R.id.WorkoutName);
@@ -136,7 +140,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         Button backButton = findViewById(R.id.BackButtonWorkout);
         recyclerView = findViewById(R.id.RV_WorkoutsMain);
         horizontalRecyclerView = findViewById(R.id.RV_WorkoutsHorizontal);
-        emptyView = findViewById(R.id.EmptyRVWorkouts);
+        emptyButton1 = findViewById(R.id.CreateExerciseButton2);
+        emptyButton2 = findViewById(R.id.AddExerciseButton2);
 
 
         // -------------------------------------------------------------------
@@ -207,11 +212,20 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             public void onClick(View v) { AddExercise(); }
         });
 
+        emptyButton1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { CreateNewExercise(); }
+        });
+
+        emptyButton2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { AddExercise(); }
+        });
+
+
         // --- Back Button ---
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Change back to Main Activity
-                Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
+                Intent intent = new Intent(WorkoutActivity.this, PlanActivity.class);
                 intent.putExtra("SelectedPlan", thisPlan);
                 startActivity(intent);
             }
@@ -386,8 +400,14 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                     }
                 }
 
-                // Sort by Order
-                displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                if (thisPlan.fixedDays) {
+                    // Sort by Order
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.dayOfWeek.getValue(), w2.dayOfWeek.getValue()));
+                }
+                else {
+                    // Sort by Order
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                }
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
@@ -478,11 +498,13 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     private void ChangeUIVisibility() {
         if (displayedExercises.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            emptyButton1.setVisibility(View.VISIBLE);
+            emptyButton2.setVisibility(View.VISIBLE);
         }
         else {
             recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            emptyButton1.setVisibility(View.GONE);
+            emptyButton2.setVisibility(View.GONE);
         }
     }
 

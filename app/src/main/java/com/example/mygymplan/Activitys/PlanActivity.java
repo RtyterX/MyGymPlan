@@ -68,7 +68,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
     // UI Elements
     TextView planName;
-    Button startButton;
+    Button noWorkoutButton;
     ItemTouchHelper mIth;
 
     // Buttons
@@ -84,15 +84,12 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // Drawer NaviBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    ActivityResultLauncher<Intent> resultLauncher;
+    ImageView naviBarImage;
+    ImageConverter imageConverter = new ImageConverter();
 
     // Others
     Button testButton;
-
-    // Test
-    ActivityResultLauncher<Intent> resultLauncher;
-    ImageView naviBarImage;
-
-    ImageConverter imageConverter = new ImageConverter();
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -115,14 +112,15 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
 
+        Log.d("Selected Plan", "Selected Plan ID is: " + thisPlan.id);
 
         // --- Components ---
         planName = findViewById(R.id.PlanNameText);
-        recyclerView = findViewById(R.id.RecycleViewWorkouts);
-        startButton = findViewById(R.id.StartButton);
-        count = findViewById(R.id.RVCount);
         ImageView dbPlanIcon = findViewById(R.id.PlanFromDBIcon);
+        count = findViewById(R.id.RVCount);
+        recyclerView = findViewById(R.id.RecycleViewWorkouts);
         // Buttons
+        noWorkoutButton = findViewById(R.id.StartButton);
         newWorkout = findViewById(R.id.NewWorkout);
         changePlan = findViewById(R.id.ChangePlanButton);
         changePlan2 = findViewById(R.id.ChangePlan2Button);
@@ -189,6 +187,19 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         // -------------------------------------------
         // ----------------- BUTTONS -----------------
         // -------------------------------------------
+        noWorkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewWorkout();
+            }
+        });
+
+        newWorkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewWorkout();
+            }
+        });
 
         changePlan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,13 +209,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         changePlan2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { ChangePlan(); }
-        });
-
-        newWorkout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewWorkout();
-            }
         });
 
         planName.setOnClickListener(new View.OnClickListener() {
@@ -313,7 +317,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
     // ---------------- Edit Workout ------------------------
     // ------------------------------------------------------
-    private void EditWorkout(Workout workout) { popupService.EditWorkoutPopup(this, this, workout); }
+    private void EditWorkout(Workout workout) { popupService.EditWorkoutPopup(this, this, thisPlan, workout); }
 
     // ------------------------------------------------------
     // ------------- Edit User Plan Name  -------------------
@@ -388,8 +392,15 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-                // Sort by Order
-                displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+
+                if (thisPlan.fixedDays) {
+                    // Sort by Order
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.dayOfWeek.getValue(), w2.dayOfWeek.getValue()));
+                }
+                else {
+                    // Sort by Order
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                }
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
@@ -416,6 +427,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ---------------------------------------------------
     public void UpdateRecyclerView() {
         if (!displayedWorkouts.isEmpty()) {
+            Log.d("Workouts RecyclerView", "Workouts Recycler View Ok");
             workoutAdapter = new WorkoutRVAdapter(PlanActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(Workout item) {
@@ -425,11 +437,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                     intent.putExtra("SelectedPlan", thisPlan);
                     intent.putExtra("SelectedWorkout", item);
                     startActivity(intent);
-                }
-                // --------------------------------------
-                @Override
-                public void onItemLongClick(Workout item) {
-                    // Do nothing
                 }
             }, new WorkoutRVAdapter.OnClickEditListener() {
                 @Override
@@ -445,7 +452,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
             ChangeUIVisibility();
         } else {
-            Toast.makeText(getApplicationContext(), "Reload Recycler View Ok",Toast.LENGTH_SHORT).show();
+            Log.d("Workouts RecyclerView", "Recycler View has 0 Workouts");
         }
 
     }
@@ -456,58 +463,37 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
     private void ChangeUIVisibility() {
-        // -------------------
-        // ----- NO PLAN -----
-        // -------------------
-        if (thisPlan == null) {
+        // ----------------------
+        // ----- NO WORKOUT -----
+        // ----------------------
+        if (displayedWorkouts.isEmpty()) {
             // -- Recycler View --
             recyclerView.setVisibility(View.GONE);
-            startButton.setVisibility(View.VISIBLE);
-            // -- Buttons --
-            changePlan2.setVisibility(View.GONE);
-            newWorkout.setVisibility(View.GONE);
-            changePlan.setVisibility(View.GONE);
             // -- Workout Number Count --
             count.setVisibility(View.GONE);
-            // -- Plan Name --
-            planName.setText("No Plans");
+            // -- Buttons --
+            noWorkoutButton.setVisibility(View.VISIBLE);
+            changePlan2.setVisibility(View.VISIBLE);
+            changePlan.setVisibility(View.GONE);
+            newWorkout.setVisibility(View.GONE);
         } else {
-            // ----------------------
-            // ----- NO WORKOUT -----
-            // ----------------------
-            if (displayedWorkouts.isEmpty()) {
-                // -- Recycler View --
-                recyclerView.setVisibility(View.GONE);
-                startButton.setVisibility(View.VISIBLE);
-                // -- Buttons --
-                changePlan2.setVisibility(View.VISIBLE);
-                changePlan.setVisibility(View.GONE);
-                newWorkout.setVisibility(View.GONE);
-                startButton.setText("Create Workout");
-                startButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        NewWorkout();
-                    }
-                });
-                // -- Workout Number Count --
-                count.setVisibility(View.GONE);
-            } else {
-                // -----------------
-                // ----- ELSE ------
-                // -----------------
-                recyclerView.setVisibility(View.VISIBLE);
-                // -- Buttons --
-                changePlan2.setVisibility(View.GONE);
-                startButton.setVisibility(View.GONE);
-                changePlan.setVisibility(View.VISIBLE);
-                newWorkout.setVisibility(View.VISIBLE);
+            // -------------------------
+            // ----- WITH WORKOUT ------
+            // -------------------------
+            recyclerView.setVisibility(View.VISIBLE);
+            // -- Workout Number Count --
+            count.setVisibility(View.VISIBLE);
+            // -- Buttons --
+            changePlan2.setVisibility(View.GONE);
+            noWorkoutButton.setVisibility(View.GONE);
+            changePlan.setVisibility(View.VISIBLE);
+            newWorkout.setVisibility(View.VISIBLE);
 
-                CheckWorkoutLimit();
-            }
-            // Set Plan Name with or without workouts
-            planName.setText(thisPlan.name);
+            CheckWorkoutLimit();
         }
+
+        // Set Plan Name with or without workouts
+        planName.setText(thisPlan.name);
     }
 
 

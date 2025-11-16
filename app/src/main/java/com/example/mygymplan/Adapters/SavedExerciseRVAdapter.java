@@ -32,22 +32,28 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         void onItemEdit(SavedExercise item);
     }
 
+    public interface OnDeleteClickListener {
+        void onItemDelete(int position);
+    }
+
     Context context;
     List<SavedExercise> savedExerciseList;
     OnItemClickListener onListener;
     OnShareClickListener shareListener ;
     OnEditClickListener editListener;
+    OnDeleteClickListener deleteListener;
 
     ImageConverter imageConverter = new ImageConverter();
 
 
     // Constructor
-    public SavedExerciseRVAdapter(Context context, List<SavedExercise> savedExerciseList, OnItemClickListener onListener, OnShareClickListener shareListener, OnEditClickListener editListener) {
+    public SavedExerciseRVAdapter(Context context, List<SavedExercise> savedExerciseList, OnItemClickListener onListener, OnShareClickListener shareListener, OnEditClickListener editListener, OnDeleteClickListener deleteListener) {
         this.context = context;
         this.savedExerciseList = savedExerciseList;
         this.onListener = onListener;
         this.shareListener = shareListener;
         this.editListener = editListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -76,6 +82,9 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
             holder.imageView.setImageBitmap(imageConverter.ConvertToBitmap(savedExerciseList.get(position).image));
         }
 
+        // On Item Click ( Everything inside "bind()" )
+        holder.bind(savedExerciseList.get(position), onListener);
+
         // Edit Button
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +101,14 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
             }
         });
 
-        // On Item Click ( Everything inside "bind()" )
-        holder.bind(savedExerciseList.get(position), onListener);
+        // Share Button
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteListener.onItemDelete(position);
+            }
+        });
+
     }
 
 
@@ -112,6 +127,7 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         ImageView imageView;
         ImageView shareButton;
         ImageView editButton;
+        ImageView deleteButton;
 
         // Constructor
         public MyViewHolder(@NonNull View itemView) {
@@ -123,6 +139,7 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
             imageView = itemView.findViewById(R.id.AddExerciseImageRV);
             shareButton = itemView.findViewById(R.id.ShareExerciseIcon);
             editButton = itemView.findViewById(R.id.EditSavedExerciseIcon);
+            deleteButton = itemView.findViewById(R.id.DeleteSavedExerciseIcon);
         }
 
         public void bind(SavedExercise item, OnItemClickListener onlistener) {

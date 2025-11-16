@@ -42,17 +42,17 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
-            android:layout_width="405dp"
-            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
             <ImageView
                 android:id="@+id/WorkoutInfoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="40dp"
+                android:layout_width="34dp"
+                android:layout_height="31dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/nav_info" />
@@ -61,9 +61,9 @@
                 android:id="@+id/WorkoutName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Workout Name"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Workout Name"
                 android:textSize="26sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -76,24 +76,39 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RV_WorkoutsMain"
             android:layout_width="410dp"
-            android:layout_height="616dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/RV_WorkoutsHorizontal">
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/EmptyRVWorkouts"
+        <Button
+            android:id="@+id/CreateExerciseButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginTop="320dp"
+            android:text="Create Exercise"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2"
+            app:layout_constraintVertical_bias="0.052" />
+
+        <Button
+            android:id="@+id/AddExerciseButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="144dp"
-            android:text="VOCE AINDA NAO TEM NENHUM EXERCISE"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/RV_WorkoutsMain"
-            app:layout_constraintHorizontal_bias="0.506"
-            app:layout_constraintStart_toStartOf="@+id/RV_WorkoutsMain"
-            app:layout_constraintTop_toTopOf="@+id/RV_WorkoutsMain" />
+            android:background="@android:color/transparent"
+            android:text="Add Exercise"
+            android:textColor="@color/blue2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CreateExerciseButton2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -139,9 +154,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RV_WorkoutsHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="389dp"
+            android:layout_height="56dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
