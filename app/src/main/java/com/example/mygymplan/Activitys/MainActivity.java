@@ -352,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 // -----------------------------------------
                 // ----- Check if User has Active Plan -----
                 // -----------------------------------------

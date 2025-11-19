@@ -85,7 +85,7 @@ public class ShareService extends AppCompatActivity {
                     newWorkout.description = parts[1];
                     // newWorkout.image = parts[1];
                     newWorkout.type = WorkoutType.valueOf(parts[2]);
-                    newWorkout.order = Integer.parseInt(parts[3]);
+                    newWorkout.sequence = Integer.parseInt(parts[3]);
                     newWorkout.lastModified = LocalDate.now().toString();
                     newWorkout.plan_Id = newPlan.id;
 
@@ -114,7 +114,7 @@ public class ShareService extends AppCompatActivity {
                     newExercise.rest = Integer.parseInt(parts[5]);
                     newExercise.load = Integer.parseInt(parts[6]);
                     newExercise.type = WorkoutType.valueOf(parts[7]);
-                    newExercise.order = Integer.parseInt(parts[8]);
+                    newExercise.sequence = Integer.parseInt(parts[8]);
                     newExercise.lastModified = LocalDate.now().toString();
                     newExercise.plan_Id = newPlan.id;
                     newExercise.workout_Id = Integer.parseInt(parts[11]);
@@ -162,7 +162,7 @@ public class ShareService extends AppCompatActivity {
                             + w.description + ","
                             // + w.wImage + ","
                             + w.type + ","
-                            + w.order + ","
+                            + w.sequence + ","
                             + LocalDate.now().toString() + ","
                             // Foreign Key doesn't Matter
                             + ";");
@@ -191,7 +191,7 @@ public class ShareService extends AppCompatActivity {
                                 + exerciseList.get(i).rest + ","
                                 + exerciseList.get(i).load + ","
                                 + exerciseList.get(i).type + ","
-                                + exerciseList.get(i).order + ","
+                                + exerciseList.get(i).sequence + ","
                                 + LocalDate.now().toString() + ","
                                 // Foreign Key doesn't Matter
                                 + ";" + exerciseString;

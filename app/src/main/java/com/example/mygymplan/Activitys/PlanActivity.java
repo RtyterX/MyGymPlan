@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -399,7 +398,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else {
                     // Sort by Order
-                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.sequence, w2.sequence));
                 }
 
                 // Run On UI When the above injection is applied
@@ -537,7 +536,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
                         for (Workout item : allWorkouts) {
                             if (item.plan_Id == activePlanId) {
-                                if (item.order == (workout.order + 1)) {
+                                if (item.sequence == (workout.sequence + 1)) {
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putInt("nextWorkoutId", item.id);
                                     editor.apply();

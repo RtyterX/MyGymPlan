@@ -7,7 +7,9 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Enums.WorkoutType;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Dao
@@ -24,5 +26,9 @@ public interface WorkoutDao {
 
     @Delete
     void deleteWorkout(Workout workout);
+
+    @Query("INSERT INTO workouts (name,description,type,sequence,duration,dayOfWeek,lastModified,plan_Id) VALUES (:name, :description, :type, :sequence, :duration, :dayOfWeek, :lastModified, :plan_Id)")
+    void rawInsert(String name, String description, WorkoutType type, int sequence, String duration, DayOfWeek dayOfWeek, String lastModified, int plan_Id);
+
 
 }

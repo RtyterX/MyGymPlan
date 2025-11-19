@@ -55,6 +55,7 @@ import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.PopupService;
+import com.example.mygymplan.Services.WorkoutService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    // Entity's
     public Plan thisPlan;
     public Workout thisWorkout;
 
@@ -70,18 +72,24 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     String username;
     String email;
 
+    // -------------------------------------------------------------
+
     // UI Elements
     TextView showName;
     List<Exercise> displayedExercises;
     List<Workout> displayedWorkouts;
+    Button newButton;
+    Button addButton;
+    ItemTouchHelper mIth;
 
-// -------------------------------------------------------------
-    // Add Exercise Teste
-    List<SavedExercise> myExercises;
-    List<SavedExercise> databaseExercises;
-    SavedExerciseRVAdapter myExerciseAdapter;
-    SavedExerciseRVAdapter databaseAdapter;
-    Exercise newExercise;
+    // -------------------------------------------------------------
+
+    // Recycler Views
+    RecyclerView recyclerView;                  // Exercise Recycler View (Vertical)
+    RecyclerView horizontalRecyclerView;        // Workout Recycler View (Horizontal)
+    ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
+    Button emptyButton1;                         // Show Button when Recycler View is Empty
+    Button emptyButton2;                         // Show Button when Recycler View is Empty
 
     // -------------------------------------------------------------
 
@@ -93,20 +101,12 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     String userImageString;
     ActivityResultLauncher<Intent> resultLauncher;
 
-    // Recycler Views
-    RecyclerView recyclerView;                  // Exercise Recycler View (Vertical)
-    RecyclerView horizontalRecyclerView;        // Workout Recycler View (Horizontal)
-    ExerciseRVAdapter exerciseAdapter;          // Needed for Delete Exercise
-    Button emptyButton1;                         // Show Button when Recycler View is Empty
-    Button emptyButton2;                         // Show Button when Recycler View is Empty
+    // -------------------------------------------------------------
 
     // Others
-    ItemTouchHelper mIth;
     PopupService popupService = new PopupService();
-
-    // --> For Tests Only
-    Button testButton;
-
+    Exercise newExercise;  // -->  Add Exercise Teste
+    Button testButton;  // --> For Tests Only
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -135,8 +135,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         // --- UI Elements ---
         showName = findViewById(R.id.WorkoutName);
-        Button newButton = findViewById(R.id.CreateNewExercise);
-        Button addButton = findViewById(R.id.AddExercise);
+        newButton = findViewById(R.id.CreateNewExercise);
+        addButton = findViewById(R.id.AddExercise);
         Button backButton = findViewById(R.id.BackButtonWorkout);
         recyclerView = findViewById(R.id.RV_WorkoutsMain);
         horizontalRecyclerView = findViewById(R.id.RV_WorkoutsHorizontal);
@@ -159,15 +159,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);            // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                               // Set Click on ActionBar
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);  // Lock NaviBar Swipe Right Gesture to Open
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
         toggle.syncState();                                                                           // Sync with drawer state (Open/Close)
 
+        // Get URI from Pick Image
         RegisterResult();
 
         // NaviBar Values
@@ -180,8 +174,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // Set Image
         Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
         naviBarImage.setImageBitmap(bitmap2);
-
-
+        //Set Image Click
         naviBarImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,7 +186,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // -------------------------------------------------------------------
         // ---  Set Values based on Received Data  ---
         showName.setText(thisPlan.name);
-
 
 
         // ---------------------------------
@@ -263,7 +255,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
                     }
                 });
-
 
     }
 
@@ -354,16 +345,19 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     }
 
 
-
     // --------------------------------------------
     // ----------- Load Data and Display ----------
     // ------------- on Recycler Views -------------
     // --------------------------------------------
     public void LoadData(Workout workout) {
-        WorkoutsHorizontalRecyclerView(workout.order);
+        WorkoutsHorizontalRecyclerView(workout.sequence);
         UpdateRecyclerView(workout);
     }
 
+
+    // --------------------------------------------
+    // ---------- Load Shared Preferences ---------
+    // --------------------------------------------
     private void LoadPrefs() {
         // Check if its user First time opening App
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -406,7 +400,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 }
                 else {
                     // Sort by Order
-                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
+                    displayedWorkouts.sort((w1, w2) -> Integer.compare(w1.sequence, w2.sequence));
                 }
 
                 // Run On UI When the above injection is applied
@@ -419,7 +413,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             public void onItemClick(Workout item) {
                                 UpdateRecyclerView(item);
                                 thisWorkout = item;
-                                WorkoutsHorizontalRecyclerView(item.order);  // Change Color
+                                WorkoutsHorizontalRecyclerView(item.sequence);  // Change Color
                             }
                         }, position);
                         // Display Workouts inside the Recycler View
@@ -456,7 +450,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 }
 
                 // Sort by Order
-                displayedExercises.sort((e1, e2) -> Integer.compare(e1.order, e2.order));
+                displayedExercises.sort((e1, e2) -> Integer.compare(e1.sequence, e2.sequence));
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
@@ -473,6 +467,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public void deleteButtonClick(int position) {
                                 DeleteFromRecyclerView(position);
+                                // Update Duration Time in Workout
+                                WorkoutService workoutService = new WorkoutService();
+                                workoutService.updateWorkout(getApplicationContext(), thisWorkout);
                             }
                         });
                         // Display Exercises inside the Recycler View
@@ -498,6 +495,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     private void ChangeUIVisibility() {
         if (displayedExercises.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
+            newButton.setVisibility(View.GONE);
             emptyButton1.setVisibility(View.VISIBLE);
             emptyButton2.setVisibility(View.VISIBLE);
         }
@@ -524,7 +523,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         newExercise.reps = 0;
         newExercise.rest = 0;
         newExercise.load = 0;
-        newExercise.order = displayedExercises.size();
+        newExercise.sequence = displayedExercises.size();
         // Set Default Image
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.logo_fundoazul);
         ImageConverter imageConverter = new ImageConverter();

@@ -39,10 +39,10 @@ public class Exercise implements Serializable {
     public int load;
 
     @ColumnInfo(name = "type")
-    public WorkoutType type;    // Enum
+    public WorkoutType type;
 
-    @ColumnInfo(name = "order")
-    public int order;
+    @ColumnInfo(name = "sequence")
+    public int sequence;
 
     @ColumnInfo(name = "lastModified")
     public String lastModified;

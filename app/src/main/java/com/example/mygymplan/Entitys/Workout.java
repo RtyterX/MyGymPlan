@@ -30,8 +30,8 @@ public class Workout implements Serializable {
     @ColumnInfo(name = "type")
     public WorkoutType type;
 
-    @ColumnInfo(name = "order")
-    public int order;
+    @ColumnInfo(name = "sequence")
+    public int sequence;
 
     @ColumnInfo(name = "duration")
     public String duration;

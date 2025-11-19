@@ -11,6 +11,7 @@ import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
+import android.util.Log;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -86,10 +87,10 @@ public class WorkoutService extends AppCompatActivity {
 
                 // Set New Workout Order based on list Size
                 if (!planWorkouts.isEmpty()) {
-                    workout.order = planWorkouts.size();
+                    workout.sequence = planWorkouts.size();
                 }
                 else {
-                    workout.order = 0;
+                    workout.sequence = 0;
                 }
 
                 // Set Duration Time
@@ -99,6 +100,8 @@ public class WorkoutService extends AppCompatActivity {
 
                 // Insert in Database
                 dao.insertWorkout(workout);
+
+                Log.d("Teste Workout ID", "Workout Created - ID: " + workout.id);
             }
         }).start();
 
@@ -115,6 +118,11 @@ public class WorkoutService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // Set Duration Time
+                ExerciseDao daoExercise = db.exerciseDao();
+                List<Exercise> allExercises = daoExercise.listExercise();
+                workout.duration = workoutDuration.CalculateDurationTime(workout, allExercises);
+
                 dao.updateWorkout(workout);
             }
         }).start();
@@ -143,9 +151,9 @@ public class WorkoutService extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------
     public void changeWorkoutOrder(Context context, Workout workout1, Workout workout2) {
 
-        int change = workout1.order;
-        workout1.order = workout2.order;
-        workout2.order = change;
+        int change = workout1.sequence;
+        workout1.sequence = workout2.sequence;
+        workout2.sequence = change;
 
         updateWorkout(context, workout1);
         updateWorkout(context, workout2);

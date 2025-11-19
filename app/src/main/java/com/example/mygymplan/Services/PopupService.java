@@ -53,8 +53,8 @@ import java.util.List;
 public class PopupService extends AppCompatActivity {
     Plan newPlan;
     Workout newWorkout;
-    private List<SavedExercise> databaseExercises = new ArrayList<>();
     private List<SavedExercise> myExercises = new ArrayList<>();
+    private List<SavedExercise> databaseExercises = new ArrayList<>();
 
     boolean sortBool = true;
 
@@ -779,6 +779,7 @@ public class PopupService extends AppCompatActivity {
         RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
         TextView listTotal = popupView.findViewById(R.id.ExerciseListTotal);
         ImageView sortButton = popupView.findViewById(R.id.SortSavedExercises);
+        Button searchButton = popupView.findViewById(R.id.SearchButtonAddExercise);
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -823,55 +824,7 @@ public class PopupService extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        // Show Number of items in List
-                        if (myExercises.isEmpty()) {
-                            listTotal.setText("Total: " + myExercises.size());
-                        }
-                        else {
-                            listTotal.setText("Total: " + myExercises.size());
-                        }
-                        // ------ Show Recycler View (My Exercises when Open) ------
-                        SavedExerciseRVAdapter savedExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(SavedExercise item) {
-                                activity.AddExerciseToWorkout(item);
-                                // Show Text on Screen
-                                Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
-                                popupWindow.dismiss();
-                            }
-                        }, new SavedExerciseRVAdapter.OnShareClickListener() {
-                            @Override
-                            public void onItemShare(SavedExercise item) {
-                                ShareService shareService = new ShareService();
-                                Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
-                            }
-                        }, new SavedExerciseRVAdapter.OnEditClickListener() {
-                            @Override
-                            public void onItemEdit(SavedExercise item) {
-                                //Intent intent = new Intent(activity, ExerciseActivity.class);
-                                //intent.putExtra("SelectedPlan", thisPlan);
-                                // intent.putExtra("SelectedWorkout", thisWorkout);
-                                // intent.putExtra("SelectedExercise", item);
-                                //  startActivity(intent);
-                            }
-                        }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
-                            @Override
-                            public void onItemDelete( int position) {
-                                SavedExerciseService savedExerciseService = new SavedExerciseService();
-                                savedExerciseService.deleteSavedExercise(context, myExercises.get(position));
-                                //teste(context, myExerciseAdapter, myExercises.get(position), position);
-                            }
-                        });
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Display Exercises inside the Recycler View
-                                addExerciseRV.setAdapter(savedExerciseAdapter);
-                                addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
-                            }
-                        }, 500); // 3000 milliseconds = 3 seconds
-
+                        DatabaseButton.callOnClick();
                     }
                 });
             }
@@ -936,7 +889,6 @@ public class PopupService extends AppCompatActivity {
                 public void onItemDelete(int position) {
                     SavedExerciseService savedExerciseService = new SavedExerciseService();
                     savedExerciseService.deleteSavedExercise(context, myExercises.get(position));
-                    //teste(context, myExerciseAdapter, myExercises.get(position), position);
                 }
             });
             // Display Exercises inside the Recycler View
@@ -989,10 +941,10 @@ public class PopupService extends AppCompatActivity {
             addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
         });
 
+
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });
-
 
     }
 

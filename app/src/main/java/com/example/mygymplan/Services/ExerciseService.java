@@ -119,9 +119,9 @@ public class ExerciseService extends AppCompatActivity {
                     for (Exercise item : allExercises) {
                         if (item.plan_Id == exercise.plan_Id) {
                             if (item.workout_Id == exercise.workout_Id) {
-                                if (item.order > exercise.order) {
+                                if (item.sequence > exercise.sequence) {
                                     newExercise = item;
-                                    newExercise.order -= 1;
+                                    newExercise.sequence -= 1;
                                     saveExercise(context, newExercise);
                                 }
                             }
@@ -164,9 +164,9 @@ public class ExerciseService extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------
     public void changeExerciseOrder(Context context, Exercise exercise1, Exercise exercise2) {
 
-        int change = exercise1.order;
-        exercise1.order = exercise2.order;
-        exercise2.order = change;
+        int change = exercise1.sequence;
+        exercise1.sequence = exercise2.sequence;
+        exercise2.sequence = change;
 
         saveExercise(context, exercise1);
         saveExercise(context, exercise2);
@@ -186,7 +186,7 @@ public class ExerciseService extends AppCompatActivity {
         newExercise.load = savedExercise.load;
         newExercise.type = savedExercise.type;
         newExercise.image = savedExercise.image;
-        newExercise.order = workoutOrder;
+        newExercise.sequence = workoutOrder;
         newExercise.plan_Id = planId;
         newExercise.workout_Id = workoutId;
         newExercise.savedExercise_Id = savedExercise.id;

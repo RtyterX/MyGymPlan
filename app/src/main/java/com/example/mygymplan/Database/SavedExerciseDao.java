@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.SavedExercise;
+import com.example.mygymplan.Enums.WorkoutType;
 
 import java.util.List;
 
@@ -26,4 +27,8 @@ public interface SavedExerciseDao {
     @Delete
     void deleteSavedExercise(SavedExercise savedExercise);
 
+    @Query("INSERT INTO savedExercises (name,description,sets,reps,rest,load,type,userCreated,createdDate,modDate,image,video) VALUES (:name, :description, :sets, :reps, :rest, :load, :type, :userCreated, :createdDate, :modDate, :image, :video)")
+    void rawInsert(String name, String description, int sets, int reps, int rest, int load, WorkoutType type, boolean userCreated, String createdDate, String modDate, String image, String video);
+
 }
+

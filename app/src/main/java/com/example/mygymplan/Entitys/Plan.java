@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.mygymplan.Enums.ExperienceLevel;
+
 import java.io.Serializable;
 
 @Entity(tableName = "plans")
@@ -26,6 +28,9 @@ public class Plan implements Serializable {
 
     @ColumnInfo(name = "bodyType")
     public int bodyType;
+
+    @ColumnInfo(name = "level")
+    public ExperienceLevel level;
 
     @ColumnInfo(name = "author")
     public String author;

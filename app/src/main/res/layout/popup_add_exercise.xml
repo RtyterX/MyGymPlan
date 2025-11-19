@@ -88,12 +88,12 @@
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/FindButtonAddExercise"
+            app:layout_constraintEnd_toStartOf="@+id/SearchButtonAddExercise"
             app:layout_constraintStart_toEndOf="@+id/FindTitleAddExercise"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/FindButtonAddExercise"
+            android:id="@+id/SearchButtonAddExercise"
             android:layout_width="54dp"
             android:layout_height="41dp"
             android:layout_marginStart="2sp"

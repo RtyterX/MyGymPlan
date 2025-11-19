@@ -23,7 +23,8 @@ public class PlanService extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------------
     public Plan insertPlan(Context context, Plan plan) {
 
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts")
+                .build();
         PlanDao dao = db.planDao();
 
         new Thread(new Runnable() {

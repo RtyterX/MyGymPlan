@@ -631,9 +631,6 @@ public class ExerciseActivity extends AppCompatActivity {
     // --------------- Save Values in Database ---------------
     // -------------------------------------------------------
     public void SaveExerciseValues() {
-
-        LocalDate date = LocalDate.now();
-
         // Get Exercise Values
         thisExercise.name = showName.getText().toString();
         thisExercise.description = showDescription.getText().toString();
@@ -641,7 +638,7 @@ public class ExerciseActivity extends AppCompatActivity {
         thisExercise.reps = Integer.parseInt(showReps.getText().toString());
         thisExercise.rest = Integer.parseInt(showRest.getText().toString());
         thisExercise.load = Integer.parseInt(showLoad.getText().toString());
-        thisExercise.lastModified = date.format(DateTimeFormatter.ofPattern("dd/MM"));
+        thisExercise.lastModified = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM"));
         // Type get from dropdown menu
 
 
@@ -679,11 +676,11 @@ public class ExerciseActivity extends AppCompatActivity {
             // Show Text on Screen
             Toast.makeText(getApplicationContext(), "Exercise Saved",Toast.LENGTH_SHORT).show();
         }
-        // Update Last Modified Date in Workout
+        // Update Duration Time in Workout
         WorkoutService workoutService = new WorkoutService();
         workoutService.updateWorkout(getApplicationContext(), thisWorkout);
-        // ------------------------------------------------------------------------
 
+        // ------------------------------------------------------------------------
 
     }
 
