@@ -53,9 +53,11 @@ import java.util.List;
 public class PopupService extends AppCompatActivity {
     Plan newPlan;
     Workout newWorkout;
-    private List<SavedExercise> myExercises = new ArrayList<>();
-    private List<SavedExercise> databaseExercises = new ArrayList<>();
 
+    // Add Saved Exercise
+    private List<SavedExercise> userExercises = new ArrayList<>();
+    private List<SavedExercise> dbExercises = new ArrayList<>();
+    private List<SavedExercise> searchExercises = new ArrayList<>();
     boolean sortBool = true;
 
 
@@ -773,13 +775,14 @@ public class PopupService extends AppCompatActivity {
         View popupView = View.inflate(context, R.layout.popup_add_exercise, null);
 
         // Popup View UI Content
-        Button MyExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
-        Button DatabaseButton = popupView.findViewById(R.id.DatabaseExercisesButton);
-        Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
-        RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
-        TextView listTotal = popupView.findViewById(R.id.ExerciseListTotal);
-        ImageView sortButton = popupView.findViewById(R.id.SortSavedExercises);
+        Button userExercisesButton = popupView.findViewById(R.id.MyExercisesButton);
+        Button dbExercisesButton = popupView.findViewById(R.id.DatabaseExercisesButton);
         Button searchButton = popupView.findViewById(R.id.SearchButtonAddExercise);
+        TextView searchText = popupView.findViewById(R.id.FindNameAddExercise);
+        ImageView sortButton = popupView.findViewById(R.id.SortSavedExercises);
+        TextView listTotal = popupView.findViewById(R.id.ExerciseListTotal);
+        RecyclerView addExerciseRV = popupView.findViewById(R.id.AddExerciseRV);
+        Button closeButton = popupView.findViewById(R.id.CloseAddExercise);
 
         // Initialize new Popup View
         PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -789,6 +792,7 @@ public class PopupService extends AppCompatActivity {
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
+        // Access Database
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
         SavedExerciseDao dao = db.savedExerciseDao();
 
@@ -796,26 +800,23 @@ public class PopupService extends AppCompatActivity {
             @Override
             public void run() {
 
-                // Initialize ListS
-                List<SavedExercise> allExercises;
-
                 // List All Exercises
-                allExercises = dao.listSavedExercise();
+                List<SavedExercise> allExercises = dao.listSavedExercise();
 
-                // ---------- MY EXERCISES ----------
+                // ------ GET USER EXERCISES ------
                 if (!allExercises.isEmpty()) {
                     for (SavedExercise item : allExercises) {
                         if (item.userCreated) {
-                            myExercises.add(item);
+                            userExercises.add(item);
                         }
                     }
                 }
 
-                // ---------- DATABASE ----------
+                // ----- GET DATABASE EXERCISES -----
                 if (!allExercises.isEmpty()) {
                     for (SavedExercise item : allExercises) {
                         if (!item.userCreated) {
-                            databaseExercises.add(item);
+                            dbExercises.add(item);
                         }
                     }
                 }
@@ -824,7 +825,8 @@ public class PopupService extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        DatabaseButton.callOnClick();
+                        // Show Database Exercises whem Open
+                        dbExercisesButton.callOnClick();
                     }
                 });
             }
@@ -834,12 +836,166 @@ public class PopupService extends AppCompatActivity {
 
 
         // ------ Buttons ------
+        // ---------------------------------------------------------------------------------------
+        userExercisesButton.setOnClickListener(v -> {
+            // Show Number of items in List
+            if (userExercises.isEmpty()) {
+                listTotal.setText("Total: " + userExercises.size());
+            }
+            else {
+                listTotal.setText("Total: " + userExercises.size());
+            }
+            // ------ Show Recycler View (My Exercises when Open) ------
+            SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, userExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    activity.AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
+                    popupWindow.dismiss();
+                }
+            }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                @Override
+                public void onItemShare(SavedExercise item) {
+                    ShareService shareService = new ShareService();
+                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                }
+            }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                @Override
+                public void onItemEdit(SavedExercise item) {
+                    //Intent intent = new Intent(activity, ExerciseActivity.class);
+                    //intent.putExtra("SelectedPlan", thisPlan);
+                    // intent.putExtra("SelectedWorkout", thisWorkout);
+                    // intent.putExtra("SelectedExercise", item);
+                    //  startActivity(intent);
+                }
+            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                @Override
+                public void onItemDelete(int position) {
+                    SavedExerciseService savedExerciseService = new SavedExerciseService();
+                    savedExerciseService.deleteSavedExercise(context, userExercises.get(position));
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(myExerciseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+        });
+
+        // ---------------------------------------------------------------------------------------
+        dbExercisesButton.setOnClickListener(v -> {
+            // Show Number of items in List
+            if (dbExercises.isEmpty()) {
+                listTotal.setText("Total: " + dbExercises.size());
+            }
+            else {
+                listTotal.setText("Total: " + dbExercises.size());
+            }
+            // ------ Show Recycler View (My Exercises when Open) ------
+            SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, dbExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(SavedExercise item) {
+                    activity.AddExerciseToWorkout(item);
+                    // Show Text on Screen
+                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
+                    popupWindow.dismiss();
+                }
+            }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                @Override
+                public void onItemShare(SavedExercise item) {
+                    ShareService shareService = new ShareService();
+                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                }
+            }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                @Override
+                public void onItemEdit(SavedExercise item) {
+                    //Intent intent = new Intent(activity, ExerciseActivity.class);
+                    //intent.putExtra("SelectedPlan", thisPlan);
+                    // intent.putExtra("SelectedWorkout", thisWorkout);
+                    // intent.putExtra("SelectedExercise", item);
+                    //  startActivity(intent);
+                }
+            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                @Override
+                public void onItemDelete(int position) {
+                    SavedExerciseService savedExerciseService = new SavedExerciseService();
+                    savedExerciseService.deleteSavedExercise(context, dbExercises.get(position));
+                }
+            });
+            // Display Exercises inside the Recycler View
+            addExerciseRV.setAdapter(databaseAdapter);
+            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+        });
+
+        // ---------------------------------------------------------------------------------------
+        searchButton.setOnClickListener(v -> {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    // List All Exercises
+                    searchExercises = dao.searchByName("%" + searchText.getText().toString() + "%");
+
+                    // Run On UI When the above injection is applied
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Show Number of items in List
+                            if (searchExercises.isEmpty()) {
+                                listTotal.setText("Total: " + searchExercises.size());
+                            }
+                            else {
+                                listTotal.setText("Total: " + searchExercises.size());
+                            }
+                            // ------ Show Recycler View (My Exercises when Open) ------
+                            SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, searchExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(SavedExercise item) {
+                                    activity.AddExerciseToWorkout(item);
+                                    // Show Text on Screen
+                                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
+
+                                    popupWindow.dismiss();
+                                }
+                            }, new SavedExerciseRVAdapter.OnShareClickListener() {
+                                @Override
+                                public void onItemShare(SavedExercise item) {
+                                    ShareService shareService = new ShareService();
+                                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
+                                }
+                            }, new SavedExerciseRVAdapter.OnEditClickListener() {
+                                @Override
+                                public void onItemEdit(SavedExercise item) {
+                                    //Intent intent = new Intent(activity, ExerciseActivity.class);
+                                    //intent.putExtra("SelectedPlan", thisPlan);
+                                    // intent.putExtra("SelectedWorkout", thisWorkout);
+                                    // intent.putExtra("SelectedExercise", item);
+                                    //  startActivity(intent);
+                                }
+                            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
+                                @Override
+                                public void onItemDelete(int position) {
+                                    SavedExerciseService savedExerciseService = new SavedExerciseService();
+                                    savedExerciseService.deleteSavedExercise(context, searchExercises.get(position));
+                                }
+                            });
+                            // Display Exercises inside the Recycler View
+                            addExerciseRV.setAdapter(databaseAdapter);
+                            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
+                        }
+                    });
+                }
+            }).start();
+        });
+
+        // ---------------------------------------------------------------------------------------
         sortButton.setOnClickListener(v -> {
 
             if (sortBool) {
                 // Sort by Name
-                 myExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
-                 databaseExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
+                userExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
+                dbExercises.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
             } else {
                 // Sort by Type
                 // myExercises.sort((w1, w2) -> Integer.compare(w1.order, w2.order));
@@ -850,98 +1006,7 @@ public class PopupService extends AppCompatActivity {
 
         });
 
-
-        MyExercisesButton.setOnClickListener(v -> {
-            // Show Number of items in List
-            if (myExercises.isEmpty()) {
-                listTotal.setText("Total: " + myExercises.size());
-            }
-            else {
-                listTotal.setText("Total: " + myExercises.size());
-            }
-            // ------ Show Recycler View (My Exercises when Open) ------
-            SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, myExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(SavedExercise item) {
-                    activity.AddExerciseToWorkout(item);
-                    // Show Text on Screen
-                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
-                    popupWindow.dismiss();
-                }
-            }, new SavedExerciseRVAdapter.OnShareClickListener() {
-                @Override
-                public void onItemShare(SavedExercise item) {
-                    ShareService shareService = new ShareService();
-                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
-                }
-            }, new SavedExerciseRVAdapter.OnEditClickListener() {
-                @Override
-                public void onItemEdit(SavedExercise item) {
-                    //Intent intent = new Intent(activity, ExerciseActivity.class);
-                    //intent.putExtra("SelectedPlan", thisPlan);
-                    // intent.putExtra("SelectedWorkout", thisWorkout);
-                    // intent.putExtra("SelectedExercise", item);
-                    //  startActivity(intent);
-                }
-            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
-                @Override
-                public void onItemDelete(int position) {
-                    SavedExerciseService savedExerciseService = new SavedExerciseService();
-                    savedExerciseService.deleteSavedExercise(context, myExercises.get(position));
-                }
-            });
-            // Display Exercises inside the Recycler View
-            addExerciseRV.setAdapter(myExerciseAdapter);
-            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
-        });
-
-        DatabaseButton.setOnClickListener(v -> {
-            // Show Number of items in List
-            if (databaseExercises.isEmpty()) {
-                listTotal.setText("Total: " + databaseExercises.size());
-            }
-            else {
-                listTotal.setText("Total: " + databaseExercises.size());
-            }
-            // ------ Show Recycler View (My Exercises when Open) ------
-            SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, databaseExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(SavedExercise item) {
-                    activity.AddExerciseToWorkout(item);
-                    // Show Text on Screen
-                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
-                    popupWindow.dismiss();
-                }
-            }, new SavedExerciseRVAdapter.OnShareClickListener() {
-                @Override
-                public void onItemShare(SavedExercise item) {
-                    ShareService shareService = new ShareService();
-                    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show();
-                }
-            }, new SavedExerciseRVAdapter.OnEditClickListener() {
-                @Override
-                public void onItemEdit(SavedExercise item) {
-                    //Intent intent = new Intent(activity, ExerciseActivity.class);
-                    //intent.putExtra("SelectedPlan", thisPlan);
-                    // intent.putExtra("SelectedWorkout", thisWorkout);
-                    // intent.putExtra("SelectedExercise", item);
-                    //  startActivity(intent);
-                }
-            }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
-                @Override
-                public void onItemDelete(int position) {
-                    SavedExerciseService savedExerciseService = new SavedExerciseService();
-                    savedExerciseService.deleteSavedExercise(context, databaseExercises.get(position));
-                }
-            });
-            // Display Exercises inside the Recycler View
-            addExerciseRV.setAdapter(databaseAdapter);
-            addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
-        });
-
-
+        // ---------------------------------------------------------------------------------------
         closeButton.setOnClickListener(v -> {
             popupWindow.dismiss();
         });

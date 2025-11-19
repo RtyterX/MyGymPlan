@@ -83,7 +83,7 @@
             android:layout_marginTop="4sp"
             android:background="@drawable/text_box"
             android:ellipsize="end"
-            android:ems="10"
+            android:ems="15"
             android:inputType="text"
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"

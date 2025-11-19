@@ -18,6 +18,9 @@ public interface SavedExerciseDao {
     @Query("SELECT * FROM savedExercises")
     List<SavedExercise> listSavedExercise();
 
+    @Query("SELECT * FROM savedExercises WHERE name LIKE :search")
+    List<SavedExercise> searchByName(String search);
+
     @Insert
     void insertSavedExercise(SavedExercise... savedExercise);
 
