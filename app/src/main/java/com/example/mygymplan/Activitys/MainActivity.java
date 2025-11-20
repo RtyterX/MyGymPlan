@@ -346,12 +346,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ------------- in Recycler View -------------
     // --------------------------------------------
     public void CheckPlan() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 
                 // -----------------------------------------
                 // ----- Check if User has Active Plan -----
@@ -368,11 +367,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-            }
 
+                db.close();
+            }
         }).start();
 
-        db.close();
 
         // ----------------------------------------------------------------------
         // Wait before Apply Plans RV and Get Today Workout
@@ -442,12 +441,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (activePlan.fixedDays) {
                 Log.d("Teste", "Active Plan " + activePlan.id + " has fixed days");
 
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         // ------------------------------------------------------
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         WorkoutDao dao = db.workoutDao();
                         List<Workout> allWorkouts = dao.listWorkouts();
 
@@ -462,22 +460,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }
                         }
+
+                        db.close();
                     }
-
                 }).start();
-
-                db.close();
 
             } else {  // --------------------------------------------------------------------------------------------------------
                 Log.d("Teste", "Active Plan " + activePlan.id + " HASN'T fixed days");
 
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         // ------------------------------------------------------
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         WorkoutDao dao = db.workoutDao();
                         List<Workout> allWorkouts = dao.listWorkouts();
 
@@ -490,10 +485,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }
                         }
+
+                        db.close();
                     }
                 }).start();
-
-                db.close();
             }
         }
 

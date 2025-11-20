@@ -9,6 +9,7 @@ public enum WorkoutType {
     Shoulder,
     Biceps,
     Triceps,
+    Forearm,
     Abs,
     Quadriceps,
     Hamstrings,

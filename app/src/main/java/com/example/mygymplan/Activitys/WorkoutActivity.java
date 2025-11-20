@@ -41,7 +41,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
 import com.example.mygymplan.Adapters.ExerciseRVAdapter;
 import com.example.mygymplan.Adapters.WorkoutRVAdapterHorizontal;
 import com.example.mygymplan.Database.AppDatabase;
@@ -371,19 +370,20 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // -------- Reload Workouts Recycler View -------
     // ----------------------------------------------
     public void WorkoutsHorizontalRecyclerView(int position) {
-        // Access Database
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        WorkoutDao dao = db.workoutDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // Access Database
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+
                 // Initialize List
                 displayedWorkouts = new ArrayList<>();
-                List<Workout> allWorkouts = new ArrayList<>();
 
                 // List All Workouts
-                allWorkouts = dao.listWorkouts();
+                List<Workout>  allWorkouts = dao.listWorkouts();
+
+                db.close();
 
                 // Remove Workouts from other Plans
                 if (!allWorkouts.isEmpty()) {
@@ -430,17 +430,19 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // -------- Reload Exercise Recycler View -------
     // ----------------------------------------------
     public void UpdateRecyclerView(Workout workout) {
-
-        // Access Database
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                // Access Database
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
                 // Initialize List
                 displayedExercises = new ArrayList<>();
                 List<Exercise> newList = dao.listExercise();
+
+                db.close();
 
                 // Add to List only the Exercises from this Workout
                 for (Exercise e : newList) {
@@ -456,35 +458,31 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        // ----- Set Exercise Adapter -----
-                        exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Exercise item) {
-                                ChangeToExercise(item);
-                            }
-                        }, new ExerciseRVAdapter.OnItemClickDelete() {
-                            @Override
-                            public void deleteButtonClick(int position) {
-                                DeleteFromRecyclerView(position);
-                                // Update Duration Time in Workout
-                                WorkoutService workoutService = new WorkoutService();
-                                workoutService.updateWorkout(getApplicationContext(), thisWorkout);
-                            }
-                        });
-                        // Display Exercises inside the Recycler View
-                        recyclerView.setAdapter(exerciseAdapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-                        // Attach item Helper
-                        mIth.attachToRecyclerView(recyclerView);
-                        // Then Check if Need to Change the UI...
-                        ChangeUIVisibility();
+                        if (!displayedExercises.isEmpty()) {
+                            // ----- Set Exercise Adapter -----
+                            exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(Exercise item) {
+                                    ChangeToExercise(item);
+                                }
+                            }, new ExerciseRVAdapter.OnItemClickDelete() {
+                                @Override
+                                public void deleteButtonClick(int position) {
+                                    DeleteFromRecyclerView(position);
+                                }
+                            });
+                            // Display Exercises inside the Recycler View
+                            recyclerView.setAdapter(exerciseAdapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+                            // Attach item Helper
+                            mIth.attachToRecyclerView(recyclerView);
+                            // Then Check if Need to Change the UI...
+                            ChangeUIVisibility();
+                        }
                     }
                 });
             }
         }).start();
-
-        db.close();
     }
 
 
@@ -493,7 +491,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ------- Based On Recycler View State ---------
     // ----------------------------------------------
     private void ChangeUIVisibility() {
+        Log.d("Change UI Visibility Teste", "Number os Displayed Exercises: " + displayedExercises.size());
         if (displayedExercises.isEmpty()) {
+            Log.d("Change UI Visibility Teste", "Displayed Exercises is Empty");
             recyclerView.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
             newButton.setVisibility(View.GONE);
@@ -542,14 +542,15 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
         newExercise = exerciseService.convertExercise(savedExercise,
-                displayedExercises.size() + 1,thisPlan.id, thisWorkout.id);
+                displayedExercises.size() + 1, thisPlan.id, thisWorkout.id);
         // --------------------------------------
         exerciseService.insertExercise(getApplicationContext(), newExercise);
-        exerciseAdapter.notifyItemRangeRemoved(0, exerciseAdapter.getItemCount());
         UpdateRecyclerView(thisWorkout);
-        ChangeUIVisibility();
-    }
+        if (exerciseAdapter != null) {
+            exerciseAdapter.notifyItemRangeRemoved(0, exerciseAdapter.getItemCount());
+        }
 
+    }
 
 
     // ----------------------------------------------
@@ -562,6 +563,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         exerciseService.deleteExercise(getApplicationContext(), displayedExercises.get(position));
         displayedExercises.remove(position);
         exerciseAdapter.notifyItemRemoved(position);
+
         // Show Text on Screen
         Toast.makeText(getApplicationContext(), "Exercise Deleted",Toast.LENGTH_SHORT).show();
         // Need to wait for animation when is the last Exercise in List
@@ -569,6 +571,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             @Override
             public void run() {
                 ChangeUIVisibility();
+                // Update Duration Time in Workout
+                WorkoutService workoutService = new WorkoutService();
+                workoutService.updateWorkout(getApplicationContext(), thisWorkout);
             }
         }, 500); // 3000 milliseconds = 3 seconds
 

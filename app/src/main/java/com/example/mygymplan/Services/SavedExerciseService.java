@@ -17,46 +17,48 @@ public class SavedExerciseService extends AppCompatActivity {
     }
 
     public void insertSavedExercise(Context context, SavedExercise savedExercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
+
                 dao.insertSavedExercise(savedExercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     public void updateSavedExercise(Context context, SavedExercise savedExercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
+
                 dao.updateSavedExercise(savedExercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     public void deleteSavedExercise(Context context, SavedExercise savedExercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
-
         new Thread(new Runnable() {
             @Override
-            public void run() { dao.deleteSavedExercise(savedExercise);}
-        }).start();
+            public void run() {
 
-        db.close();
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
+
+                dao.deleteSavedExercise(savedExercise);
+
+                db.close();
+            }
+        }).start();
     }
 
 }

@@ -373,14 +373,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------------- on Recycler View -------------
     // --------------------------------------------
     public void GetWorkoutList() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        WorkoutDao daoW = db.workoutDao();
-        displayedWorkouts = new ArrayList<>();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                WorkoutDao daoW = db.workoutDao();
+                displayedWorkouts = new ArrayList<>();
 
                 List<Workout> workoutList = daoW.listWorkouts();
 
@@ -414,10 +413,9 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
@@ -525,12 +523,11 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             // Check if Active Plan haven't Fixed Days
             if (!plan.fixedDays) {
 
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         // ------------------------------------------------------
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                         WorkoutDao dao = db.workoutDao();
                         List<Workout> allWorkouts = dao.listWorkouts();
 
@@ -544,12 +541,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }
                         }
+
+                        db.close();
                     }
                 }).start();
-
-                db.close();
             }
         }
+
     }
 
     //////////////////////// END ////////////////////////

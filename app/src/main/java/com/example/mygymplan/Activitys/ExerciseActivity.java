@@ -101,6 +101,7 @@ public class ExerciseActivity extends AppCompatActivity {
             "Shoulder",
             "Biceps",
             "Triceps",
+            "Forearm",
             "Abs",
             "Quadriceps",
             "Hamstrings",

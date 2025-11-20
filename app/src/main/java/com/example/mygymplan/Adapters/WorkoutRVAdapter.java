@@ -62,7 +62,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
         holder.textViewName.setText(workoutList.get(position).name);
-        holder.textViewDescription.setText(workoutList.get(position).description);
         holder.textViewLastMod.setText(workoutList.get(position).lastModified);
 
         // Calculate Workout Duration Time
@@ -102,7 +101,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
         TextView textViewName;
-        TextView textViewDescription;
         TextView textViewType;
         TextView textViewDuration;
         TextView textViewLastMod;
@@ -115,7 +113,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
-            textViewDescription = itemView.findViewById(R.id.RecyclerWorkoutDescription);
             textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
             textViewLastMod = itemView.findViewById(R.id.LastModifiedWorkout);
             imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);

@@ -792,16 +792,18 @@ public class PopupService extends AppCompatActivity {
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
-        // Access Database
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
 
+                // Access Database
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
+
                 // List All Exercises
                 List<SavedExercise> allExercises = dao.listSavedExercise();
+
+                db.close();
 
                 // ------ GET USER EXERCISES ------
                 if (!allExercises.isEmpty()) {
@@ -829,10 +831,9 @@ public class PopupService extends AppCompatActivity {
                         dbExercisesButton.callOnClick();
                     }
                 });
+
             }
         }).start();
-
-        db.close();
 
 
         // ------ Buttons ------
@@ -934,6 +935,10 @@ public class PopupService extends AppCompatActivity {
                 @Override
                 public void run() {
 
+                    // Access Database
+                    AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                    SavedExerciseDao dao = db.savedExerciseDao();
+
                     // List All Exercises
                     searchExercises = dao.searchByName("%" + searchText.getText().toString() + "%");
 
@@ -985,6 +990,8 @@ public class PopupService extends AppCompatActivity {
                             addExerciseRV.setLayoutManager(new LinearLayoutManager(activity));
                         }
                     });
+
+                    db.close();
                 }
             }).start();
         });
@@ -1035,9 +1042,6 @@ public class PopupService extends AppCompatActivity {
         // Set Popup Location on Screen
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1046,7 +1050,15 @@ public class PopupService extends AppCompatActivity {
 
                 new Thread(new Runnable() {
                     @Override
-                    public void run() { dao.updatePlan(plan); }
+                    public void run() {
+
+                        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                        PlanDao dao = db.planDao();
+
+                        dao.updatePlan(plan);
+
+                        db.close();
+                    }
                 }).start();
                 activity.recreate();
                 popupWindow.dismiss();
@@ -1089,9 +1101,4 @@ public class PopupService extends AppCompatActivity {
 
     }
 
-    public void teste(Context context, SavedExerciseRVAdapter savedExerciseRVAdapter, SavedExercise savedExercise, int position) {
-        SavedExerciseService savedExerciseService = new SavedExerciseService();
-        savedExerciseService.deleteSavedExercise(context, savedExercise);
-        savedExerciseRVAdapter.notifyItemRemoved(position);
-    }
 }

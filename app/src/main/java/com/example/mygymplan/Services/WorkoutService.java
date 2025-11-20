@@ -23,11 +23,11 @@ import java.util.Objects;
 public class WorkoutService extends AppCompatActivity {
 
     int newWorkoutId = 0;
-
     WorkoutDuration workoutDuration = new WorkoutDuration();
 
 
     // ---------------------------------------------------------------------------------------------------
+    // TEST
     public List<Workout> listAllWorkout(Context context) {
 
         List<Workout> allWorkouts;
@@ -44,14 +44,14 @@ public class WorkoutService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void insertWorkout(Context context, Workout workout) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        WorkoutDao dao = db.workoutDao();
-        PlanDao planDao = db.planDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+                PlanDao planDao = db.planDao();
+
                 List<Workout> allWorkouts = new ArrayList<>();
                 allWorkouts = dao.listWorkouts();
 
@@ -102,50 +102,50 @@ public class WorkoutService extends AppCompatActivity {
                 dao.insertWorkout(workout);
 
                 Log.d("Teste Workout ID", "Workout Created - ID: " + workout.id);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void updateWorkout(Context context, Workout workout) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        WorkoutDao dao = db.workoutDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+
                 // Set Duration Time
                 ExerciseDao daoExercise = db.exerciseDao();
                 List<Exercise> allExercises = daoExercise.listExercise();
                 workout.duration = workoutDuration.CalculateDurationTime(workout, allExercises);
 
                 dao.updateWorkout(workout);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void deleteWorkout(Context context, Workout workout) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        WorkoutDao dao = db.workoutDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                WorkoutDao dao = db.workoutDao();
+
                 // Delete Workout
                 dao.deleteWorkout(workout);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     // ---------------------------------------------------------------------------------------------------

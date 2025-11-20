@@ -22,14 +22,12 @@ public class PlanService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public Plan insertPlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts")
-                .build();
-        PlanDao dao = db.planDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                PlanDao dao = db.planDao();
 
                 // If Plan set Active...
                 if (plan.active) {
@@ -60,18 +58,12 @@ public class PlanService extends AppCompatActivity {
                     editor.apply();
                 }
 
-                Log.d("Active Plan Id", "no DB foi salvo como ID: " + plan.id);
-
                 // Insert Plan in Database
                 dao.insertPlan(plan);
+
+                db.close();
             }
         }).start();
-
-        db.close();
-
-
-        Log.d("Active Plan Id", "no DB depois de 3s: " + plan.id);
-
 
         return plan;
     }
@@ -79,9 +71,6 @@ public class PlanService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void savePlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
 
         if (plan.active) {
             // Save Active Plan Id for later use...
@@ -94,28 +83,32 @@ public class PlanService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                PlanDao dao = db.planDao();
+
                 dao.updatePlan(plan);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void deletePlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                PlanDao dao = db.planDao();
+
                 dao.deletePlan(plan);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -123,8 +116,6 @@ public class PlanService extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Get local Time Date
-                LocalDate date = LocalDate.now();
 
                 // Create New Workout DataBase
                 Plan newPlan = new Plan();
@@ -133,14 +124,13 @@ public class PlanService extends AppCompatActivity {
                 newPlan.pro = false;
                 newPlan.author = username;
                 newPlan.active = isActiveOrNot;
-                newPlan.createdDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+                newPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
                 // Insert Plan in Database
                 insertPlan(context, newPlan);
 
             }
         }).start();
-
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -161,13 +151,12 @@ public class PlanService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void setActivePlan(Context context, Plan plan) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                PlanDao dao = db.planDao();
 
                 plan.active = true;
 
@@ -194,10 +183,10 @@ public class PlanService extends AppCompatActivity {
                 editor.apply();
 
                 Log.d("Active Plan Id", "Salvo ID como: " + plan.id);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 }

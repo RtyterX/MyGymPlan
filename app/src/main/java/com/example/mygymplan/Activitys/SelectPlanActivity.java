@@ -265,13 +265,13 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
 
     public void LoadMyPlans() {
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        PlanDao daoW = db.planDao();
-        planList = new ArrayList<>();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                PlanDao daoW = db.planDao();
+                planList = new ArrayList<>();
 
                 List<Plan> allPlans = daoW.listPlans();
 
@@ -290,21 +290,20 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
                         UpdateRecyclerView(planList);
                     }
                 });
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     public void LoadDatabasePlans() {
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-        PlanDao daoW = db.planDao();
-        planList = new ArrayList<>();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
+                PlanDao daoW = db.planDao();
+                planList = new ArrayList<>();
 
                 List<Plan> allPlans = daoW.listPlans();
 
@@ -323,10 +322,10 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
                         UpdateRecyclerView(planList);
                     }
                 });
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     public void UpdateRecyclerView (List<Plan> list) {

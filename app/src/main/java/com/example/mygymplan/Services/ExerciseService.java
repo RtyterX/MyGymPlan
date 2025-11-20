@@ -23,13 +23,13 @@ public class ExerciseService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void createExercise(Context context, Exercise exercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
                 // Set Variables
                 SavedExercise savedExercise = new SavedExercise();
 
@@ -58,59 +58,58 @@ public class ExerciseService extends AppCompatActivity {
 
                 // Save Exercise in Workout
                 dao.insertExercise(exercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void insertExercise(Context context, Exercise exercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
                 // Save Exercise in Workout
                 dao.insertExercise(exercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void saveExercise(Context context, Exercise exercise) {
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+
                 dao.updateExercise(exercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 
     // ---------------------------------------------------------------------------------------------------
     public void deleteExercise(Context context, Exercise exercise) {
 
-        savedExercise = new SavedExercise();
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        ExerciseDao dao = db.exerciseDao();
-        SavedExerciseDao secondDao = db.savedExerciseDao();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                savedExercise = new SavedExercise();
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                ExerciseDao dao = db.exerciseDao();
+                SavedExerciseDao secondDao = db.savedExerciseDao();
 
                 List<Exercise> allExercises = dao.listExercise();
 
@@ -155,10 +154,10 @@ public class ExerciseService extends AppCompatActivity {
 
                 // Delete Exercise from Workout
                 dao.deleteExercise(exercise);
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -225,14 +224,15 @@ public class ExerciseService extends AppCompatActivity {
 
     // ---------------------------------------------------------------------------------------------------
     public void switchAllExercisesName(Context context, String  language) {
-        // switch(item)  ???
 
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        SavedExerciseDao dao = db.savedExerciseDao();
+        // switch(item)  ???
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                SavedExerciseDao dao = db.savedExerciseDao();
 
                 String[] newNames = new String[0];
                 /////////// Language String ///////////////
@@ -254,10 +254,10 @@ public class ExerciseService extends AppCompatActivity {
                         dao.updateSavedExercise(allExercises.get(i));
                     }
                 }
+
+                db.close();
             }
         }).start();
-
-        db.close();
     }
 
 }
