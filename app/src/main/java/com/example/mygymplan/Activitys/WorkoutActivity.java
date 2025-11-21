@@ -60,6 +60,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -440,7 +441,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
                 // Initialize List
                 displayedExercises = new ArrayList<>();
-                List<Exercise> newList = dao.listExercise();
+                List<Exercise> newList = dao.listExercises();
 
                 db.close();
 
@@ -573,7 +574,11 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 ChangeUIVisibility();
                 // Update Duration Time in Workout
                 WorkoutService workoutService = new WorkoutService();
-                workoutService.updateWorkout(getApplicationContext(), thisWorkout);
+                if (Objects.equals(thisPlan.author, "MyGymPlan")) {
+                    workoutService.createVarient(getApplicationContext(), thisWorkout);
+                } else {
+                    workoutService.updateWorkout(getApplicationContext(), thisWorkout);
+                }
             }
         }, 500); // 3000 milliseconds = 3 seconds
 

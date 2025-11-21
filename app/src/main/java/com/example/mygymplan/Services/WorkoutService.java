@@ -11,6 +11,8 @@ import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 
 import java.time.DayOfWeek;
@@ -95,7 +97,7 @@ public class WorkoutService extends AppCompatActivity {
 
                 // Set Duration Time
                 ExerciseDao daoExercise = db.exerciseDao();
-                List<Exercise> allExercises = daoExercise.listExercise();
+                List<Exercise> allExercises = daoExercise.listExercises();
                 workout.duration = workoutDuration.CalculateDurationTime(workout, allExercises);
 
                 // Insert in Database
@@ -116,14 +118,15 @@ public class WorkoutService extends AppCompatActivity {
             public void run() {
 
                 AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-                WorkoutDao dao = db.workoutDao();
+                WorkoutDao workoutDao = db.workoutDao();
 
                 // Set Duration Time
                 ExerciseDao daoExercise = db.exerciseDao();
-                List<Exercise> allExercises = daoExercise.listExercise();
+                List<Exercise> allExercises = daoExercise.listExercises();
                 workout.duration = workoutDuration.CalculateDurationTime(workout, allExercises);
 
-                dao.updateWorkout(workout);
+                // Then.. Update Workout
+                workoutDao.updateWorkout(workout);
 
                 db.close();
             }
@@ -202,6 +205,131 @@ public class WorkoutService extends AppCompatActivity {
         }
 
         return workout.type;
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------
+    public void createVarient(Context context, Workout workout) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                WorkoutDao workoutDao = db.workoutDao();
+                PlanDao planDao = db.planDao();
+
+                Plan workoutPlan = new Plan();
+
+                List<Plan> allPlans = planDao.listPlans();
+
+                for (Plan item : allPlans) {
+                    if (item.id == workout.plan_Id) {
+                        workoutPlan = item;
+                    }
+                }
+                // Set Duration Time
+                ExerciseDao daoExercise = db.exerciseDao();
+                List<Exercise> allExercises = daoExercise.listExercises();
+                workout.duration = workoutDuration.CalculateDurationTime(workout, allExercises);
+
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String username = sharedPreferences.getString("username", "");
+
+                // Get Plan ID
+                int newPlanId = 0;
+
+                // Get Higher id value
+                for (int i = 0; i < allPlans.size(); i++) {
+                    if (newPlanId < allPlans.get(i).id) {
+                        newPlanId = allPlans.get(i).id;
+                    }
+                }
+
+                newPlanId++;
+
+                workoutPlan.id = newPlanId;
+                workoutPlan.name = workoutPlan.name + " (Edited)";
+                workoutPlan.author = username;
+                workoutPlan.description = "Edited";
+                workoutPlan.createdDate = LocalDate.now().toString();
+
+
+                planDao.insertPlan(workoutPlan);
+
+                // --------------------------------------------------------
+
+                List<Workout> thisPlanWorkouts = new ArrayList<>();
+                List<Workout> allWorkouts = workoutDao.listWorkouts();
+
+                // Get next Workout ID
+                newWorkoutId = 0;
+
+                // Get Higher id value
+                for (int i = 0; i < allWorkouts.size(); i++) {
+                    if (newWorkoutId < allWorkouts.get(i).id) {
+                        newWorkoutId = allWorkouts.get(i).id;
+                    }
+                }
+
+                for (Workout item : allWorkouts) {
+                    if (item.plan_Id == workout.plan_Id) {
+                        thisPlanWorkouts.add(item);
+                    }
+                }
+
+                allExercises = daoExercise.listExercises();
+                List<Exercise> thisWorkoutExercises = new ArrayList<>();
+
+                // Get Next Exercise ID
+                int newExerciseId = 0;
+                // Get Higher id value
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                    newExerciseId = allExercises.getLast().id;
+                }
+
+                for (Workout thisPlanWorkout : thisPlanWorkouts) {
+
+                    int oldId = thisPlanWorkout.id;
+
+                    newWorkoutId = newWorkoutId + 1;
+                    thisPlanWorkout.plan_Id = newPlanId;
+                    thisPlanWorkout.id = newWorkoutId;
+                    thisPlanWorkout.description = "";
+                    workoutDao.insertWorkout(thisPlanWorkout);
+
+                    if (!thisWorkoutExercises.isEmpty()) {
+                        thisWorkoutExercises.clear();
+                    }
+
+                    for (Exercise e : allExercises) {
+                        if (e.workout_Id == oldId) {
+                            Log.d("Teste", "Try to Add ExerciseId = " + e.id);
+                            thisWorkoutExercises.add(e);
+                        }
+                    }
+
+                    for (Exercise newExercise : thisWorkoutExercises) {
+
+                        newExerciseId++;
+
+                        Log.d("Teste", "Edited Exercise plan_Id = " + newPlanId);
+                        Log.d("Teste", "Edited Exercise workout_Id = " + newWorkoutId);
+                        Log.d("Teste", "Edited Exercise Id = " + newExerciseId);
+
+                        newExercise.id = newExerciseId;
+                        newExercise.name = "Teste";
+                        newExercise.description = "";
+                        newExercise.plan_Id = newPlanId;
+                        newExercise.workout_Id = newWorkoutId;
+                        daoExercise.insertExercise(newExercise);
+
+                    }
+
+                }
+
+                db.close();
+            }
+        }).start();
     }
 
 }

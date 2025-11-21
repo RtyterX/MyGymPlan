@@ -111,7 +111,7 @@ public class ExerciseService extends AppCompatActivity {
                 ExerciseDao dao = db.exerciseDao();
                 SavedExerciseDao secondDao = db.savedExerciseDao();
 
-                List<Exercise> allExercises = dao.listExercise();
+                List<Exercise> allExercises = dao.listExercises();
 
                 // Reorder Exercises in this Workout
                 if (!allExercises.isEmpty()) {

@@ -15,7 +15,7 @@ import java.util.List;
 public interface ExerciseDao {
 
     @Query("SELECT * FROM exercises")
-    List<Exercise> listExercise();
+    List<Exercise> listExercises();
 
     @Insert
     void insertExercise(Exercise... exercises);

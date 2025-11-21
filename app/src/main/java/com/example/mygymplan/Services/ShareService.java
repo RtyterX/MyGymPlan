@@ -171,7 +171,7 @@ public class ShareService extends AppCompatActivity {
                     // Format Exercise List
                     List<Exercise> exerciseList = new ArrayList<>();
                     List<Exercise> allExercises = new ArrayList<>();
-                    allExercises = exerciseDao.listExercise();
+                    allExercises = exerciseDao.listExercises();
 
                     for (Exercise item : allExercises) {
                         if (item.workout_Id == w.id) {
