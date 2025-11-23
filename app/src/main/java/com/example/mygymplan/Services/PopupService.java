@@ -310,8 +310,8 @@ public class PopupService extends AppCompatActivity {
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            // Update Activity
-                            activity.LoadMyPlans();
+                            // Change to Activity
+                            activity.AddPlanToSelection();
                             // Close Popup
                             popupWindow.dismiss();
                         }
@@ -525,26 +525,18 @@ public class PopupService extends AppCompatActivity {
             }
             ///////////////////////////////////////////////////
 
-
-            // Inset New Workout in Database
-            WorkoutService workoutService = new WorkoutService();
-
             if (newWorkout.type == null) {
                 newWorkout.type = WorkoutType.NA;
             }
 
+            WorkoutService workoutService = new WorkoutService();
             newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.type, newWorkout.dayOfWeek, plan.id);
-            workoutService.insertWorkout(context, newWorkout);
-            // Show Text on Screen
-            Toast.makeText(context, "Workout Created",Toast.LENGTH_SHORT).show();
-            // Need to wait for animation when is the last Exercise in List
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    planActivity.GetWorkoutList();
-                    popupWindow.dismiss();     // Close Popup
-                }
-            }, 50); // 3000 milliseconds = 3 seconds
+
+            //----------------------------------------------------
+            // Change to Activity
+            planActivity.AddWorkoutToPlan(newWorkout);
+            // Close Popup
+            popupWindow.dismiss();
 
         });
 
@@ -556,7 +548,7 @@ public class PopupService extends AppCompatActivity {
 
 
     // --------------------------------------------------------------------------------------------
-    public void EditWorkoutPopup(Context context, PlanActivity planActivity, Plan plan, Workout workout) {
+    public void EditWorkoutPopup(Context context, PlanActivity planActivity, Plan plan, Workout workout, int position) {
         // Inflate Activity with a new View
         View popupView = View.inflate(context, R.layout.popup_new_workout, null);
 
@@ -640,24 +632,15 @@ public class PopupService extends AppCompatActivity {
             // Set Variables
             workout.name = newWorkoutName.getText().toString();
             workout.description = newWorkoutDescription.getText().toString();
-            // Update Workout
-            WorkoutService workoutService = new WorkoutService();
-            workoutService.updateWorkout(context, workout);
-            // Change Activity
-            planActivity.GetWorkoutList();
-            Toast.makeText(context, "Workout Modified",Toast.LENGTH_SHORT).show();
+            // Change to Activity
+            planActivity.EditWorkoutFromPlan(workout, position);
             // Close Popup
             popupWindow.dismiss();
         });
 
         deleteButton.setOnClickListener(v -> {
-            // Delete Workout
-            WorkoutService workoutService = new WorkoutService();
-            workoutService.deleteWorkout(context, workout);
-            // Change Activity
-            planActivity.GetWorkoutList();
-            // Show Confirmation Text
-            Toast.makeText(context, "Workout Deleted",Toast.LENGTH_SHORT).show();
+            // Change to Activity
+            planActivity.DeleteWorkoutFromPlan(position);
             // Close Popup
             popupWindow.dismiss();
         });
@@ -768,7 +751,7 @@ public class PopupService extends AppCompatActivity {
 
 
     // --------------------------------------------------------------------------------------------
-    public void addExercisePopup(Context context, WorkoutActivity activity) {
+    public void AddExercisePopup(Context context, WorkoutActivity activity) {
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
@@ -804,6 +787,10 @@ public class PopupService extends AppCompatActivity {
                 List<SavedExercise> allExercises = dao.listSavedExercise();
 
                 db.close();
+
+                // Clear Lists when Open
+                userExercises.clear();
+                dbExercises.clear();
 
                 // ------ GET USER EXERCISES ------
                 if (!allExercises.isEmpty()) {
@@ -896,10 +883,9 @@ public class PopupService extends AppCompatActivity {
             SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, dbExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(SavedExercise item) {
+                    // Change to Activity
                     activity.AddExerciseToWorkout(item);
-                    // Show Text on Screen
-                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
+                    // Close Popup
                     popupWindow.dismiss();
                 }
             }, new SavedExerciseRVAdapter.OnShareClickListener() {
@@ -957,10 +943,9 @@ public class PopupService extends AppCompatActivity {
                             SavedExerciseRVAdapter databaseAdapter = new SavedExerciseRVAdapter(activity, searchExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(SavedExercise item) {
+                                    // Change to Activity
                                     activity.AddExerciseToWorkout(item);
-                                    // Show Text on Screen
-                                    Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
+                                    // Close Popup
                                     popupWindow.dismiss();
                                 }
                             }, new SavedExerciseRVAdapter.OnShareClickListener() {

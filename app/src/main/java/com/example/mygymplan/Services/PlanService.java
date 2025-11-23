@@ -111,27 +111,6 @@ public class PlanService extends AppCompatActivity {
         }).start();
     }
 
-    // ---------------------------------------------------------------------------------------------------
-    public void createNewPlan(String name, String description, boolean isActiveOrNot, Context context, String username) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Create New Workout DataBase
-                Plan newPlan = new Plan();
-                newPlan.name = name;
-                newPlan.description = description;
-                newPlan.pro = false;
-                newPlan.author = username;
-                newPlan.active = isActiveOrNot;
-                newPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-
-                // Insert Plan in Database
-                insertPlan(context, newPlan);
-
-            }
-        }).start();
-    }
 
     // ---------------------------------------------------------------------------------------------------
     public Plan convertPlan(String name, String description, String author, boolean fixedDays, boolean isActiveOrNot) {
@@ -142,6 +121,7 @@ public class PlanService extends AppCompatActivity {
         convertPlan.description = description;
         convertPlan.fixedDays = fixedDays;
         convertPlan.pro = false;
+        convertPlan.userCreated = true;
         convertPlan.author = author;
         convertPlan.active = isActiveOrNot;
         convertPlan.createdDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));

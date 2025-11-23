@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mygymplan.R;
 
+import java.util.Locale;
+
 public class WelcomePage3 extends AppCompatActivity {
 
     String email;
@@ -48,17 +50,28 @@ public class WelcomePage3 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Get value from EditText
-                email = newUserEmail.getText().toString();
+                email = newUserEmail.getText().toString().toLowerCase(Locale.ROOT);
 
-                // Insert in Shared Preferences
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("email", email);
-                editor.apply();
+                // Check email before Apply
+                if (email.contains("@")) {
+                    if (email.contains(".com") && !email.contains(" ") && !email.contains("/") && !email.contains("}")) {
+                        // Insert in Shared Preferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", email);
+                        editor.apply();
 
-                // Change Activity
-                Intent intent = new Intent(WelcomePage3.this, WelcomePage4.class);
-                startActivity(intent);
+                        // Change Activity
+                        Intent intent = new Intent(WelcomePage3.this, WelcomePage4.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        // show Error
+                    }
+                }
+                else {
+                   // show error
+                }
             }
         });
 

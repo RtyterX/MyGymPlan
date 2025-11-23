@@ -31,6 +31,8 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:ems="10"
+            android:textAllCaps="false"
+            android:capitalize="none"
             android:inputType="textEmailAddress"
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"

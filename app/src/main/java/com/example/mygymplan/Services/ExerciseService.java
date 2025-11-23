@@ -119,9 +119,8 @@ public class ExerciseService extends AppCompatActivity {
                         if (item.plan_Id == exercise.plan_Id) {
                             if (item.workout_Id == exercise.workout_Id) {
                                 if (item.sequence > exercise.sequence) {
-                                    newExercise = item;
-                                    newExercise.sequence -= 1;
-                                    saveExercise(context, newExercise);
+                                    item.sequence--;
+                                    dao.updateExercise(item);
                                 }
                             }
                         }

@@ -94,20 +94,30 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         });
 
         // Share Button
-        holder.shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareListener.onItemShare(savedExerciseList.get(position));
-            }
-        });
+        if (savedExerciseList.get(position).userCreated) {
+            holder.shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shareListener.onItemShare(savedExerciseList.get(position));
+                }
+            });
+        }
+        else {
+            holder.shareButton.setVisibility(View.GONE);
+        }
 
         // Share Button
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteListener.onItemDelete(position);
-            }
-        });
+        if (savedExerciseList.get(position).userCreated) {
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteListener.onItemDelete(position);
+                }
+            });
+        }
+        else {
+            holder.deleteButton.setVisibility(View.GONE);
+        }
 
     }
 

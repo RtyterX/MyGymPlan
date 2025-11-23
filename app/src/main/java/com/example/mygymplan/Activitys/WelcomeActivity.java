@@ -18,6 +18,7 @@ import androidx.room.Room;
 
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.DataInsert;
 import com.example.mygymplan.Services.SavedExerciseService;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -165,6 +166,10 @@ public class WelcomeActivity extends AppCompatActivity {
         // Weight
 
         editor.apply();
+
+        DataInsert dataInsert = new DataInsert();
+        dataInsert.PopulateDatabase(this);
+
     }
 
     //////////////////////// END ////////////////////////

@@ -530,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }, new WorkoutRVAdapter.OnClickEditListener() {
                                 @Override
-                                public void editButtonClick(Workout item) {
+                                public void editButtonClick(int position) {
                                     // EditWorkout(item);
                                 }
                             });

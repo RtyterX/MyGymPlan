@@ -88,12 +88,7 @@ public class WorkoutService extends AppCompatActivity {
                 }
 
                 // Set New Workout Order based on list Size
-                if (!planWorkouts.isEmpty()) {
-                    workout.sequence = planWorkouts.size();
-                }
-                else {
-                    workout.sequence = 0;
-                }
+                workout.sequence = planWorkouts.size() + 1;
 
                 // Set Duration Time
                 ExerciseDao daoExercise = db.exerciseDao();
@@ -145,6 +140,17 @@ public class WorkoutService extends AppCompatActivity {
 
                 // Delete Workout
                 dao.deleteWorkout(workout);
+
+                // Update other Workouts order in Plan
+                List<Workout> allWorkouts = dao.listWorkouts();
+                for (Workout w : allWorkouts) {
+                    if (w.plan_Id == workout.plan_Id) {
+                        if (w.sequence >workout.sequence) {
+                            w.sequence--;
+                            dao.updateWorkout(w);
+                        }
+                    }
+                }
 
                 db.close();
             }

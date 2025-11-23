@@ -47,18 +47,30 @@ public class WelcomePage2 extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // Get value from EditText
                 username = newUseName.getText().toString();
 
-                // Insert in Shared Preferences
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("username", username);
-                editor.apply();
+                // Check Username before Apply
+                if (username.length() >= 3 && username.length() < 15) {
+                    if (!username.equals("MyGymPlan")) {
+                        // Insert in Shared Preferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("username", username);
+                        editor.apply();
 
-                // Change Activity
-                Intent intent = new Intent(WelcomePage2.this, WelcomePage3.class);
-                startActivity(intent);
+                        // Change Activity
+                        Intent intent = new Intent(WelcomePage2.this, WelcomePage3.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        // Show Error
+                    }
+                }
+                else {
+                    // Show Error
+                }
             }
         });
 

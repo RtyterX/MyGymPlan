@@ -29,7 +29,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     }
 
     public interface OnClickEditListener {
-        void editButtonClick(Workout workout);
+        void editButtonClick(int position);
     }
 
     Context context;
@@ -82,7 +82,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editListener.editButtonClick(workoutList.get(position));
+                editListener.editButtonClick(position);
             }
         });
 

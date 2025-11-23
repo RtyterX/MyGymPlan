@@ -131,7 +131,7 @@ public class DataInsert extends AppCompatActivity {
                 // ---------- PLANS  ---------------------
                 // ---------------------------------------
                 // --- 1 - BEGINNER PLAN --- \\
-                planDao.rawInsert("Beginner Plan", "From Database", false, false, 1, ExperienceLevel.Beginner, "MyGymPlan", LocalDate.now().toString(), false);
+                planDao.rawInsert("Beginner Plan", "From Database", false, false, 1, ExperienceLevel.Beginner, "MyGymPlan", false, LocalDate.now().toString(), false);
                 // - Workout 1 - \\
                 workoutDao.rawInsert("Workout A", "From Database", WorkoutType.Chest, 1, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 1);
                 // Exercises:
@@ -145,7 +145,7 @@ public class DataInsert extends AppCompatActivity {
                 // Exercises:
 
                 // --- 2 - INTERMEDIATE PLAN --- \\
-                planDao.rawInsert("Intermediate Plan", "From Database", false, false, 1, ExperienceLevel.Intermediate, "MyGymPlan", LocalDate.now().toString(), false);
+                planDao.rawInsert("Intermediate Plan", "From Database", false, false, 1, ExperienceLevel.Intermediate, "MyGymPlan", false, LocalDate.now().toString(), false);
                 // - Workout 4 - \\
                 workoutDao.rawInsert("Chest Workout", "", WorkoutType.Chest, 1, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
                 // Exercises:
@@ -190,7 +190,7 @@ public class DataInsert extends AppCompatActivity {
                 exerciseDao.rawInsert("Fly Invertido", "From Database", 4, 10, 60, 20, WorkoutType.Shoulder, 7, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 7, 64, imageConverter.ConvertToString(defaultImage), null);
 
                 // --- 3 - ADVANCED PLAN --- \\
-                planDao.rawInsert("Advanced Plan", "From Database", false, false, 1, ExperienceLevel.Advanced, "MyGymPlan", LocalDate.now().toString(), false);
+                planDao.rawInsert("Advanced Plan", "From Database", false, false, 1, ExperienceLevel.Advanced, "MyGymPlan", false, LocalDate.now().toString(), false);
                 // - Workout 8 - \\
                 workoutDao.rawInsert("Chest Workout", "", WorkoutType.Chest, 1, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 3);
                 // Exercises:

@@ -27,8 +27,8 @@ public interface PlanDao {
     @Delete
     void deletePlan(Plan plan);
 
-    @Query("INSERT INTO plans (name,description,active,fixedDays,bodyType,level,author,createdDate,pro) VALUES (:name, :description, :active, :fixedDays, :type, :level, :author, :createdDate, :pro)")
-    void rawInsert(String name, String description, boolean active, boolean fixedDays, int type, ExperienceLevel level, String author, String createdDate, boolean pro);
+    @Query("INSERT INTO plans (name, description, active, fixedDays, bodyType, level, author, userCreated, createdDate, pro) VALUES (:name, :description, :active, :fixedDays, :type, :level, :author, :userCreated, :createdDate, :pro)")
+    void rawInsert(String name, String description, boolean active, boolean fixedDays, int type, ExperienceLevel level, String author, boolean userCreated, String createdDate, boolean pro);
 
 
 }

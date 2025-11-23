@@ -378,5 +378,9 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+    public void AddPlanToSelection() {
+
+    }
+
     //////////////////////// END ////////////////////////
 }

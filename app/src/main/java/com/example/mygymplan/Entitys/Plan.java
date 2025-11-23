@@ -35,6 +35,9 @@ public class Plan implements Serializable {
     @ColumnInfo(name = "author")
     public String author;
 
+    @ColumnInfo(name = "userCreated")
+    public Boolean userCreated;
+
     @ColumnInfo(name = "createdDate")
     public String createdDate;
 

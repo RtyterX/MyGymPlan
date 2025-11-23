@@ -60,7 +60,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class WorkoutActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -341,7 +340,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // --------- Add Exercise From Database ---------
     // ----------------------------------------------
     public void AddExercise() {
-        popupService.addExercisePopup(this, WorkoutActivity.this);
+        popupService.AddExercisePopup(this, WorkoutActivity.this);
     }
 
 
@@ -412,11 +411,12 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         WorkoutRVAdapterHorizontal workoutAdapter = new WorkoutRVAdapterHorizontal(WorkoutActivity.this, displayedWorkouts, new WorkoutRVAdapterHorizontal.OnItemClickListener() {
                             @Override
                             public void onItemClick(Workout item) {
-                                UpdateRecyclerView(item);
                                 thisWorkout = item;
+                                UpdateRecyclerView(thisWorkout);
                                 WorkoutsHorizontalRecyclerView(item.sequence);  // Change Color
+                                displayedExercises.clear();
                             }
-                        }, position);
+                        }, position - 1);
                         // Display Workouts inside the Recycler View
                         horizontalRecyclerView.setAdapter(workoutAdapter);
                         horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this, LinearLayoutManager.HORIZONTAL, false));
@@ -441,6 +441,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
                 // Initialize List
                 displayedExercises = new ArrayList<>();
+                displayedExercises.clear();
                 List<Exercise> newList = dao.listExercises();
 
                 db.close();
@@ -459,7 +460,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (!displayedExercises.isEmpty()) {
+                        if (displayedExercises != null) {
                             // ----- Set Exercise Adapter -----
                             exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
                                 @Override
@@ -542,15 +543,21 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     public void AddExerciseToWorkout(SavedExercise savedExercise) {
         ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
+        // Convert Saved Exercise to Exercise
         newExercise = exerciseService.convertExercise(savedExercise,
                 displayedExercises.size() + 1, thisPlan.id, thisWorkout.id);
         // --------------------------------------
+        // Insert new Exercise in Database
         exerciseService.insertExercise(getApplicationContext(), newExercise);
-        UpdateRecyclerView(thisWorkout);
-        if (exerciseAdapter != null) {
-            exerciseAdapter.notifyItemRangeRemoved(0, exerciseAdapter.getItemCount());
-        }
+        // Update Recycler View and List
+        displayedExercises.add(newExercise);
+        exerciseAdapter.notifyItemInserted(displayedExercises.size());
+        ChangeUIVisibility();
+        // Action Feedback
+        Log.d( "Workout Activity", "Exercise " + newExercise.name + " ID nº: " + newExercise.id +" - Added");
+        Toast.makeText(getApplicationContext(), "Exercise Added",Toast.LENGTH_SHORT).show();
 
+        // CheckAuthor();
     }
 
 
@@ -559,31 +566,43 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ---------- Exercises Recycler View -----------
     // ----------------------------------------------
     public void DeleteFromRecyclerView(int position) {
+        // Delete Exercise in Database
         ExerciseService exerciseService = new ExerciseService();
-        // --------------------------------------
         exerciseService.deleteExercise(getApplicationContext(), displayedExercises.get(position));
+        // --------------------------------------
+        Log.d( "Workout Activity", "Exercise " + displayedExercises.get(position).name + " ID nº: " + displayedExercises.get(position).id + " - Deleted");
+
+        Log.d("Teste", "deletado Exercisio daLista - " + displayedExercises.get(position).name + " na posição " + position);
+        // Update Recycler View and List
         displayedExercises.remove(position);
         exerciseAdapter.notifyItemRemoved(position);
-
-        // Show Text on Screen
+        exerciseAdapter.notifyItemRangeChanged(position, displayedExercises.size());
+        ChangeUIVisibility();
+        // Action Feedback
         Toast.makeText(getApplicationContext(), "Exercise Deleted",Toast.LENGTH_SHORT).show();
-        // Need to wait for animation when is the last Exercise in List
+
+        // CheckAuthor();
+    }
+
+
+    private void CheckAuthor() {
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                ChangeUIVisibility();
-                // Update Duration Time in Workout
                 WorkoutService workoutService = new WorkoutService();
-                if (Objects.equals(thisPlan.author, "MyGymPlan")) {
+
+                // Check if Plan is from Database...
+                if (thisPlan.userCreated == false) {
+                    // If is from Database... Create Variant
                     workoutService.createVarient(getApplicationContext(), thisWorkout);
                 } else {
+                    // If NOT just Update Duration Time
                     workoutService.updateWorkout(getApplicationContext(), thisWorkout);
                 }
             }
         }, 500); // 3000 milliseconds = 3 seconds
-
     }
-
 
     // ----------------------------------------------
     // ------ Change Activity to Show Exercise ------

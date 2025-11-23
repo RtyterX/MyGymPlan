@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -41,8 +42,11 @@ import com.example.mygymplan.Adapters.WorkoutRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
+import com.example.mygymplan.Entitys.SavedExercise;
 import com.example.mygymplan.Entitys.Workout;
+import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
+import com.example.mygymplan.Services.ExerciseService;
 import com.example.mygymplan.Services.ImageConverter;
 import com.example.mygymplan.Services.PopupService;
 import com.example.mygymplan.Services.WorkoutService;
@@ -316,7 +320,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ------------------------------------------------------
     // ---------------- Edit Workout ------------------------
     // ------------------------------------------------------
-    private void EditWorkout(Workout workout) { popupService.EditWorkoutPopup(this, this, thisPlan, workout); }
+    private void EditWorkout(Workout workout, int position) { popupService.EditWorkoutPopup(this, this, thisPlan, workout, position); }
 
     // ------------------------------------------------------
     // ------------- Edit User Plan Name  -------------------
@@ -408,6 +412,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                             UpdateRecyclerView();
                         }
                         else {
+                            UpdateRecyclerView();
                             ChangeUIVisibility();
                         }
                     }
@@ -437,8 +442,8 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                 }
             }, new WorkoutRVAdapter.OnClickEditListener() {
                 @Override
-                public void editButtonClick(Workout item) {
-                    EditWorkout(item);
+                public void editButtonClick(int position) {
+                    EditWorkout(displayedWorkouts.get(position), position);
                 }
             });
             // Display Workouts in Recycler View
@@ -506,6 +511,60 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             Button newWorkout = findViewById(R.id.NewWorkout);
             newWorkout.setVisibility(View.GONE);
         }
+    }
+
+    // ----------------------------------------------
+    // ------------- Add New Workout ----------------
+    // ----------------------------------------------
+    public void AddWorkoutToPlan(Workout addWorkout) {
+        // Insert New Workout in Database
+        WorkoutService workoutService = new WorkoutService();
+        workoutService.insertWorkout(getApplicationContext(), addWorkout);
+        // --------------------------------------
+        // Update Recycler View and List
+        displayedWorkouts.add(addWorkout);
+        workoutAdapter.notifyItemInserted(displayedWorkouts.size());
+        ChangeUIVisibility();
+        // Action Feedback
+        Log.d( "Plan Activity", "Workout " + addWorkout.name + " ID nº:  " + addWorkout.id + " - Added");
+        Toast.makeText(getApplicationContext(), "Workout Added",Toast.LENGTH_SHORT).show();
+    }
+
+
+    // ----------------------------------------------
+    // ------------- Add New Workout ----------------
+    // ----------------------------------------------
+    public void EditWorkoutFromPlan(Workout editedWorkout, int position) {
+        // Insert New Workout in Database
+        WorkoutService workoutService = new WorkoutService();
+        workoutService.updateWorkout(getApplicationContext(), editedWorkout);
+        // --------------------------------------
+        // Update Recycler View and List
+        displayedWorkouts.set(position, editedWorkout);
+        workoutAdapter.notifyItemChanged(position);
+        // Action Feedback
+        Log.d( "Plan Activity", "Workout " + editedWorkout.name + " ID nº:  " + editedWorkout.id + " - Edited");
+        Toast.makeText(getApplicationContext(), "Workout Edited",Toast.LENGTH_SHORT).show();
+    }
+
+
+    // ----------------------------------------------
+    // -------- Delete a Specific Row From ----------
+    // ---------- Workout Recycler View -----------
+    // ----------------------------------------------
+    public void DeleteWorkoutFromPlan(int position) {
+        // Delete Workout in Database
+        WorkoutService workoutService = new WorkoutService();
+        workoutService.deleteWorkout(getApplicationContext(), displayedWorkouts.get(position));
+        Log.d( "Plan Activity", "Workout " + displayedWorkouts.get(position).name  + " ID nº:  " + displayedWorkouts.get(position).id + " - Deleted");
+        // --------------------------------------
+        // Update Recycler View and List
+        displayedWorkouts.remove(position);
+        workoutAdapter.notifyItemRemoved(position);
+        workoutAdapter.notifyItemRangeChanged(position, workoutAdapter.getItemCount());
+        ChangeUIVisibility();
+        // Action Feedback
+        Toast.makeText(getApplicationContext(), "Workout Deleted",Toast.LENGTH_SHORT).show();
     }
 
 
