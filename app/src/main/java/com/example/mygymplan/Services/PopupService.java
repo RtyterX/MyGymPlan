@@ -36,12 +36,15 @@ import com.example.mygymplan.Activitys.SelectPlanActivity;
 import com.example.mygymplan.Activitys.WorkoutActivity;
 import com.example.mygymplan.Adapters.PlanRVAdapter;
 import com.example.mygymplan.Adapters.SavedExerciseRVAdapter;
+import com.example.mygymplan.Adapters.SavedWorkoutRVAdapter;
 import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.PlanDao;
 import com.example.mygymplan.Database.SavedExerciseDao;
+import com.example.mygymplan.Database.SavedWorkoutDao;
 import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
+import com.example.mygymplan.Entitys.SavedWorkout;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
@@ -59,6 +62,8 @@ public class PopupService extends AppCompatActivity {
     private List<SavedExercise> dbExercises = new ArrayList<>();
     private List<SavedExercise> searchExercises = new ArrayList<>();
     boolean sortBool = true;
+
+    List<SavedWorkout> allSavedWorkouts = new ArrayList<>();
 
 
     // --------------------------------------------------------------------------------------------
@@ -1086,4 +1091,111 @@ public class PopupService extends AppCompatActivity {
 
     }
 
-}
+        public void savedWorkoutsPopup(Context context, PlanActivity activity, Plan plan) {
+             // Inflate Activity with a new View
+            View popupView = View.inflate(context, R.layout.popoup_saved_workout, null);
+            // Popup View UI Content
+            TextView listTotal = popupView.findViewById(R.id.SavedWorkoutsListTotal);
+            ImageView sortButton = popupView.findViewById(R.id.SortSavedWorkouts);
+            TextView noItemsRV = popupView.findViewById(R.id.EmptySavedWorkoutsText);
+            Button closeButton = popupView.findViewById(R.id.CloseSavedWorkout);
+            RecyclerView savedWorkoutsRV = popupView.findViewById(R.id.SavedWorkoutsRV);
+            // Initialize new Popup View
+            PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            // Set Shadow
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+            popupWindow.setElevation(10.0f);
+            // Set Popup Location on Screen
+            popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+            SavedWorkoutService savedWorkoutService = new SavedWorkoutService();
+            sortBool = true;
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    // Database
+                    AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
+                    SavedWorkoutDao dao = db.savedWorkoutDao();
+
+                    // List All Saved Workouts
+                    allSavedWorkouts = dao.listSavedWorkouts();
+
+                    db.close();
+
+                    // Run On UI When the above injection is applied
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            listTotal.setText("Total: " + allSavedWorkouts.size());
+
+                            if (allSavedWorkouts != null) {
+
+                                noItemsRV.setVisibility(View.GONE);
+
+                                // ------ Show Recycler View ------
+                                SavedWorkoutRVAdapter savedWorkoutAdapter = new SavedWorkoutRVAdapter(context, allSavedWorkouts, new SavedWorkoutRVAdapter.OnItemClickListener() {
+
+                                    @Override
+                                    public void onItemClick(SavedWorkout item) {
+                                        // Add Workout to Plan
+                                        activity.AddWorkoutToPlan(item, plan);
+                                        // Show Text on Screen
+                                        Toast.makeText(context, "Workout " + item.name + " Add", Toast.LENGTH_SHORT).show();
+                                        // Close Popup
+                                        popupWindow.dismiss();
+                                    }
+                                }, new SavedWorkoutRVAdapter.OnShareClickListener() {
+
+                                    @Override
+                                    public void onItemShare(SavedWorkout item) {
+
+                                    }
+                                }, new SavedWorkoutRVAdapter.OnEditClickListener() {
+                                    @Override
+                                    public void onItemEdit(SavedWorkout item) {
+
+                                    }
+
+                                }, new SavedWorkoutRVAdapter.OnDeleteClickListener() {
+                                    @Override
+                                    public void onItemDelete(int position) {
+                                        savedWorkoutService.deleteSavedWorkout(getApplicationContext(), allSavedWorkouts.get(position));
+                                    }
+                                });
+
+                                savedWorkoutsRV.setAdapter(savedWorkoutAdapter);
+                                savedWorkoutsRV.setLayoutManager(new LinearLayoutManager(activity));
+
+                            } else {
+
+                                noItemsRV.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }
+            }).start();
+
+            sortButton.setOnClickListener(v -> {
+                if (sortBool) {
+                    // Sort by Name
+                    allSavedWorkouts.sort((w1, w2) -> CharSequence.compare(w1.name, w2.name));
+                } else {
+                    // Sort by Type
+                    // allSavedWorkouts.sort((w1, w2) -> Integer.compare(w1.type, w2.type));
+                }
+
+                sortBool = !sortBool;
+            });
+
+            closeButton.setOnClickListener(v -> {
+                popupWindow.dismiss();
+            });
+
+        }
+
+
+        //////////////// END ///////////////////
+    }
