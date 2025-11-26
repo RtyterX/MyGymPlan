@@ -51,7 +51,8 @@ import java.util.Objects;
 
 public class SelectPlanActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    List<Plan> planList = new ArrayList<>();
+    List<Plan> dbPlanList = new ArrayList<>();
+    List<Plan> userPlanList = new ArrayList<>();
     PlanRVAdapter adapter;
 
     // Shared Preferences
@@ -59,9 +60,11 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
     String email;
 
     // UI
-    RecyclerView recyclerView;
+    RecyclerView RVDbPlans;
+    RecyclerView RVUserPlans;
     TextView emptyText;
-    TextView count;
+    TextView count1;
+    TextView count2;
 
 
     // Drawer NaviBar
@@ -92,16 +95,18 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
 
 
         // --- Components ---
-        recyclerView = findViewById(R.id.RecycleViewPlans);
+        RVDbPlans = findViewById(R.id.RecycleViewDbPlans);
+        RVUserPlans = findViewById(R.id.RecycleViewMyPlans);
         emptyText = findViewById(R.id.EmptyPlanRVText);
-        count = findViewById(R.id.TotalPlansCount);
+        count1 = findViewById(R.id.DbPlansCount);
+        count2 = findViewById(R.id.MyPlansCount);
         Button myPlans = findViewById(R.id.MyPlansButton);
         Button databasePlans = findViewById(R.id.DatabasePlansButton);
         Button backButton = findViewById(R.id.BackButton2);
         Button newPlan = findViewById(R.id.CreateNewPlanButton);
 
         // -------------------------------
-        LoadDatabasePlans();
+        LoadPlans();
         LoadPrefs();
 
         // --- Drawer Layout ---
@@ -140,20 +145,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
 
 
         // ----- Buttons -----
-        myPlans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoadMyPlans();
-            }
-        });
-
-        databasePlans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoadDatabasePlans();
-            }
-        });
-
         newPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,117 +254,102 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
     }
 
 
-    public void LoadMyPlans() {
-
+    public void LoadPlans() {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
                 PlanDao daoW = db.planDao();
-                planList = new ArrayList<>();
 
+                // List All Plans
                 List<Plan> allPlans = daoW.listPlans();
 
-                if (!allPlans.isEmpty()) {
-                    for (Plan item : allPlans) {
-                        if (!Objects.equals(item.author, "MyGymPlan")) {
-                            planList.add(item);
-                        }
+                // Load Database Plans
+                for (Plan item : allPlans) {
+                    if (Objects.equals(item.author, "MyGymPlan")) {
+                        dbPlanList.add(item);
                     }
                 }
+
+                // Load User Plans
+                for (Plan item : allPlans) {
+                    if (!Objects.equals(item.author, "MyGymPlan")) {
+                        userPlanList.add(item);
+                    }
+                }
+
+                db.close();
 
                 // Run On UI When the above injection is applied
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        UpdateRecyclerView(planList);
+                        SetRecyclerViewAdapter(dbPlanList, RVDbPlans);
+                        SetRecyclerViewAdapter(userPlanList, RVUserPlans);
+                        ChangeUIVisibility();
                     }
                 });
 
-                db.close();
             }
         }).start();
     }
 
-    public void LoadDatabasePlans() {
-        new Thread(new Runnable() {
+
+    public void SetRecyclerViewAdapter(List<Plan> list, RecyclerView recyclerView) {
+
+        adapter = new PlanRVAdapter(SelectPlanActivity.this, list, new PlanRVAdapter.OnItemClickListener() {
             @Override
-            public void run() {
-
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
-                PlanDao daoW = db.planDao();
-                planList = new ArrayList<>();
-
-                List<Plan> allPlans = daoW.listPlans();
-
-                if (!allPlans.isEmpty()) {
-                    for (Plan item : allPlans) {
-                        if (Objects.equals(item.author, "MyGymPlan")) {
-                            planList.add(item);
-                        }
-                    }
-                }
-
-                // Run On UI When the above injection is applied
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        UpdateRecyclerView(planList);
-                    }
-                });
-
-                db.close();
+            public void onItemClick(Plan item) {
+                Intent intent = new Intent(SelectPlanActivity.this, PlanActivity.class);
+                intent.putExtra("SelectedPlan", item);
+                startActivity(intent);
             }
-        }).start();
+        }, new PlanRVAdapter.OnItemClickDelete() {
+            @Override
+            public void deleteButtonClick(int position) {
+                PlanService planService = new PlanService();
+                planService.deletePlan(getApplicationContext(), dbPlanList.get(position));
+                dbPlanList.remove(dbPlanList.get(position));
+                adapter.notifyItemRemoved(position);
+
+                LoadPlans();
+            }
+        }, new PlanRVAdapter.OnItemClickSetActive() {
+            @Override
+            public void setActiveButtonClick(Plan plan) {
+                PlanService planService = new PlanService();
+                planService.setActivePlan(getApplicationContext(), plan);
+
+                LoadPlans();
+            }
+        }, new PlanRVAdapter.OnClickEditPlanListener() {
+            @Override
+            public void editButtonClick(Plan plan) {
+                Intent intent = new Intent(SelectPlanActivity.this, MainActivity.class);
+                intent.putExtra("SelectedPlan", plan);
+                startActivity(intent);
+            }
+        });
+        // Display Workouts in Recycler View
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(SelectPlanActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
     }
 
-    public void UpdateRecyclerView (List<Plan> list) {
-        if (!list.isEmpty()) {
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new PlanRVAdapter(SelectPlanActivity.this, list, new PlanRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(Plan item) {
-                    Intent intent = new Intent(SelectPlanActivity.this, PlanActivity.class);
-                    intent.putExtra("SelectedPlan", item);
-                    startActivity(intent);
-                }
-            }, new PlanRVAdapter.OnItemClickDelete() {
-                @Override
-                public void deleteButtonClick(int position) {
-                    PlanService planService = new PlanService();
-                    planService.deletePlan(getApplicationContext(), planList.get(position));
-                    planList.remove(planList.get(position));
-                    adapter.notifyItemRemoved(position);
 
-                    LoadMyPlans();
-                }
-            }, new PlanRVAdapter.OnItemClickSetActive() {
-                @Override
-                public void setActiveButtonClick(Plan plan) {
-                    PlanService planService = new PlanService();
-                    planService.setActivePlan(getApplicationContext(), plan);
+    private void ChangeUIVisibility() {
 
-                    LoadMyPlans();
-                }
-            }, new PlanRVAdapter.OnClickEditPlanListener() {
-                @Override
-                public void editButtonClick(Plan plan) {
-                    Intent intent = new Intent(SelectPlanActivity.this, MainActivity.class);
-                    intent.putExtra("SelectedPlan", plan);
-                    startActivity(intent);
-                }
-            });
-            // Display Workouts in Recycler View
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(SelectPlanActivity.this));
-            // Change UI
-            count.setText("Total de Planos: " + planList.size());
+        count1.setText("Total de Planos: " + dbPlanList.size());
+
+        if (userPlanList != null) {
+            count2.setText("Total de Planos: " + userPlanList.size());
             emptyText.setVisibility(View.GONE);
+            RVUserPlans.setVisibility(View.VISIBLE);
         } else {
             // Change UI
-            recyclerView.setVisibility(View.GONE);
-            count.setVisibility(View.GONE);
+            RVUserPlans.setVisibility(View.GONE);
+            count2.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
         }
     }

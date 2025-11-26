@@ -68,9 +68,12 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         // Based on the position of the Recycler View
 
         holder.textViewName.setText(planList.get(position).name);
-        // holder.textViewDescription.setText(planList.get(position).description);
         holder.textViewCreatedDate.setText(planList.get(position).createdDate);
         holder.textViewAuthor.setText(planList.get(position).author);
+        if (planList.get(position).level != null) {
+            holder.textExperienceLevel.setText(planList.get(position).level.toString());
+        }
+        else { holder.textExperienceLevel.setVisibility(View.VISIBLE); };
 
         // Body Type
         if (planList.get(position).bodyType != 0) {
@@ -90,21 +93,31 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         }
 
         // Edit Plan
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editListener.editButtonClick(planList.get(position));
-            }
-        });
+        if (planList.get(position).userCreated) {
+            holder.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editListener.editButtonClick(planList.get(position));
+                }
+            });
+        }
+        else {
+            holder.editButton.setVisibility(View.GONE);
+        }
 
         // Delete Plan
         if (planList.size() >= 2) {
-            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteListener.deleteButtonClick(position);
-                }
-            });
+            if (planList.get(position).userCreated) {
+                holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteListener.deleteButtonClick(position);
+                    }
+                });
+            }
+            else {
+                holder.deleteButton.setVisibility(View.GONE);
+            }
         }
         else {
             holder.deleteButton.setVisibility(View.GONE);
@@ -138,11 +151,11 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
         TextView textViewName;
-        TextView textViewDescription;
         TextView textViewCreatedDate;
         TextView textViewBodyType;
         TextView textViewBodyTypeTitle;
         TextView textViewAuthor;
+        TextView textExperienceLevel;
         TextView hasFixedDays;
 
         // TextView textViewWorkoutTypes;
@@ -158,7 +171,6 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.RecyclerPlanName);
-            textViewDescription = itemView.findViewById(R.id.RecyclerPlanDescrip);
             textViewCreatedDate = itemView.findViewById(R.id.CreatedDatePlan);
             textViewBodyType = itemView.findViewById(R.id.BodyTypePlanRv);
             textViewBodyTypeTitle = itemView.findViewById(R.id.BodyTypeTitleRV);
@@ -169,6 +181,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             deleteButton = itemView.findViewById(R.id.DeletePlanButton);
             setActiveButton = itemView.findViewById(R.id.SetPlanActiveRV);
             textViewAuthor = itemView.findViewById(R.id.PlanRVAuthor);
+            textExperienceLevel = itemView.findViewById(R.id.PlanExperienceLevel);
         }
 
         public void bind(Plan item, OnItemClickListener onlistener) {

@@ -275,7 +275,7 @@ public class PopupService extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Update Activity
-                                activity.LoadMyPlans();
+                                activity.LoadPlans();
                                 // Close Popups
                                 subPopupWindow.dismiss();
                                 popupWindow.dismiss();
@@ -294,7 +294,7 @@ public class PopupService extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Update Activity
-                                activity.LoadMyPlans();
+                                activity.LoadPlans();
                                 // Close Popups
                                 subPopupWindow.dismiss();
                                 popupWindow.dismiss();
@@ -308,7 +308,7 @@ public class PopupService extends AppCompatActivity {
                     newPlan.active = true;
                     planService.insertPlan(context, newPlan);
                     // Update Activity
-                    activity.LoadMyPlans();
+                    activity.LoadPlans();
                     // Show Text on Screen
                     Toast.makeText(context, "First Plan Created", Toast.LENGTH_SHORT).show();
                     // Delay for ID transfer from DB

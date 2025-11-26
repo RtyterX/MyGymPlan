@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // ----- Set UI Data-----
-        mainText.setText("Bem vindo! " + username);
+        mainText.setText("Bem vindo, " + username);
         String dayOfWeek2 = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         TextView dayOfWeekText = findViewById(R.id.DayOfWeekText);
         dayOfWeekText.setText(dayOfWeek2);
@@ -358,12 +358,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PlanDao daoPlan = db.planDao();
                 List<Plan> allPlans = daoPlan.listPlans();
 
+                // Find Active Plan First
                 if (!allPlans.isEmpty()) {
                     for (Plan item : allPlans) {
                         if (item.id == activePlanId) {
                             activePlan = item;
                             planList.add(item);
                             break;
+                        }
+                    }
+                }
+
+                // Add other Plans from Database
+                if (!allPlans.isEmpty()) {
+                    for (Plan item : allPlans) {
+                        if (!item.userCreated) {
+                            planList.add(item);
                         }
                     }
                 }
@@ -421,7 +431,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             // Display Workouts in Recycler View
             plansRV.setAdapter(planAdapter);
-            plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+            //plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+            plansRV.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         } else {
             Log.d("RV Plans", " No Plans in Recycler View");
@@ -492,6 +503,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
+        if (todaysWorkout == null) {
+
+        }
+
         // Wait before Apply Recycler View
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -537,10 +552,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             // Display Workouts in Recycler View
                             workoutRV.setAdapter(workoutAdapter);
                             workoutRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                            // Attach Item Helper
-                           // mIth.attachToRecyclerView(workoutRV);
                         } else {
                             Log.d("Teste RV", "Todays Workout NOT found");
+
+                            noWorkout.setVisibility(View.VISIBLE);
+                            noWorkout.setText("No Workout for Today");
                         }
                     }
                 });

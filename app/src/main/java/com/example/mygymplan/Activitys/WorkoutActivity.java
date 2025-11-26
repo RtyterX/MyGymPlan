@@ -242,6 +242,9 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         Collections.swap(displayedExercises, fromPos, toPos);
                         exerciseAdapter.notifyItemMoved(fromPos, toPos);
 
+                        exerciseAdapter.notifyItemChanged(fromPos);
+                        exerciseAdapter.notifyItemChanged(toPos);
+
                         ExerciseService exerciseService = new ExerciseService();
                         exerciseService.changeExerciseOrder(getApplicationContext(), exercise1, exercise2);
 
@@ -441,7 +444,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
                 // Initialize List
                 displayedExercises = new ArrayList<>();
-                displayedExercises.clear();
                 List<Exercise> newList = dao.listExercises();
 
                 db.close();
@@ -460,27 +462,25 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (displayedExercises != null) {
-                            // ----- Set Exercise Adapter -----
-                            exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(Exercise item) {
-                                    ChangeToExercise(item);
-                                }
-                            }, new ExerciseRVAdapter.OnItemClickDelete() {
-                                @Override
-                                public void deleteButtonClick(int position) {
-                                    DeleteFromRecyclerView(position);
-                                }
-                            });
-                            // Display Exercises inside the Recycler View
-                            recyclerView.setAdapter(exerciseAdapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
-                            // Attach item Helper
-                            mIth.attachToRecyclerView(recyclerView);
-                            // Then Check if Need to Change the UI...
-                            ChangeUIVisibility();
-                        }
+                        // ----- Set Exercise Adapter -----
+                        exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Exercise item) {
+                                ChangeToExercise(item);
+                            }
+                        }, new ExerciseRVAdapter.OnItemClickDelete() {
+                            @Override
+                            public void deleteButtonClick(int position) {
+                                DeleteFromRecyclerView(position);
+                            }
+                        });
+                        // Display Exercises inside the Recycler View
+                        recyclerView.setAdapter(exerciseAdapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(WorkoutActivity.this));
+                        // Attach item Helper
+                        mIth.attachToRecyclerView(recyclerView);
+                        // Then Check if Need to Change the UI...
+                        ChangeUIVisibility();
                     }
                 });
             }
@@ -541,20 +541,20 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ---------- Exercises Recycler View -----------
     // ----------------------------------------------
     public void AddExerciseToWorkout(SavedExercise savedExercise) {
-        ExerciseService exerciseService = new ExerciseService();
         // --------------------------------------
         // Convert Saved Exercise to Exercise
+        ExerciseService exerciseService = new ExerciseService();
         newExercise = exerciseService.convertExercise(savedExercise,
                 displayedExercises.size() + 1, thisPlan.id, thisWorkout.id);
         // --------------------------------------
+        Log.d( "Workout Activity", "Exercise " + newExercise.name + " ID nº: " + newExercise.id +" - Added");
         // Insert new Exercise in Database
         exerciseService.insertExercise(getApplicationContext(), newExercise);
         // Update Recycler View and List
         displayedExercises.add(newExercise);
-        exerciseAdapter.notifyItemInserted(displayedExercises.size());
+        exerciseAdapter.notifyItemInserted(exerciseAdapter.getItemCount());
         ChangeUIVisibility();
         // Action Feedback
-        Log.d( "Workout Activity", "Exercise " + newExercise.name + " ID nº: " + newExercise.id +" - Added");
         Toast.makeText(getApplicationContext(), "Exercise Added",Toast.LENGTH_SHORT).show();
 
         // CheckAuthor();

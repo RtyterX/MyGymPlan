@@ -80,12 +80,12 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // ----- BUTTONS -----
 
         // Delete Button
-        holder.deleteExerciseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteListener.deleteButtonClick(position);
-            }
-        });
+       // holder.deleteExerciseButton.setOnClickListener(new View.OnClickListener() {
+         //   @Override
+          //  public void onClick(View v) {
+           //     deleteListener.deleteButtonClick(position);
+          //  }
+       // });
 
         // Image View
         if (exerciseList.get(position).image != null) {
@@ -129,7 +129,7 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             textViewLastMod = itemView.findViewById(R.id.LastModifiedExercise);
             textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
             textViewTypeTitle = itemView.findViewById(R.id.RVWTypeTitle);
-            deleteExerciseButton = itemView.findViewById(R.id.DeleteWorkoutIcon);
+            //deleteExerciseButton = itemView.findViewById(R.id.DeleteWorkoutIcon);
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
         }
 

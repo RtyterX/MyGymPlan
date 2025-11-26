@@ -166,6 +166,17 @@
             app:layout_constraintEnd_toEndOf="@+id/BackgroundRVPlan"
             app:srcCompat="@drawable/delete_icon" />
 
+        <TextView
+            android:id="@+id/PlanExperienceLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="92dp"
+            android:text="TextView"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="@+id/BackgroundRVPlan"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,9 +103,8 @@
         <TextView
             android:id="@+id/FindTitleAddExercise"
             android:layout_width="55dp"
-            android:layout_height="31dp"
+            android:layout_height="33dp"
             android:layout_marginTop="3sp"
-            android:layout_marginEnd="2sp"
             android:text="FIND"
             android:textAlignment="textEnd"
             android:textSize="24sp"

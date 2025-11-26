@@ -43,6 +43,7 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.Database.WorkoutDao;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.SavedExercise;
+import com.example.mygymplan.Entitys.SavedWorkout;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
@@ -119,7 +120,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
         // --- Components ---
         planName = findViewById(R.id.PlanNameText);
-        ImageView dbPlanIcon = findViewById(R.id.PlanFromDBIcon);
         count = findViewById(R.id.RVCount);
         recyclerView = findViewById(R.id.RecycleViewWorkouts);
         // Buttons
@@ -168,16 +168,6 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                 pickImage();
             }
         });
-
-
-        // Check if plan is from app DB
-        if (thisPlan != null) {
-            if (Objects.equals(thisPlan.author, "My Gym Plan")) {
-                dbPlanIcon.setVisibility(View.VISIBLE);
-            } else {
-                dbPlanIcon.setVisibility(View.GONE);
-            }
-        }
 
 
         //  --- Go to Test Activity ---
@@ -428,35 +418,37 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     // ---------------- Reload Workouts ------------------
     // ---------------------------------------------------
     public void UpdateRecyclerView() {
+        // Logs Feedback
         if (!displayedWorkouts.isEmpty()) {
             Log.d("Workouts RecyclerView", "Workouts Recycler View Ok");
-            workoutAdapter = new WorkoutRVAdapter(PlanActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(Workout item) {
-                    SetNextWorkout(item, thisPlan);
-                    // Change Activity
-                    Intent intent = new Intent(PlanActivity.this, WorkoutActivity.class);
-                    intent.putExtra("SelectedPlan", thisPlan);
-                    intent.putExtra("SelectedWorkout", item);
-                    startActivity(intent);
-                }
-            }, new WorkoutRVAdapter.OnClickEditListener() {
-                @Override
-                public void editButtonClick(int position) {
-                    EditWorkout(displayedWorkouts.get(position), position);
-                }
-            });
-            // Display Workouts in Recycler View
-            recyclerView.setAdapter(workoutAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(PlanActivity.this));
-            // Attach Item Helper
-            mIth.attachToRecyclerView(recyclerView);
-
-            ChangeUIVisibility();
         } else {
             Log.d("Workouts RecyclerView", "Recycler View has 0 Workouts");
         }
+        // -----------------------------------------------------------------------------------------
+        workoutAdapter = new WorkoutRVAdapter(PlanActivity.this, displayedWorkouts, new WorkoutRVAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Workout item) {
+                SetNextWorkout(item, thisPlan);
+                // Change Activity
+                Intent intent = new Intent(PlanActivity.this, WorkoutActivity.class);
+                intent.putExtra("SelectedPlan", thisPlan);
+                intent.putExtra("SelectedWorkout", item);
+                startActivity(intent);
+            }
+        }, new WorkoutRVAdapter.OnClickEditListener() {
+            @Override
+            public void editButtonClick(int position) {
+                EditWorkout(displayedWorkouts.get(position), position);
+            }
+        });
+        // Display Workouts in Recycler View
+        recyclerView.setAdapter(workoutAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(PlanActivity.this));
 
+        // Attach Item Helper
+        mIth.attachToRecyclerView(recyclerView);
+
+        ChangeUIVisibility();
     }
 
 
@@ -523,7 +515,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         // --------------------------------------
         // Update Recycler View and List
         displayedWorkouts.add(addWorkout);
-        workoutAdapter.notifyItemInserted(displayedWorkouts.size());
+        workoutAdapter.notifyItemInserted(workoutAdapter.getItemCount());
         ChangeUIVisibility();
         // Action Feedback
         Log.d( "Plan Activity", "Workout " + addWorkout.name + " ID nº:  " + addWorkout.id + " - Added");
@@ -607,6 +599,9 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
+    }
+
+    public void AddWorkoutToPlan(SavedWorkout savedWorkout, Plan plan) {
     }
 
     //////////////////////// END ////////////////////////
