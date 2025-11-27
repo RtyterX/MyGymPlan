@@ -46,6 +46,8 @@ dependencies {
 
     val room_version = "2.7.2"
 
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
     implementation("androidx.room:room-runtime:$room_version")
 
 

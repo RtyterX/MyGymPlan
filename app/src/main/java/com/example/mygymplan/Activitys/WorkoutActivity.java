@@ -315,6 +315,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
             // Open Settings
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {

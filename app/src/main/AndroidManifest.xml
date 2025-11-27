@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyGymPlan">
         <activity
+            android:name=".Activitys.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
             android:name=".Activitys.PlanActivity"
             android:exported="false" />
         <activity

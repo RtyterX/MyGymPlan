@@ -104,7 +104,8 @@
             android:background="@android:color/transparent"
             android:text="Count"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:textStyle="bold|italic"
             app:layout_constraintBottom_toTopOf="@+id/RecycleViewWorkouts"
             app:layout_constraintEnd_toEndOf="parent" />
 

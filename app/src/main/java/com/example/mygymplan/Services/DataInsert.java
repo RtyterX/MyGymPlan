@@ -147,7 +147,7 @@ public class DataInsert extends AppCompatActivity {
                 // --- 2 - INTERMEDIATE PLAN --- \\
                 planDao.rawInsert("Intermediate Plan", "From Database", false, false, 1, ExperienceLevel.Intermediate, "MyGymPlan", false, LocalDate.now().toString(), false);
                 // - Workout 4 - \\
-                workoutDao.rawInsert("Chest Workout", "", WorkoutType.Chest, 1, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
+                workoutDao.rawInsert("Chest Workout", "", WorkoutType.Chest, 1, "50 - 80min", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
                 // Exercises:
                 exerciseDao.rawInsert("Supino Reto com Barra", "From Database", 4, 10, 90, 15, WorkoutType.Chest, 1, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 4, 1, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Supino Inclinado com Halter", "From Database", 4, 10, 90, 12, WorkoutType.Chest, 2, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 4, 5, imageConverter.ConvertToString(defaultImage), null);
@@ -157,7 +157,7 @@ public class DataInsert extends AppCompatActivity {
                 exerciseDao.rawInsert("Triceps Testa", "From Database", 4, 8, 60, 12, WorkoutType.Triceps, 6, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 4, 52, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Triceps Corda", "From Database", 4, 8, 60, 10, WorkoutType.Triceps, 7, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 4, 53, imageConverter.ConvertToString(defaultImage), null);
                 // - Workout 5 - \\
-                workoutDao.rawInsert("Back Workout", "", WorkoutType.Back, 2, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
+                workoutDao.rawInsert("Back Workout", "", WorkoutType.Back, 2, "50 - 80min", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
                 // Exercises:
                 exerciseDao.rawInsert("Remada Curvada", "From Database", 4, 10, 60, 10, WorkoutType.Back, 1, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 5, 28, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Puxada Alta", "From Database", 3, 10, 60, 20, WorkoutType.Back, 2, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 5, 32, imageConverter.ConvertToString(defaultImage), null);
@@ -168,7 +168,7 @@ public class DataInsert extends AppCompatActivity {
                 exerciseDao.rawInsert("Lombar", "From Database", 4, 8, 60, 0, WorkoutType.Back, 7, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 5, 37, imageConverter.ConvertToString(defaultImage), null);
 
                 // - Workout 6 - \\
-                workoutDao.rawInsert("Leg Workout", "", WorkoutType.Leg, 3, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
+                workoutDao.rawInsert("Leg Workout", "", WorkoutType.Leg, 3, "50 - 80min", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
                 // Exercises:
                 exerciseDao.rawInsert("Agachamento", "From Database", 4, 8, 90, 20, WorkoutType.Leg, 1, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 6, 16, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Cadeira Extensora", "From Database", 3, 8, 60, 15, WorkoutType.Leg, 2, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 6, 24, imageConverter.ConvertToString(defaultImage), null);
@@ -179,7 +179,7 @@ public class DataInsert extends AppCompatActivity {
                 exerciseDao.rawInsert("Leg Press 45°", "From Database", 4, 8, 90, 80, WorkoutType.Leg, 7, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 6, 14, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Panturrilha", "From Database", 3, 15, 45, 20, WorkoutType.Leg, 8, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 6, 25, imageConverter.ConvertToString(defaultImage), null);
                 // - Workout 7 - \\
-                workoutDao.rawInsert("Arm Workout", "", WorkoutType.Arm, 4, "", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
+                workoutDao.rawInsert("Arm Workout", "", WorkoutType.Arm, 4, "50 - 80min", null, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2);
                 // Exercises:
                 exerciseDao.rawInsert("Rosca Direta no Polia", "From Database", 3, 8, 60, 10, WorkoutType.Biceps, 1, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 7, 42, imageConverter.ConvertToString(defaultImage), null);
                 exerciseDao.rawInsert("Scott com Barra W", "From Database", 4, 8, 90, 16, WorkoutType.Biceps, 2, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM")), 2, 7, 49, imageConverter.ConvertToString(defaultImage), null);

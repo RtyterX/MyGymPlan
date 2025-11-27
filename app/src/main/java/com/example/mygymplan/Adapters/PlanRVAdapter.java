@@ -73,7 +73,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         if (planList.get(position).level != null) {
             holder.textExperienceLevel.setText(planList.get(position).level.toString());
         }
-        else { holder.textExperienceLevel.setVisibility(View.VISIBLE); };
+        else { holder.textExperienceLevel.setVisibility(View.GONE); };
 
         // Body Type
         if (planList.get(position).bodyType != 0) {

@@ -26,6 +26,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 
@@ -123,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Can't Rotate the Screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // Night Mode Off **** because its not Implemented yet *****
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
 
         // --- Components ---
@@ -280,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
             // Open Settings
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {
@@ -410,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onItemClick(Plan item) {
                     Intent intent = new Intent(MainActivity.this, PlanActivity.class);
-                    intent.putExtra("SelectedPlan", activePlan);
+                    intent.putExtra("SelectedPlan", item);
                     startActivity(intent);
                 }
             }, new PlanRVAdapter.OnItemClickDelete() {

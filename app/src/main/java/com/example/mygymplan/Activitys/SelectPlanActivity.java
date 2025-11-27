@@ -237,6 +237,8 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_settings) {
             // Open Settings
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         // -----------------------------------------------------------------------------
         if (menuItem.getItemId() == R.id.nav_info) {

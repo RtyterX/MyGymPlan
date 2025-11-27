@@ -73,9 +73,9 @@ public class PopupService extends AppCompatActivity {
 
         // Popup View UI Content
         EditText newPlanName = popupView.findViewById(R.id.NewPlanName);
-        EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
-        TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
-        TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
+        //EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
+        TextView newPlanNameWarning = popupView.findViewById(R.id.PlanNameWarning);
+        //TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
         CheckBox fixedDays = popupView.findViewById(R.id.FixedDaysCheckBox);
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
         Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
@@ -91,10 +91,11 @@ public class PopupService extends AppCompatActivity {
         // ------ Buttons ------
         confirmButton.setOnClickListener(v -> {
             // --------------------------------------------------------------------
-            if (newPlanName.getText().toString().isEmpty()) {
+            if (newPlanName.getText().toString().isEmpty() && newPlanName.getText().length() < 3) {
                 newPlanNameWarning.setVisibility(View.VISIBLE);
-            } else if (newPlanDescription.getText().toString().isEmpty()) {
-                newPlanDescripWarning.setVisibility(View.VISIBLE);
+                newPlanNameWarning.setText("Please insert a name with 3 characters");
+            //} else if (newPlanDescription.getText().toString().isEmpty()) {
+              //  newPlanDescripWarning.setVisibility(View.VISIBLE);
             } else {
 
                 //--------------------------------------------------------------
@@ -103,9 +104,9 @@ public class PopupService extends AppCompatActivity {
                 // Plan newPlan = new Plan();
                 // Check if plan has Fixed Days
                 if (fixedDays.isChecked()) {
-                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, true,true);
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), "", username, true,true);
                 } else {
-                    newPlan = planService.convertPlan(newPlanName.getText().toString(), newPlanDescription.getText().toString(), username, false,true);
+                    newPlan = planService.convertPlan(newPlanName.getText().toString(), "", username, false,true);
                 }
                 SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 int activePlanId = sharedPreferences.getInt("activePlanId", 0);
@@ -204,8 +205,8 @@ public class PopupService extends AppCompatActivity {
 
         // Popup View UI Content
         EditText newPlanName = popupView.findViewById(R.id.NewPlanName);
+        TextView newPlanNameWarning = popupView.findViewById(R.id.PlanNameWarning);
         EditText newPlanDescription = popupView.findViewById(R.id.NewPlanDescription);
-        TextView newPlanNameWarning = popupView.findViewById(R.id.NewPlanDescription);
         TextView newPlanDescripWarning = popupView.findViewById(R.id.NewPlanDescription);
         CheckBox fixedDays = popupView.findViewById(R.id.FixedDaysCheckBox);
         Button confirmButton = popupView.findViewById(R.id.ConfirmWarningButton);
@@ -513,36 +514,29 @@ public class PopupService extends AppCompatActivity {
             ///////////////////// NEED REWORK /////////////////////
             /////////////// Check Variables Inputs ////////////////
             // ---------------------------------------------------------
-            if (newWorkoutName.getText().toString().isEmpty() || newWorkoutName.getText().toString().length() >= 3) {
+            if (newWorkoutName.getText().toString().isEmpty()) {
                 nameWarning.setVisibility(View.VISIBLE);
-                // ---------------------------------------------------------
-                if (!newWorkoutDescription.getText().toString().isEmpty() || newWorkoutDescription.getText().toString().length() >= 5) {
-                    descriptionWarning.setVisibility(View.VISIBLE);
                 }
                 // ---------------------------------------------------------
-                if (newWorkout.type == null) {
-                    typeWarning.setVisibility(View.VISIBLE);
-                }
-            } else {
+                else {
                 nameWarning.setVisibility(View.GONE);
                 descriptionWarning.setVisibility(View.GONE);
                 typeWarning.setVisibility(View.GONE);
+
+                ///////////////////////////////////////////////////
+                if (newWorkout.type == null) {
+                    newWorkout.type = WorkoutType.NA;
+                }
+
+                WorkoutService workoutService = new WorkoutService();
+                newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.type, newWorkout.dayOfWeek, plan.id);
+
+                //----------------------------------------------------
+                // Change to Activity
+                planActivity.AddWorkoutToPlan(newWorkout);
+                // Close Popup
+                popupWindow.dismiss();
             }
-            ///////////////////////////////////////////////////
-
-            if (newWorkout.type == null) {
-                newWorkout.type = WorkoutType.NA;
-            }
-
-            WorkoutService workoutService = new WorkoutService();
-            newWorkout = workoutService.converterWorkout(newWorkoutName.getText().toString(), newWorkoutDescription.getText().toString(), newWorkout.type, newWorkout.dayOfWeek, plan.id);
-
-            //----------------------------------------------------
-            // Change to Activity
-            planActivity.AddWorkoutToPlan(newWorkout);
-            // Close Popup
-            popupWindow.dismiss();
-
         });
 
         closeButton.setOnClickListener(v -> {

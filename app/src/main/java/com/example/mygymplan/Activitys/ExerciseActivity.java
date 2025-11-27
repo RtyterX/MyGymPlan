@@ -690,11 +690,10 @@ public class ExerciseActivity extends AppCompatActivity {
     // ---------------- Change Activity Back  -------------------
     // ----------------------------------------------------------
     public void ChangeActivity() {
-
+        // --------------------------------------
         Intent intent = new Intent(ExerciseActivity.this, WorkoutActivity.class);
         intent.putExtra("SelectedPlan", thisPlan);
         intent.putExtra("SelectedWorkout", thisWorkout);
-
         startActivity(intent);
     }
 
