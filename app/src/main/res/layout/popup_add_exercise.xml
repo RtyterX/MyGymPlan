@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="365dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -41,19 +41,6 @@
         app:layout_constraintEnd_toStartOf="@+id/MyExercisesButton"
         app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise"
         app:layout_constraintTop_toBottomOf="@+id/AddExerciseTitle" />
-
-    <Button
-        android:id="@+id/CloseAddExercise"
-        android:layout_width="128dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="12dp"
-        android:background="@android:color/transparent"
-        android:text="Close"
-        android:textColor="@color/blue1"
-        app:layout_constraintBottom_toBottomOf="@+id/BackgroundAddExercise"
-        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise" />
 
     <TextView
         android:id="@+id/AddExerciseTitle"
@@ -102,12 +89,12 @@
 
         <TextView
             android:id="@+id/FindTitleAddExercise"
-            android:layout_width="55dp"
-            android:layout_height="33dp"
-            android:layout_marginTop="3sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8sp"
             android:text="FIND"
             android:textAlignment="textEnd"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -130,7 +117,20 @@
         android:layout_marginEnd="28dp"
         app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
         app:layout_constraintTop_toBottomOf="@+id/MyExercisesButton"
-        app:srcCompat="@drawable/bug" />
+        app:srcCompat="@drawable/filter_list" />
+
+    <Button
+        android:id="@+id/CloseAddExercise"
+        android:layout_width="128dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="12dp"
+        android:background="@android:color/transparent"
+        android:text="Close"
+        android:textColor="@color/blue1"
+        app:layout_constraintBottom_toBottomOf="@+id/BackgroundAddExercise"
+        app:layout_constraintEnd_toEndOf="@+id/BackgroundAddExercise"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/BackgroundAddExercise" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

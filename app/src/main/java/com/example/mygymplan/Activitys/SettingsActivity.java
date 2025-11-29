@@ -1,21 +1,29 @@
 package com.example.mygymplan.Activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -23,8 +31,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mygymplan.R;
 import com.example.mygymplan.Services.ImageConverter;
-
-import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -34,14 +40,14 @@ public class SettingsActivity extends AppCompatActivity {
     String username;
     String email;
     int bodyType;
-    String imageString;
+    String userImageString;
     String language;
 
     // -------------------------------------------------------------
 
     // UI Elements
-    EditText nameText;
-    EditText emailText;
+    TextView nameText;
+    TextView emailText;
     Button bodyType1;
     Button bodyType2;
     ImageView userImage;
@@ -56,6 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
     boolean bodyType1Clicked;
     boolean bodyType2Clicked;
     SharedPreferences sharedPreferences;
+    ImageConverter imageConverter = new ImageConverter();
+    ActivityResultLauncher<Intent> resultLauncher;
 
     // ------------------------------------
     // ------------ Enum ------------------
@@ -67,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     // -------------------------------------------------------------
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
         bodyType2 = findViewById(R.id.SettingsBodyType2);
         autoComplete = findViewById(R.id.AutoCompleteLanguageList);
         Button backButton = findViewById(R.id.SettingsBackButton);
+        Button editImage = findViewById(R.id.EditImageButton);
 
 
         // Get Shared Preferences
@@ -101,8 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
         nameText.setText(username);
         emailText.setText(email);
         // Set Image
-        ImageConverter imageConverter = new ImageConverter();
-        Bitmap bitmap = imageConverter.ConvertToBitmap(imageString);
+        Bitmap bitmap = imageConverter.ConvertToBitmap(userImageString);
         userImage.setImageBitmap(bitmap);
         //Set Body Type Button Click
         if (bodyType == 1) {
@@ -111,6 +120,8 @@ public class SettingsActivity extends AppCompatActivity {
             bodyType2.setText(username);   // Just For Test
         }
 
+        // Get URI from Pick Image
+        RegisterResult();
 
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
@@ -159,6 +170,22 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
+
+
         // -------------------------------------------
         // ------------- Back Button -----------------
         // -------------------------------------------
@@ -177,6 +204,41 @@ public class SettingsActivity extends AppCompatActivity {
     // --------------------------------------------------------------------------
 
 
+    // ------------------------------------------------------
+    // --------- Pick Image From Gallery (NaviBar) ----------
+    // ------------------------------------------------------
+    public void pickImage() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+
+    public void RegisterResult() {
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Uri imageUri = result.getData().getData();
+                userImage.setImageURI(imageUri);
+
+                // Convert Image to Bitmap
+                Drawable drawable = userImage.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                // Convert to String
+                userImageString = imageConverter.ConvertToString(bitmap);
+
+                // Check if its user First time opening App
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
+                editor.putString("userImageString", userImageString);
+                editor.apply();
+
+                // Re Create App
+                recreate();
+            }
+        });
+    }
+
     // ------------------------------
     // --------- Functions ----------
     // ------------------------------
@@ -186,7 +248,7 @@ public class SettingsActivity extends AppCompatActivity {
         email = sharedPreferences.getString("email", "");
         bodyType = sharedPreferences.getInt("bodyType", 0);
         language = sharedPreferences.getString("language", "");
-        imageString = sharedPreferences.getString("userImageString", "");
+        userImageString = sharedPreferences.getString("userImageString", "");
     }
 
 

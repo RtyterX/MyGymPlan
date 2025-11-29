@@ -121,9 +121,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
-
-        RegisterResult();
-
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
         TextView userNameText = headerView.findViewById(R.id.UsernameNaviBar);
@@ -134,15 +131,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         // Set Image
         Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
         naviBarImage.setImageBitmap(bitmap2);
-
-
-        naviBarImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
-
 
         // ----- Buttons -----
         newPlan.setOnClickListener(new View.OnClickListener() {
@@ -172,50 +160,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
 
     public void NewPlan() {
         popupService.NewPlanActivityPopup(this, this, username);
-    }
-
-    private void LoadPrefs() {
-        // Check if its user First time opening App
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("username", "");
-        email = sharedPreferences.getString("email", "");
-        userImageString = sharedPreferences.getString("userImageString", "");
-    }
-
-
-    // ------------------------------------------------------
-    // --------- Pick Image From Gallery (NaviBar) ----------
-    // ------------------------------------------------------
-    public void pickImage() {
-        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-        resultLauncher.launch(intent);
-    }
-
-    public void RegisterResult() {
-        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                Uri imageUri = result.getData().getData();
-                naviBarImage.setImageURI(imageUri);
-
-                // Convert Image to Bitmap
-                Drawable drawable = naviBarImage.getDrawable();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-
-                // Convert to String
-                userImageString = imageConverter.ConvertToString(bitmap);
-
-                // Check if its user First time opening App
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
-                editor.putString("userImageString", userImageString);
-                editor.apply();
-
-                // Re Create App
-                recreate();
-            }
-        });
     }
 
 
@@ -254,6 +198,15 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void LoadPrefs() {
+        // Check if its user First time opening App
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("username", "");
+        email = sharedPreferences.getString("email", "");
+        userImageString = sharedPreferences.getString("userImageString", "");
+    }
+
 
 
     public void LoadPlans() {

@@ -7,13 +7,11 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,10 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
+
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -160,8 +156,6 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         drawerLayout.addDrawerListener(toggle);                                               // Set Click on ActionBar
         toggle.syncState();                                                                           // Sync with drawer state (Open/Close)
 
-        // Get URI from Pick Image
-        RegisterResult();
 
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
@@ -173,13 +167,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         // Set Image
         Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
         naviBarImage.setImageBitmap(bitmap2);
-        //Set Image Click
-        naviBarImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
+
 
 
         // -------------------------------------------------------------------
@@ -225,77 +213,44 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        mIth = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                        0) {
-                    @Override
-                    public boolean onMove(@NonNull RecyclerView recyclerView,
-                                          @NonNull RecyclerView.ViewHolder viewHolder,
-                                          @NonNull RecyclerView.ViewHolder target) {
-
-                        final int fromPos = viewHolder.getBindingAdapterPosition();
-                        final int toPos = target.getBindingAdapterPosition();
-
-                        Exercise exercise1 = displayedExercises.get(fromPos);
-                        Exercise exercise2 = displayedExercises.get(toPos);
-
-                        Collections.swap(displayedExercises, fromPos, toPos);
-                        exerciseAdapter.notifyItemMoved(fromPos, toPos);
-
-                        exerciseAdapter.notifyItemChanged(fromPos);
-                        exerciseAdapter.notifyItemChanged(toPos);
-
-                        ExerciseService exerciseService = new ExerciseService();
-                        exerciseService.changeExerciseOrder(getApplicationContext(), exercise1, exercise2);
-
-                        return true;
-                    }
-
-                    @Override
-                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                        // Has no Swipe action
-
-                    }
-                });
-
-    }
-
-
-    // ------------------------------------------------------
-    // --------- Pick Image From Gallery (NaviBar) ----------
-    // ------------------------------------------------------
-    public void pickImage() {
-        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-        resultLauncher.launch(intent);
-    }
-
-    public void RegisterResult() {
-        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        // ---------------------------------------------
+        // --- Swap Recycler View List Item Position ---
+        // ---------------------------------------------
+        mIth = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
-            public void onActivityResult(ActivityResult result) {
-                Uri imageUri = result.getData().getData();
-                naviBarImage.setImageURI(imageUri);
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
 
-                // Convert Image to Bitmap
-                Drawable drawable = naviBarImage.getDrawable();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap = bitmapDrawable.getBitmap();
+                final int fromPos = viewHolder.getBindingAdapterPosition();
+                final int toPos = target.getBindingAdapterPosition();
 
-                // Convert to String
-                userImageString = imageConverter.ConvertToString(bitmap);
+                Exercise exercise1 = displayedExercises.get(fromPos);
+                Exercise exercise2 = displayedExercises.get(toPos);
 
-                // Check if its user First time opening App
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
-                editor.putString("userImageString", userImageString);
-                editor.apply();
+                Collections.swap(displayedExercises, fromPos, toPos);
+                exerciseAdapter.notifyItemMoved(fromPos, toPos);
 
-                // Re Create App
-                recreate();
+                exerciseAdapter.notifyItemChanged(fromPos);
+                exerciseAdapter.notifyItemChanged(toPos);
+
+                ExerciseService exerciseService = new ExerciseService();
+                exerciseService.changeExerciseOrder(getApplicationContext(), exercise1, exercise2);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Has no Swipe action
+
             }
         });
+
     }
 
+    // ---------------------------------------------------------------------------------------------
 
     // ------------------------------------------------------
     // ------- Switch for Navigation Bar Item List ----------

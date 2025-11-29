@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ViewFlipper flipper = findViewById(R.id.MainFlipperView);
         flipper.setVisibility(View.VISIBLE);
         flipper.startFlipping();
-        createPlan.setVisibility(View.GONE);
         noWorkout.setVisibility(View.GONE);
 
 
@@ -175,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // JUST FOR DEBUG ------------------------------------
         // JUST FOR DEBUG ------------------------------------
 
-        //--------------------------------
-        RegisterResult();
 
         // NaviBar Values
         View headerView = navigationView.getHeaderView(0);
@@ -186,19 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userNameText.setText(username);
         userEmailText.setText(email);
         // Set Image
-        // Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
-        // naviBarImage.setImageBitmap(bitmap2);
+        Bitmap bitmap2 = imageConverter.ConvertToBitmap(userImageString);
+        naviBarImage.setImageBitmap(bitmap2);
 
 
         // ----- Buttons -----
-
-        naviBarImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
-
         createPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,44 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void changeToPlanSelection() {
         Intent intent = new Intent(this, SelectPlanActivity.class);
         startActivity(intent);
-    }
-
-
-    public void pickImage() {
-        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-        resultLauncher.launch(intent);
-    }
-
-    public void RegisterResult() {
-        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                //if (false) { //&& data != null && data.getData() != null) {
-                Uri imageUri = result.getData().getData();
-                naviBarImage.setImageURI(imageUri);
-
-                // Convert Image to Bitmap
-                Drawable drawable = naviBarImage.getDrawable();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-
-                // Convert to String
-                userImageString = imageConverter.ConvertToString(bitmap);
-
-                // Check if its user First time opening App
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();        // Insert in Shared Preferences
-                editor.putString("userImageString", userImageString);
-                editor.apply();
-
-                // Re Create App
-                recreate();
-
-                // } else if (resultCode == RESULT_CANCELED) {
-
-            }
-            // }
-        });
     }
 
 
@@ -334,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (activePlanId == 0) {
             Log.d("Active Plan", "User have no Plans");
 
-            createPlan.setVisibility(View.VISIBLE);
             noWorkout.setVisibility(View.VISIBLE);
             noWorkout.setText("You have no Active Plan.\n Create one or choose from list!");
         }
@@ -408,7 +358,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("RV Plans", " Applying Plan Recycler View... ");
 
             // Change UI
-            createPlan.setVisibility(View.GONE);
             plansRV.setVisibility(View.VISIBLE);
 
             // Inflate Plan Recycler View

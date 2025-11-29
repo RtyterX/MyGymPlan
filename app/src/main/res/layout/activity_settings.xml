@@ -10,6 +10,17 @@
     tools:layout_editor_absoluteY="16dp">
 
     <Button
+        android:id="@+id/EditImageButton"
+        android:layout_width="128dp"
+        android:layout_height="35dp"
+        android:background="@android:color/transparent"
+        android:text="Edit"
+        android:textColor="@color/blue1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SettingsPhoto" />
+
+    <Button
         android:id="@+id/SettingsBackButton"
         android:layout_width="86dp"
         android:layout_height="50dp"
@@ -70,43 +81,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SettingsBodyTypeTitle" />
 
-    <TextView
-        android:id="@+id/SettingsNameText"
-        android:layout_width="318dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/text_box"
-        android:textCursorDrawable="@color/black"
-        android:ems="10"
-        android:inputType="text"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsPhoto" />
-
-    <TextView
-        android:id="@+id/SettingsEmailText"
-        android:layout_width="318dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/text_box"
-        android:textCursorDrawable="@color/black"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsNameText" />
-
     <ImageView
         android:id="@+id/SettingsPhoto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="128dp"
+        android:layout_width="115dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -118,12 +97,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
         android:text="BodyType"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsEmailText" />
+        tools:layout_editor_absoluteY="398dp" />
+
+    <TextView
+        android:id="@+id/SettingsNameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="251dp" />
+
+    <TextView
+        android:id="@+id/SettingsNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SettingsNameTitle" />
 
     <TextView
         android:id="@+id/SettingsEmailTitle"
@@ -133,19 +131,17 @@
         android:text="Email"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/SettingsEmailText"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="326dp" />
 
     <TextView
-        android:id="@+id/SettingsNameTime"
+        android:id="@+id/SettingsEmailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="Name"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/SettingsNameText"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SettingsEmailTitle" />
 
     <Button
         android:id="@+id/KgToLbButton"
@@ -157,4 +153,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LanguageInputLayout" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

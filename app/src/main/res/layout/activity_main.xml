@@ -116,6 +116,7 @@
             android:layout_height="150dp"
             android:autoStart="true"
             android:flipInterval="3000"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
@@ -158,12 +159,13 @@
             android:id="@+id/MainCreatePlanButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:text="Create Plan"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/MainRVPlans"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/OtherPlansButton"
+            app:layout_constraintHorizontal_bias="0.708"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/MainRVPlans" />
+            app:layout_constraintTop_toBottomOf="@+id/MainRVPlans" />
 
         <TextView
             android:id="@+id/MainNoWorkoutText"
@@ -198,9 +200,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="84dp"
             android:text="Plan List"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MainRVPlans" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
