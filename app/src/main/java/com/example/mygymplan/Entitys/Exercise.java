@@ -62,4 +62,6 @@ public class Exercise implements Serializable {
     @ColumnInfo(name = "video")
     public String video;
 
+    @ColumnInfo(name = "userCreated")
+    public boolean userCreated;
 }

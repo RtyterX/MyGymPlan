@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -100,6 +102,8 @@ public class SettingsActivity extends AppCompatActivity {
         autoComplete = findViewById(R.id.AutoCompleteLanguageList);
         Button backButton = findViewById(R.id.SettingsBackButton);
         Button editImage = findViewById(R.id.EditImageButton);
+        ConstraintLayout editName = findViewById(R.id.EditNameConstraint);
+        ConstraintLayout editEmail = findViewById(R.id.EditEmailConstraint);
 
 
         // Get Shared Preferences
@@ -126,9 +130,9 @@ public class SettingsActivity extends AppCompatActivity {
         // ------------------------------------------------------
         // ------------------ Dropdown Menu ---------------------
         // ------------------------------------------------------
+        autoComplete.setText(language);
         adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, languages);
         autoComplete.setAdapter(adapterItem);
-        autoComplete.setText(language);
         autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -140,6 +144,20 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         // --- Buttons ---
+
+        editName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        editEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         bodyType1.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,17 +10,6 @@
     tools:layout_editor_absoluteY="16dp">
 
     <Button
-        android:id="@+id/EditImageButton"
-        android:layout_width="128dp"
-        android:layout_height="35dp"
-        android:background="@android:color/transparent"
-        android:text="Edit"
-        android:textColor="@color/blue1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsPhoto" />
-
-    <Button
         android:id="@+id/SettingsBackButton"
         android:layout_width="86dp"
         android:layout_height="50dp"
@@ -31,31 +20,97 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/LanguageInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="372dp"
-        android:layout_height="99dp"
-        android:layout_margin="16dp"
-        android:hint="Language Selection"
+    <ImageView
+        android:id="@+id/SettingsPhoto"
+        android:layout_width="115dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.363"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsBodyType1">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
 
+    <Button
+        android:id="@+id/EditImageButton"
+        android:layout_width="128dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:text="Edit"
+        android:textColor="@color/blue1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SettingsPhoto" />
 
-        <AutoCompleteTextView
-            android:id="@+id/AutoCompleteLanguageList"
-            android:layout_width="350dp"
-            android:layout_height="74dp"
-            android:layout_marginBottom="128dp"
-            android:inputType="none"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/EditNameConstraint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EditImageButton">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/SettingsNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/SettingsNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SettingsNameTitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/EditEmailConstraint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EditNameConstraint">
+
+        <TextView
+            android:id="@+id/SettingsEmailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/SettingsEmailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SettingsEmailTitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/SettingsBodyTypeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="BodyType"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EditMailConstraint" />
 
     <Button
         android:id="@+id/SettingsBodyType1"
@@ -81,67 +136,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SettingsBodyTypeTitle" />
 
-    <ImageView
-        android:id="@+id/SettingsPhoto"
-        android:layout_width="115dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="120dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/LanguageInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="372dp"
+        android:layout_height="99dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="32dp"
+        android:hint="Language Selection"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/SettingsBodyType1">
 
-    <TextView
-        android:id="@+id/SettingsBodyTypeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="BodyType"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="398dp" />
 
-    <TextView
-        android:id="@+id/SettingsNameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="Name"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="251dp" />
+        <AutoCompleteTextView
+            android:id="@+id/AutoCompleteLanguageList"
+            android:layout_width="350dp"
+            android:layout_height="74dp"
+            android:layout_marginBottom="128dp"
+            android:inputType="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/SettingsNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsNameTitle" />
-
-    <TextView
-        android:id="@+id/SettingsEmailTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="Email"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="326dp" />
-
-    <TextView
-        android:id="@+id/SettingsEmailText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SettingsEmailTitle" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/KgToLbButton"
@@ -153,6 +173,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LanguageInputLayout" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

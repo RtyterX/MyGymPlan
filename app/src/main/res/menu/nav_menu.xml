@@ -13,7 +13,7 @@
 
         <item
             android:id="@+id/nav_plans"
-            android:icon="@drawable/no_image_plan"
+            android:icon="@drawable/plan_icon"
             android:title="Plans"/>
 
         <item

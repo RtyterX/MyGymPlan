@@ -75,6 +75,7 @@
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"
             android:textSize="16sp"
+            android:icon="@drawable/search_icon"
             app:layout_constraintEnd_toStartOf="@+id/SearchButtonAddExercise"
             app:layout_constraintStart_toEndOf="@+id/FindTitleAddExercise"
             app:layout_constraintTop_toTopOf="parent" />

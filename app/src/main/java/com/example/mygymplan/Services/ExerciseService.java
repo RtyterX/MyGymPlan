@@ -29,6 +29,7 @@ public class ExerciseService extends AppCompatActivity {
 
                 AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
                 ExerciseDao dao = db.exerciseDao();
+                SavedExerciseDao savedDao = db.savedExerciseDao();
 
                 // Set Variables
                 SavedExercise savedExercise = new SavedExercise();
@@ -50,10 +51,21 @@ public class ExerciseService extends AppCompatActivity {
                 savedExercise.image = exercise.image;
                 savedExercise.video = exercise.video;
 
-                // Create Exercise and Saved Exercise Link
+
+                // Get Saved Exercise ID
+                int id = 0;
+                List<SavedExercise> allSavedExercises = savedDao.listSavedExercise();
+                for (SavedExercise e : allSavedExercises) {
+                    if (e.id > id) {
+                        id = e.id;
+                    }
+                }
+                savedExercise.id = id + 1;
                 exercise.savedExercise_Id = savedExercise.id;
 
-                // Save Exercise Pattern
+                exercise.userCreated = true;
+
+                // Save Exercise saved Pattern
                 dao2.insertSavedExercise(savedExercise);
 
                 // Save Exercise in Workout

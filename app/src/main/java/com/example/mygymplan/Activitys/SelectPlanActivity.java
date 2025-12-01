@@ -100,8 +100,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         emptyText = findViewById(R.id.EmptyPlanRVText);
         count1 = findViewById(R.id.DbPlansCount);
         count2 = findViewById(R.id.MyPlansCount);
-        Button myPlans = findViewById(R.id.MyPlansButton);
-        Button databasePlans = findViewById(R.id.DatabasePlansButton);
         Button backButton = findViewById(R.id.BackButton2);
         Button newPlan = findViewById(R.id.CreateNewPlanButton);
 
@@ -309,9 +307,6 @@ public class SelectPlanActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-    public void AddPlanToSelection() {
-
-    }
 
     //////////////////////// END ////////////////////////
 }

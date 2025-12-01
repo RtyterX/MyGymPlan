@@ -45,11 +45,10 @@
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/CreateNewPlanButton"
+        app:layout_constraintBottom_toBottomOf="@+id/RecycleViewMyPlans"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="0.731" />
+        app:layout_constraintTop_toTopOf="@+id/RecycleViewMyPlans" />
 
     <TextView
         android:id="@+id/PlanTitleText"
@@ -87,7 +86,8 @@
         android:textAlignment="textEnd"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/RecycleViewDbPlans"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/SelectPlanRow"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
@@ -100,18 +100,38 @@
         android:textAlignment="textEnd"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/RecycleViewMyPlans"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/SelectPlanRow2"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/MyPlansButton"
-        android:layout_width="150dp"
-        android:layout_height="49dp"
+    <TextView
+        android:id="@+id/SelectMyPlansTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
         android:text="My Plans"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RecycleViewDbPlans" />
+
+    <View
+        android:id="@+id/SelectPlanRow"
+        android:layout_width="336dp"
+        android:layout_height="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SelectDatabasePlansTitle" />
+
+    <View
+        android:id="@+id/SelectPlanRow2"
+        android:layout_width="336dp"
+        android:layout_height="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SelectMyPlansTitle" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecycleViewDbPlans"
@@ -119,7 +139,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DatabasePlansButton">
+        app:layout_constraintTop_toBottomOf="@+id/SelectPlanRow">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -136,11 +156,10 @@
         android:id="@+id/RecycleViewMyPlans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MyPlansButton">
+        app:layout_constraintTop_toBottomOf="@+id/SelectPlanRow2">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -154,13 +173,16 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar2"
         app:srcCompat="@drawable/nav_info" />
 
-    <Button
-        android:id="@+id/DatabasePlansButton"
-        android:layout_width="150dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="16dp"
+    <TextView
+        android:id="@+id/SelectDatabasePlansTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
         android:text="Database"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlanTitleText" />
 

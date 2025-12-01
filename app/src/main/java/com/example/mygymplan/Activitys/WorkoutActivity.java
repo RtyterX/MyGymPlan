@@ -423,7 +423,12 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         exerciseAdapter = new ExerciseRVAdapter(WorkoutActivity.this, displayedExercises, new ExerciseRVAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Exercise item) {
-                                ChangeToExercise(item);
+                                if (item.userCreated) {
+                                    ChangeToExercise(item, 1);
+                                }
+                                else {
+                                    ChangeToExercise(item, 2);
+                                }
                             }
                         }, new ExerciseRVAdapter.OnItemClickDelete() {
                             @Override
@@ -489,7 +494,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
         newExercise.image = imageConverter.ConvertToString(bitmap1);
 
         // Change Activity
-        ChangeToExercise(newExercise);
+        ChangeToExercise(newExercise, 0);
     }
 
 
@@ -564,12 +569,15 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ----------------------------------------------
     // ------ Change Activity to Show Exercise ------
     // ----------------------------------------------
-    public void ChangeToExercise(Exercise item) {
+    public void ChangeToExercise(Exercise item, int compare) {
         Intent intent = new Intent(WorkoutActivity.this, ExerciseActivity.class);
         intent.putExtra("SelectedPlan", thisPlan);
         intent.putExtra("SelectedWorkout", thisWorkout);
         intent.putExtra("SelectedExercise", item);
+        intent.putExtra("CompareInt", compare);
         startActivity(intent);
+
+        Log.d("Change To Exercise Activity", "Transported Compare Int is: " + compare);
     }
 
     //////////////////////// END ////////////////////////

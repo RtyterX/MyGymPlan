@@ -317,7 +317,7 @@ public class PopupService extends AppCompatActivity {
                         @Override
                         public void run() {
                             // Change to Activity
-                            activity.AddPlanToSelection();
+                            //activity.AddPlanToSelection();
                             // Close Popup
                             popupWindow.dismiss();
                         }

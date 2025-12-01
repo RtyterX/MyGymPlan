@@ -71,7 +71,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         // Exercise Type
         if (exerciseList.get(position).type == WorkoutType.NA) {
             holder.textViewType.setVisibility(View.GONE);
-            holder.textViewTypeTitle.setVisibility(View.GONE);
         }
         else {
             holder.textViewType.setText(exerciseList.get(position).type.toString());
@@ -113,7 +112,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
         TextView textViewLoad;
         TextView textViewLastMod;
         TextView textViewType;
-        TextView textViewTypeTitle;
         ImageView deleteExerciseButton;
         ImageView imageView;
 
@@ -128,7 +126,6 @@ public class ExerciseRVAdapter extends RecyclerView.Adapter<ExerciseRVAdapter.My
             textViewLoad = itemView.findViewById(R.id.RecyclerExerciseLoad);
             textViewLastMod = itemView.findViewById(R.id.LastModifiedExercise);
             textViewType = itemView.findViewById(R.id.RecyclerExerciseType);
-            textViewTypeTitle = itemView.findViewById(R.id.RVWTypeTitle);
             //deleteExerciseButton = itemView.findViewById(R.id.DeleteWorkoutIcon);
             imageView = itemView.findViewById(R.id.ImageRecyclerExercise);
         }

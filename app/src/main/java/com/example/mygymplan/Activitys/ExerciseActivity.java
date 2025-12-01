@@ -64,12 +64,17 @@ import java.util.TimerTask;
 
 public class ExerciseActivity extends AppCompatActivity {
 
+    // Entity's
     Plan thisPlan;
     Workout thisWorkout;                   // Know which workout to show when user goes back to workout activity
     Exercise thisExercise;                 // Used to save Exercise data
-    String NewExerciseCompareString;       // Used to check if Exercise is new or not
+    int compareInt;                         // Used to check if Exercise is new or not
+
+    String typeString;                     // Workout Type show on Dropdown Menu
 
     ExerciseService exerciseService = new ExerciseService();
+
+    // -------------------------------------------------------------
 
     // UI Variables
     EditText showName;
@@ -79,9 +84,16 @@ public class ExerciseActivity extends AppCompatActivity {
     EditText showRest;
     EditText showLoad;
 
+    Button saveExercise;
+    Button deleteButton;
+    Button timerButton;
+
+
     // Workout Type Selector
     AutoCompleteTextView autoComplete;
     ArrayAdapter<String> adapterItem;
+
+    // -------------------------------------------------------------
 
     // For Image Selection
     ImageView exerciseImage;
@@ -145,10 +157,15 @@ public class ExerciseActivity extends AppCompatActivity {
         thisPlan = (Plan) intent.getSerializableExtra("SelectedPlan");
         thisWorkout = (Workout) intent.getSerializableExtra("SelectedWorkout");
         thisExercise = (Exercise) intent.getSerializableExtra("SelectedExercise");
+        compareInt = intent.getIntExtra("CompareInt",1);
 
-        Log.d("Selected Plan", "Selected Plan ID is: " + thisPlan.id);
-        Log.d("Selected Workout", "Selected Workout ID is: " + thisWorkout.id);
-        Log.d("Selected Exercise", "Selected Exercise ID is: " + thisExercise.id);
+        // Debug
+        Log.d("Exercise Activity", "Selected Plan ID is: " + thisPlan.id);
+        Log.d("Exercise Activity", "Selected Workout ID is: " + thisWorkout.id);
+        Log.d("Exercise Activity", "Selected Exercise ID is: " + thisExercise.id);
+        Log.d("Exercise Activity", "Selected Saved Exercise ID is: " + thisExercise.savedExercise_Id);
+        Log.d("Exercise Activity", "Compare Int is: " + compareInt);
+
 
         // --- Components ---
         showName = findViewById(R.id.ExerciseName);
@@ -164,33 +181,28 @@ public class ExerciseActivity extends AppCompatActivity {
         exerciseVideo = findViewById(R.id.videoView);
         TextView noVideoImage = findViewById(R.id.NoVideoText);
         // Buttons
-        Button saveExercise = findViewById(R.id.SaveExercise);
-        Button deleteButton = findViewById(R.id.DeleteExerciseButton);
-        Button timerButton = findViewById(R.id.TimerButton);
+        saveExercise = findViewById(R.id.SaveExercise);
+        deleteButton = findViewById(R.id.DeleteExerciseButton);
+        timerButton = findViewById(R.id.TimerButton);
         Button backButton = findViewById(R.id.BackButton3);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, // Set width to match_parent
-                ViewGroup.LayoutParams.WRAP_CONTENT  // Keep height as wrap_content or set to MATCH_PARENT
-        );
+
+        // ------------------------------------------------------
+        // ------------------ Dropdown Menu ---------------------
+        // ------------------------------------------------------
+        adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, types);
+        if (thisExercise.type != null) {
+            typeString = thisExercise.type.toString();
+            autoComplete.setText(typeString); }
+        // Only Attach Adapter if Exercise is User Created,check Compare Int...
 
 
         // --- Set UI Values ---
-        NewExerciseCompareString = thisExercise.name;                         // Just to check if it's a New Exercise or Not
-        // If Exercise isn't New...
-        if (!Objects.equals(NewExerciseCompareString, "1")) {
-            // Show already storage Values
-            showName.setText(thisExercise.name);
-            showDescription.setText(thisExercise.description);
-            showSets.setText(String.valueOf(thisExercise.sets));
-            showReps.setText(String.valueOf(thisExercise.reps));
-            showRest.setText(String.valueOf(thisExercise.rest));
-            showLoad.setText(String.valueOf(thisExercise.load));
-            autoComplete.setText(thisExercise.type.toString());
-        } else {
-            timerButton.setVisibility(View.GONE); // Delete is no necessary when creating new
-            deleteButton.setVisibility(View.GONE); // Delete is no necessary when creating new
-            saveExercise.setLayoutParams(layoutParams);
-        }
+        SetCompereInt(compareInt);
+        showDescription.setText(thisExercise.description);
+        showSets.setText(String.valueOf(thisExercise.sets));
+        showReps.setText(String.valueOf(thisExercise.reps));
+        showRest.setText(String.valueOf(thisExercise.rest));
+        showLoad.setText(String.valueOf(thisExercise.load));
         // Set Image
         ImageConverter imageConverter = new ImageConverter();
         exerciseImage.setImageBitmap(imageConverter.ConvertToBitmap(thisExercise.image));
@@ -207,32 +219,12 @@ public class ExerciseActivity extends AppCompatActivity {
 
         RegisterResult();
 
-        // ------------------------------------------------------
-        // ------------------ Dropdown Menu ---------------------
-        // ------------------------------------------------------
-        adapterItem = new ArrayAdapter<String>(this, R.layout.enum_list, types);
-        autoComplete.setAdapter(adapterItem);
-        autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                // Apply Type in Exercise
-                exerciseService.applyExerciseType(thisExercise, item);
-            }
-        });
+
 
 
         // ------------------------------------------------------
         // -------------------- Buttons -------------------------
         // ------------------------------------------------------
-        /////////////////// IMAGE BUTTON TEST ///////////////////
-        exerciseImage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
-
 
         // -------------------------------------------
         // ------------- Save Exercise ---------------
@@ -279,7 +271,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 // -----------------------------
                 // If not new, Save Exercise
                 // -----------------------------
-                if (!Objects.equals(NewExerciseCompareString, "1")) {
+                if (!Objects.equals(compareInt, 1)) {
                     SaveExerciseValues();
                 }
                 // ------------------
@@ -299,7 +291,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 // -----------------------------
                 // If not new, Save Exercise
                 // -----------------------------
-                if (!Objects.equals(NewExerciseCompareString, "1")) {
+                if (!Objects.equals(compareInt, 1)) {
                     SaveExerciseValues();
                 }
                 // ------------------
@@ -308,6 +300,69 @@ public class ExerciseActivity extends AppCompatActivity {
         };
 
 
+    }
+
+    private void SetCompereInt(int compareInt) {
+        switch (compareInt) {
+            case 0:
+                // If Exercise is New...
+                // --------------------------------------------------------------------
+                timerButton.setVisibility(View.GONE);           // Not necessary when creating new
+                deleteButton.setVisibility(View.GONE);          // Not necessary when creating new
+                // Alter Save Button Size
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,    // Set width to match_parent
+                        ViewGroup.LayoutParams.WRAP_CONTENT     // Keep height as wrap_content or set to MATCH_PARENT
+                );
+                saveExercise.setLayoutParams(layoutParams);
+                autoComplete.setAdapter(adapterItem);
+                autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String item = parent.getItemAtPosition(position).toString();
+                        // Apply Type in Exercise
+                        exerciseService.applyExerciseType(thisExercise, item);
+                    }
+                });
+                exerciseImage.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        pickImage();
+                    }
+                });
+                break;
+            case 1:
+                // If Exercise is created by User...
+                // --------------------------------------------------------------------
+                // Show already storage Values
+                showName.setText(thisExercise.name);
+                autoComplete.setAdapter(adapterItem);
+                autoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String item = parent.getItemAtPosition(position).toString();
+                        // Apply Type in Exercise
+                        exerciseService.applyExerciseType(thisExercise, item);
+                    }
+                });
+                exerciseImage.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        pickImage();
+                    }
+                });
+
+                break;
+            case 2:
+                // If Exercise is created by Database...
+                // --------------------------------------------------------------------
+                showName.setText(thisExercise.name);
+                deleteButton.setVisibility(View.GONE);          // Cant Delete Exercise from Database
+                saveExercise.setVisibility(View.GONE);
+                break;
+
+
+        }
     }
 
 
@@ -585,7 +640,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void LoadPlus(View view) {
-        if (!Objects.equals(NewExerciseCompareString, "1")) {
+        if (!Objects.equals(compareInt, "1")) {
             thisExercise.load = Integer.parseInt(showLoad.getText().toString());
         }
         if (thisExercise.load < 1000) {
@@ -594,7 +649,6 @@ public class ExerciseActivity extends AppCompatActivity {
         }
     }
     //endregion
-
 
 
     // --------------------------------------------------------------------------------
@@ -663,7 +717,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
         // ------------------------------------------------------------------------
         // Create if Exercise is New
-        if (Objects.equals(NewExerciseCompareString, "1")) {
+        if (Objects.equals(compareInt, 0)) {
             // Save new Exercise in Workout and Store in Database
             exerciseService.createExercise(getApplicationContext(), thisExercise);
             // Show Text on Screen
