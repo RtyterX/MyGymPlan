@@ -2,6 +2,7 @@ package com.example.mygymplan.Services;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -650,75 +651,6 @@ public class PopupService extends AppCompatActivity {
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    ///////////////////////// NOT IN USE //////////////////////////////
-    ///////////////////////////////////////////////////////////////////
-
-    //----------------------------------------------------
-    //------------------- Change Plan --------------------
-    //----------------------------------------------------
-    public void ChangePlan(Context context, MainActivity mainActivity) {
-        // --- Inflate Activity with a new View ---
-        View popupView = View.inflate(context, R.layout.popup_change_plan, null);
-
-        // --- Popup View UI Content ---
-        Button closeButton = popupView.findViewById(R.id.CloseWarningButton);
-        // RecyclerView
-        RecyclerView recyclerView1 = popupView.findViewById(R.id.RecyclerViewChangePlans);
-
-        // Initialize new Popup View
-        PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        // Set Shadow
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setElevation(10.0f);
-        // Set Popup Location on Screen
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "workouts").build();
-        PlanDao dao = db.planDao();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Database
-                List<Plan> planList = new ArrayList<>();
-                planList = dao.listPlans();
-
-                // Set Recycler View Adapter
-                PlanRVAdapter adapterPlan = new PlanRVAdapter(context, planList, new PlanRVAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Plan item) {
-                        // ShowAnotherPlan(item);
-                        popupWindow.dismiss();
-                    }
-                }, new PlanRVAdapter.OnItemClickDelete() {
-                    @Override
-                    public void deleteButtonClick(int position) {
-                        PlanService planService = new PlanService();
-                        // planService.deletePlan(getApplicationContext(), planList.get(postion));
-                    }
-                }, new PlanRVAdapter.OnItemClickSetActive() {
-                    @Override
-                    public void setActiveButtonClick(Plan plan) {
-
-                    }
-                }, new PlanRVAdapter.OnClickEditPlanListener() {
-                    @Override
-                    public void editButtonClick(Plan plan) {
-
-                    }
-                });
-
-                // Display Recycler View
-                recyclerView1.setAdapter(adapterPlan);
-                recyclerView1.setLayoutManager(new LinearLayoutManager(context));
-
-            }
-        }).start();
-
-        db.close();
-    }
-
 
     //----------------------------------------------------
     //-------------------- About Us ----------------------
@@ -750,7 +682,7 @@ public class PopupService extends AppCompatActivity {
 
 
     // --------------------------------------------------------------------------------------------
-    public void AddExercisePopup(Context context, WorkoutActivity activity) {
+    public void AddExercisePopup(Context context, WorkoutActivity activity, Workout workout) {
         // Open new Popup where user create a new Plan
         // -------------------------------------------------------
         // Inflate Activity with a new View
@@ -836,10 +768,11 @@ public class PopupService extends AppCompatActivity {
             SavedExerciseRVAdapter myExerciseAdapter = new SavedExerciseRVAdapter(activity, userExercises, new SavedExerciseRVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(SavedExercise item) {
+                    // Add Exercise to Activity and save in Database
                     activity.AddExerciseToWorkout(item);
                     // Show Text on Screen
                     Toast.makeText(context, "Exercise Add", Toast.LENGTH_SHORT).show();
-
+                    // Close Popup
                     popupWindow.dismiss();
                 }
             }, new SavedExerciseRVAdapter.OnShareClickListener() {
@@ -851,11 +784,9 @@ public class PopupService extends AppCompatActivity {
             }, new SavedExerciseRVAdapter.OnEditClickListener() {
                 @Override
                 public void onItemEdit(SavedExercise item) {
-                    //Intent intent = new Intent(activity, ExerciseActivity.class);
-                    //intent.putExtra("SelectedPlan", thisPlan);
-                    // intent.putExtra("SelectedWorkout", thisWorkout);
-                    // intent.putExtra("SelectedExercise", item);
-                    //  startActivity(intent);
+                    ExerciseService exerciseService = new ExerciseService();
+                    Exercise exercise = exerciseService.convertExercise(item, 0, workout.plan_Id, workout.id);
+                    activity.ChangeToExercise(exercise, 3);
                 }
             }, new SavedExerciseRVAdapter.OnDeleteClickListener() {
                 @Override

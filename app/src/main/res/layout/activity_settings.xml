@@ -20,21 +20,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/SettingsPhoto"
-        android:layout_width="115dp"
-        android:layout_height="110dp"
+        android:layout_width="166dp"
+        android:layout_height="166dp"
         android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:civ_border_width="0dp" />
 
     <Button
         android:id="@+id/EditImageButton"
         android:layout_width="128dp"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:text="Edit"
@@ -110,7 +110,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EditMailConstraint" />
+        app:layout_constraintTop_toBottomOf="@+id/EditEmailConstraint" />
 
     <Button
         android:id="@+id/SettingsBodyType1"
@@ -139,21 +139,20 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/LanguageInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="372dp"
-        android:layout_height="99dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="96dp"
+        android:layout_marginTop="36dp"
         android:hint="Language Selection"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SettingsBodyType1">
 
 
         <AutoCompleteTextView
             android:id="@+id/AutoCompleteLanguageList"
-            android:layout_width="350dp"
-            android:layout_height="74dp"
+            android:layout_width="352dp"
+            android:layout_height="76dp"
             android:layout_marginBottom="128dp"
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="parent"

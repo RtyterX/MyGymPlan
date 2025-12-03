@@ -79,12 +79,17 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
 
         // Edit Button
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editListener.editButtonClick(position);
-            }
-        });
+        if (workoutList.get(position).editable) {
+            holder.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editListener.editButtonClick(position);
+                }
+            });
+        }
+        else {
+            holder.editButton.setVisibility(View.GONE);
+        }
 
         // On Item Click
         holder.bind(workoutList.get(position), onListener);

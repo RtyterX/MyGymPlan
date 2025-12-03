@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -61,8 +64,6 @@ public class SettingsActivity extends AppCompatActivity {
     // -------------------------------------------------------------
 
     // Others
-    boolean bodyType1Clicked;
-    boolean bodyType2Clicked;
     SharedPreferences sharedPreferences;
     ImageConverter imageConverter = new ImageConverter();
     ActivityResultLauncher<Intent> resultLauncher;
@@ -118,11 +119,7 @@ public class SettingsActivity extends AppCompatActivity {
         Bitmap bitmap = imageConverter.ConvertToBitmap(userImageString);
         userImage.setImageBitmap(bitmap);
         //Set Body Type Button Click
-        if (bodyType == 1) {
-            bodyType1.setText(username);   // Just For Test
-        } else {
-            bodyType2.setText(username);   // Just For Test
-        }
+        setBodyType(bodyType);
 
         // Get URI from Pick Image
         RegisterResult();
@@ -162,14 +159,11 @@ public class SettingsActivity extends AppCompatActivity {
         bodyType1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bodyType1Clicked = !bodyType1Clicked;
-                bodyType2Clicked = false;
-                if (bodyType1Clicked) {
+                if (bodyType != 1) {
                     setBodyType(1);
                 } else {
                     setBodyType(0);
                 }
-                ;
             }
         });
 
@@ -177,9 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
         bodyType2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bodyType2Clicked = !bodyType2Clicked;
-                bodyType1Clicked = false;
-                if (bodyType2Clicked) {
+                if (bodyType != 2) {
                     setBodyType(2);
                 } else {
                     setBodyType(0);
@@ -218,6 +210,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
+
 
     // --------------------------------------------------------------------------
 
@@ -295,15 +288,23 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     public void setBodyType(int type) {
+        int color = ContextCompat.getColor(this, R.color.blue1);
+        bodyType = type;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // Insert in Shared Preferences
-        if (type == 1) {
+        if (bodyType == 1) {
+            bodyType2.setBackgroundColor(Color.GRAY);
+            bodyType1.setBackgroundColor(color);
             editor.putInt("bodyType", 1);
             editor.apply();
-        } else if (type == 2) {
+        } else if (bodyType == 2) {
+            bodyType1.setBackgroundColor(Color.GRAY);
+            bodyType2.setBackgroundColor(color);
             editor.putInt("bodyType", 2);
             editor.apply();
         } else {
+            bodyType1.setBackgroundColor(Color.GRAY);
+            bodyType2.setBackgroundColor(Color.GRAY);
             editor.putInt("bodyType", 0);
         }
         editor.apply();

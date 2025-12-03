@@ -10,14 +10,14 @@
     android:paddingStart="24sp">
     <!-- Change Background Later -->
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/UserPhotoNaviBar"
         android:layout_width="80sp"
         android:layout_height="80sp"
         android:contentDescription="User Photo"
         android:src="@drawable/no_image_plan"
-        android:background="@color/blue1"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:civ_border_width="0dp"/>
 
     <TextView
         android:id="@+id/UsernameNaviBar"

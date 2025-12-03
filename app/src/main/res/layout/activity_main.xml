@@ -44,19 +44,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="48sp"
-                android:src="@drawable/mygymplan_logo" />
+                android:src="@drawable/logo5" />
 
         </androidx.appcompat.widget.Toolbar>
 
-
-        <ImageView
-            android:id="@+id/MainInfoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/ImportMainIcon"
-            app:layout_constraintTop_toTopOf="@+id/toolbar2"
-            app:srcCompat="@drawable/nav_info" />
 
         <TextView
             android:id="@+id/MainTitle"
@@ -116,12 +107,11 @@
             android:layout_height="150dp"
             android:autoStart="true"
             android:flipInterval="3000"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/OtherPlansButton">
+            app:layout_constraintTop_toBottomOf="@+id/MainActivityRow">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -131,39 +121,31 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/mygymplan_logo_fundoazul" />
+                android:src="@drawable/panel1" />
 
         </ViewFlipper>
 
 
-        <ImageView
-            android:id="@+id/ImportMainIcon"
-            android:layout_width="46dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar2"
-            app:srcCompat="@drawable/load_icon" />
-
-        <TextView
-            android:id="@+id/ImportMainText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="Import"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ImportMainIcon" />
-
         <Button
             android:id="@+id/MainCreatePlanButton"
-            android:layout_width="wrap_content"
+            android:layout_width="146dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
             android:text="Create Plan"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/OtherPlansButton"
-            app:layout_constraintHorizontal_bias="0.708"
+            app:layout_constraintBottom_toBottomOf="@+id/MainActivityRow"
+            app:layout_constraintEnd_toStartOf="@+id/MainActivityRow"
+            app:layout_constraintTop_toTopOf="@+id/MainActivityRow"
+            app:layout_constraintVertical_bias="0.514" />
+
+        <View
+            android:id="@+id/MainActivityRow"
+            android:layout_width="2dp"
+            android:layout_height="85dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/row"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MainRVPlans" />
 
@@ -197,13 +179,14 @@
 
         <Button
             android:id="@+id/OtherPlansButton"
-            android:layout_width="wrap_content"
+            android:layout_width="146dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="84dp"
+            android:layout_marginStart="24dp"
             android:text="Plan List"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/MainRVPlans" />
+            app:layout_constraintBottom_toBottomOf="@+id/MainActivityRow"
+            app:layout_constraintStart_toEndOf="@+id/MainActivityRow"
+            app:layout_constraintTop_toTopOf="@+id/MainActivityRow"
+            app:layout_constraintVertical_bias="0.514" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -216,9 +199,9 @@
         android:fitsSystemWindows="true"
         android:textColor="@color/white"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
         app:itemIconTint="@color/blue2"
         app:itemTextColor="@color/blue1"
+        app:menu="@menu/nav_menu"
         tools:visibility="gone" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

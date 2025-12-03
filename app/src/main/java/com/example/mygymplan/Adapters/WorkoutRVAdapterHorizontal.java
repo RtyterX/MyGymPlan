@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,7 +58,8 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
            holder.backgroundView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.noSelectedBG));
         }
 
-        holder.textViewName.setText(workoutList.get(position).name);
+
+        holder.textViewName.setText(workoutList.get(position).name.replaceAll("Workout", ""));
 
         // On Item Click
         holder.bind(workoutList.get(position), onListener);
@@ -74,7 +76,7 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
         // Grab views from Recycle View Row Layout file
         // Similar to onCreate method
         TextView textViewName;
-        View backgroundView;
+        Button backgroundView;
 
 
         // Constructor
@@ -87,7 +89,7 @@ public class WorkoutRVAdapterHorizontal extends RecyclerView.Adapter<WorkoutRVAd
 
         public void bind(Workout item, OnItemClickListener onlistener) {
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            backgroundView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) { onlistener.onItemClick(item); }
             });

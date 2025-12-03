@@ -45,4 +45,7 @@ public class Workout implements Serializable {
     @ColumnInfo(name = "plan_Id")
     public  int plan_Id;
 
+    @ColumnInfo(name = "editable")
+    public  boolean editable;
+
 }

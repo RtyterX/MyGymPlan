@@ -55,6 +55,7 @@
         android:layout_width="213dp"
         android:layout_height="32dp"
         android:layout_marginTop="12dp"
+        android:textAllCaps="true"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Select Your Plan"
@@ -78,8 +79,8 @@
 
     <TextView
         android:id="@+id/DbPlansCount"
-        android:layout_width="155dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:background="@android:color/transparent"
         android:text="Count"
@@ -92,8 +93,8 @@
 
     <TextView
         android:id="@+id/MyPlansCount"
-        android:layout_width="155dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:background="@android:color/transparent"
         android:text="Count"
@@ -119,17 +120,21 @@
 
     <View
         android:id="@+id/SelectPlanRow"
-        android:layout_width="336dp"
-        android:layout_height="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="372dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/blue_row"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SelectDatabasePlansTitle" />
 
     <View
         android:id="@+id/SelectPlanRow2"
-        android:layout_width="336dp"
-        android:layout_height="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="372dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/blue_row"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SelectMyPlansTitle" />
 

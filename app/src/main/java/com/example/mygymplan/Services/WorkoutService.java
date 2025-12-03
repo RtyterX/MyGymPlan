@@ -90,6 +90,9 @@ public class WorkoutService extends AppCompatActivity {
                 // Set New Workout Order based on list Size
                 workout.sequence = planWorkouts.size() + 1;
 
+                // Set Workout to Editable
+                workout.editable = true;
+
                 // Set Duration Time
                 ExerciseDao daoExercise = db.exerciseDao();
                 List<Exercise> allExercises = daoExercise.listExercises();

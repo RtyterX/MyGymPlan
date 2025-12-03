@@ -86,7 +86,8 @@ public class ExerciseActivity extends AppCompatActivity {
 
     Button saveExercise;
     Button deleteButton;
-    Button timerButton;
+    ImageView timerButton;
+    Button createVarient;
 
 
     // Workout Type Selector
@@ -184,6 +185,7 @@ public class ExerciseActivity extends AppCompatActivity {
         saveExercise = findViewById(R.id.SaveExercise);
         deleteButton = findViewById(R.id.DeleteExerciseButton);
         timerButton = findViewById(R.id.TimerButton);
+        createVarient = findViewById(R.id.CreateVariantButton);
         Button backButton = findViewById(R.id.BackButton3);
 
         // ------------------------------------------------------
@@ -217,9 +219,8 @@ public class ExerciseActivity extends AppCompatActivity {
             noVideoImage.setVisibility(View.VISIBLE);
         }
 
+
         RegisterResult();
-
-
 
 
         // ------------------------------------------------------
@@ -351,7 +352,7 @@ public class ExerciseActivity extends AppCompatActivity {
                         pickImage();
                     }
                 });
-
+                createVarient.setVisibility(View.GONE);
                 break;
             case 2:
                 // If Exercise is created by Database...
@@ -359,8 +360,18 @@ public class ExerciseActivity extends AppCompatActivity {
                 showName.setText(thisExercise.name);
                 deleteButton.setVisibility(View.GONE);          // Cant Delete Exercise from Database
                 saveExercise.setVisibility(View.GONE);
+                createVarient.setVisibility(View.GONE);
                 break;
-
+            case 3:
+                // For edit a already Saved Exercise
+                // --------------------------------------------------------------------
+                showName.setText(thisExercise.name);
+                if (!thisExercise.userCreated) {
+                    deleteButton.setVisibility(View.GONE);          // Cant Delete Exercise from Database
+                }
+                timerButton.setVisibility(View.GONE);
+                createVarient.setVisibility(View.VISIBLE);
+                break;
 
         }
     }

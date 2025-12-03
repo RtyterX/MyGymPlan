@@ -85,6 +85,7 @@ public class SavedExerciseRVAdapter extends RecyclerView.Adapter<SavedExerciseRV
         // On Item Click ( Everything inside "bind()" )
         holder.bind(savedExerciseList.get(position), onListener);
 
+
         // Edit Button
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override

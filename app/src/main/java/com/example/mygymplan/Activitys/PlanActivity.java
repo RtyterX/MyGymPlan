@@ -140,6 +140,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);                       // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
+        
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
 
 

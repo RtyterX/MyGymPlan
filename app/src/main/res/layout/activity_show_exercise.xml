@@ -356,36 +356,39 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
+    <ImageView
         android:id="@+id/TimerButton"
-        android:layout_width="124dp"
-        android:layout_height="52dp"
+        android:layout_width="167dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="20dp"
+        android:src="@drawable/clock_icon"
         android:text="Timer"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="367dp"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="53dp"
         android:layout_margin="16dp"
+        android:layout_marginTop="4dp"
         android:hint="Workout Type"
-        app:layout_constraintBottom_toTopOf="@+id/TimerButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-        app:layout_constraintVertical_bias="0.168">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
 
         <AutoCompleteTextView
             android:id="@+id/AutoCompleteEnumList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
             android:layout_marginBottom="128dp"
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -424,6 +427,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/CreateVariantButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Create Variant"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

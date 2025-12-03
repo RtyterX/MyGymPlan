@@ -13,6 +13,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="drawerArrowStyle">@style/DrawerStyle</item>
     </style>
 
     <style name="Theme.MyGymPlan" parent="Base.Theme.MyGymPlan" />
@@ -20,6 +22,10 @@
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
 
+    </style>
+
+    <style name="DrawerStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/white</item>
     </style>
 
 

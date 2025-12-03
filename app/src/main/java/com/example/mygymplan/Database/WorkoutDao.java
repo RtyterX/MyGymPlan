@@ -27,8 +27,8 @@ public interface WorkoutDao {
     @Delete
     void deleteWorkout(Workout workout);
 
-    @Query("INSERT INTO workouts (name,description,type,sequence,duration,dayOfWeek,lastModified,plan_Id) VALUES (:name, :description, :type, :sequence, :duration, :dayOfWeek, :lastModified, :plan_Id)")
-    void rawInsert(String name, String description, WorkoutType type, int sequence, String duration, DayOfWeek dayOfWeek, String lastModified, int plan_Id);
+    @Query("INSERT INTO workouts (name,description,type,sequence,duration,dayOfWeek,lastModified,plan_Id,editable) VALUES (:name, :description, :type, :sequence, :duration, :dayOfWeek, :lastModified, :plan_Id, :editable)")
+    void rawInsert(String name, String description, WorkoutType type, int sequence, String duration, DayOfWeek dayOfWeek, String lastModified, int plan_Id, boolean editable);
 
 
 }

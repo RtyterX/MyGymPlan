@@ -67,8 +67,8 @@
 
         <TextView
             android:id="@+id/CreatedDateTitle"
-            android:layout_width="61dp"
-            android:layout_height="17dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:paddingTop="4dp"
             android:text="Create Date: "
             android:textSize="10sp"
@@ -77,8 +77,8 @@
 
         <TextView
             android:id="@+id/CreatedDatePlan"
-            android:layout_width="43dp"
-            android:layout_height="17dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:paddingTop="4dp"
             android:text="TextView"
             android:textSize="10sp"
@@ -179,6 +179,7 @@
             android:layout_width="74dp"
             android:layout_height="33dp"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="#204795"
             android:text="Active"
             android:textAlignment="gravity"
             android:textSize="8sp"

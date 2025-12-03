@@ -296,11 +296,19 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LoadData(thisWorkout);
+        Log.d("Teste Restart", "onRestart Started");
+    }
+
     // ----------------------------------------------
     // --------- Add Exercise From Database ---------
     // ----------------------------------------------
     public void AddExercise() {
-        popupService.AddExercisePopup(this, WorkoutActivity.this);
+        popupService.AddExercisePopup(this, WorkoutActivity.this, thisWorkout);
     }
 
 
@@ -371,6 +379,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                         WorkoutRVAdapterHorizontal workoutAdapter = new WorkoutRVAdapterHorizontal(WorkoutActivity.this, displayedWorkouts, new WorkoutRVAdapterHorizontal.OnItemClickListener() {
                             @Override
                             public void onItemClick(Workout item) {
+                                Log.d("Teste", "Workout Horizontal Clickeed");
                                 thisWorkout = item;
                                 UpdateRecyclerView(thisWorkout);
                                 WorkoutsHorizontalRecyclerView(item.sequence);  // Change Color

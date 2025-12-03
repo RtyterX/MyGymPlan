@@ -26,7 +26,9 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 
 
@@ -135,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         plansRV = findViewById(R.id.MainRVPlans);
         createPlan = findViewById(R.id.MainCreatePlanButton);
         noWorkout = findViewById(R.id.MainNoWorkoutText);
-        ImageView info = findViewById(R.id.MainInfoButton);
-        ImageView planImport = findViewById(R.id.ImportMainIcon);
         Button otherPlans = findViewById(R.id.OtherPlansButton);
         // Set View Flipper
         ViewFlipper flipper = findViewById(R.id.MainFlipperView);
@@ -167,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);                       // Set ActionBar (Hamburger Menu)
         drawerLayout.addDrawerListener(toggle);                                                // Set Click on ActionBar
         toggle.syncState();                                                                    // Sync with drawer state (Open/Close)
+
+        int color = getResources().getColor(R.color.black);
+        DrawerArrowDrawable arrow = new DrawerArrowDrawable(this);
+        toggle.setDrawerArrowDrawable(arrow);
+        arrow.setColor(R.color.blue1);
 
 
         //  --- Go to Test Activity ---
