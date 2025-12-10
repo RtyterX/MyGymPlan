@@ -20,16 +20,14 @@
 
     <EditText
         android:id="@+id/ExerciseName"
-        android:layout_width="342dp"
-        android:layout_height="46dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:ellipsize="end"
         android:ems="10"
         android:hint="Exercise Name"
         android:inputType="text"
         android:maxLines="1"
-        android:paddingLeft="30dp"
-        android:paddingTop="2dp"
         android:textAlignment="center"
         android:textCursorDrawable="@color/black"
         android:textSize="28sp"
@@ -358,24 +356,23 @@
 
     <ImageView
         android:id="@+id/TimerButton"
-        android:layout_width="167dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="433dp"
+        android:layout_height="342dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/clock_icon"
         android:text="Timer"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="160dp"
-        android:layout_height="53dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_marginTop="4dp"
         android:hint="Workout Type"
@@ -387,8 +384,8 @@
 
         <AutoCompleteTextView
             android:id="@+id/AutoCompleteEnumList"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_width="360dp"
+            android:layout_height="52dp"
             android:layout_marginBottom="128dp"
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -430,8 +427,8 @@
 
     <Button
         android:id="@+id/CreateVariantButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_width="177dp"
+        android:layout_height="49dp"
         android:text="Create Variant"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"

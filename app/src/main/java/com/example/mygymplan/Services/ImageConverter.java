@@ -1,8 +1,12 @@
 package com.example.mygymplan.Services;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+
+import com.example.mygymplan.Enums.WorkoutType;
+import com.example.mygymplan.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,4 +34,10 @@ public class ImageConverter {
 
         return BitmapFactory.decodeStream(byteArrayInputStream);
     }
+
+    public Bitmap SetWorkoutImage(Context context, WorkoutType type) {
+        /////////// Apply Different Images by Type ////////////
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.workout_type_arm);
+    }
+
 }

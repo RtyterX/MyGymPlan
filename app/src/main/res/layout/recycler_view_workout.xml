@@ -19,8 +19,8 @@
 
     <ImageView
         android:id="@+id/RecyclerWorkoutImage"
-        android:layout_width="92dp"
-        android:layout_height="85dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/BackgroundRVWorkout"
         app:layout_constraintStart_toStartOf="@+id/BackgroundRVWorkout"
@@ -31,11 +31,12 @@
         android:id="@+id/RecyclerWorkoutName"
         android:layout_width="180dp"
         android:layout_height="22dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Workout Name"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
@@ -45,9 +46,10 @@
         android:id="@+id/RecyclerWorkoutType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Workout Enum"
+        android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
@@ -57,10 +59,11 @@
         android:id="@+id/WorkoutDurationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="Duration: "
         android:textAlignment="center"
+        android:textColor="#E2E2E2"
         android:textSize="12dp"
         app:layout_constraintStart_toEndOf="@+id/RecyclerWorkoutImage"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutType" />
@@ -69,30 +72,13 @@
         android:id="@+id/WorkoutDurationTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:hint="Min - Max"
         android:textAlignment="textStart"
+        android:textColor="#FDFAFA"
         android:textSize="12dp"
         app:layout_constraintStart_toEndOf="@+id/WorkoutDurationTitle"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerWorkoutType" />
-
-    <TextView
-        android:id="@+id/LastModifiedWorkout"
-        android:layout_width="32dp"
-        android:layout_height="14dp"
-        android:text="TextView"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
-
-    <TextView
-        android:id="@+id/LastModifiedTitle"
-        android:layout_width="44dp"
-        android:layout_height="14dp"
-        android:text="LastMod: "
-        android:textSize="10sp"
-        app:layout_constraintEnd_toStartOf="@+id/LastModifiedWorkout"
-        app:layout_constraintTop_toTopOf="@+id/BackgroundRVWorkout" />
 
     <ImageView
         android:id="@+id/EditWorkoutRV"

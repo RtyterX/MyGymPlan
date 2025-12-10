@@ -293,9 +293,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             noWorkout.setVisibility(View.VISIBLE);
             noWorkout.setText("You have no Active Plan.\n Create one or choose from list!");
         }
-        else {
-            CheckPlan();
-        }
+
+        CheckPlan();
 
         //////////////// NOT IMPLEMENTED //////////////
         // Check if User is Pro
@@ -310,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("Teste", "teste");
 
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "workouts").build();
 

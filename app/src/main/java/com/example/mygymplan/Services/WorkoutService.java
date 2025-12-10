@@ -10,8 +10,12 @@ import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Entitys.Plan;
 import com.example.mygymplan.Entitys.Workout;
 import com.example.mygymplan.Enums.WorkoutType;
+import com.example.mygymplan.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 
@@ -340,5 +344,6 @@ public class WorkoutService extends AppCompatActivity {
             }
         }).start();
     }
+
 
 }

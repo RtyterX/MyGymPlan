@@ -310,6 +310,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 // --------------------------------------------------------------------
                 timerButton.setVisibility(View.GONE);           // Not necessary when creating new
                 deleteButton.setVisibility(View.GONE);          // Not necessary when creating new
+                createVarient.setVisibility(View.GONE);         // Not necessary when creating new
                 // Alter Save Button Size
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,    // Set width to match_parent

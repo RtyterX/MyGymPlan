@@ -138,6 +138,11 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
 
         // On Item Click
         holder.bind(planList.get(position), onListener);
+
+
+        if (!planList.get(position).active){
+            holder.row.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -164,6 +169,8 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
         ImageView deleteButton;
         Button setActiveButton;
 
+        View row;
+
 
 
         // Constructor
@@ -182,6 +189,7 @@ public class PlanRVAdapter extends RecyclerView.Adapter<com.example.mygymplan.Ad
             setActiveButton = itemView.findViewById(R.id.SetPlanActiveRV);
             textViewAuthor = itemView.findViewById(R.id.PlanRVAuthor);
             textExperienceLevel = itemView.findViewById(R.id.PlanExperienceLevel);
+            row = itemView.findViewById(R.id.RVPlanRow);
         }
 
         public void bind(Plan item, OnItemClickListener onlistener) {

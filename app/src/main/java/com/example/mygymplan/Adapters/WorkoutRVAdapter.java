@@ -10,15 +10,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
-import com.example.mygymplan.Database.AppDatabase;
-import com.example.mygymplan.Database.ExerciseDao;
-import com.example.mygymplan.Entitys.Exercise;
 import com.example.mygymplan.Enums.WorkoutType;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Entitys.Workout;
-import com.example.mygymplan.Services.WorkoutDuration;
+import com.example.mygymplan.Services.ImageConverter;
 
 import java.util.List;
 
@@ -36,6 +32,8 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
     List<Workout> workoutList;
     OnItemClickListener onListener;
     OnClickEditListener editListener;
+
+    ImageConverter imageConverter = new ImageConverter();
 
 
     // Constructor
@@ -62,7 +60,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // Assigning values to the view we created in the recycler view row Layout file
         // Based on the position of the Recycler View
         holder.textViewName.setText(workoutList.get(position).name);
-        holder.textViewLastMod.setText(workoutList.get(position).lastModified);
 
         // Calculate Workout Duration Time
         holder.textViewDuration.setText(workoutList.get(position).duration);
@@ -76,7 +73,8 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         }
 
         // Image
-        // holder.imageView.setImageResource(myWorkout.get(position).getwImage());
+        ///////////////  Place Holder  ///////////////////
+        holder.imageView.setImageBitmap(imageConverter.SetWorkoutImage(context, workoutList.get(position).type));
 
         // Edit Button
         if (workoutList.get(position).editable) {
@@ -94,6 +92,7 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         // On Item Click
         holder.bind(workoutList.get(position), onListener);
 
+
     }
 
     @Override
@@ -108,7 +107,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
         TextView textViewName;
         TextView textViewType;
         TextView textViewDuration;
-        TextView textViewLastMod;
         ImageView imageView;
         ImageView editButton;
 
@@ -119,7 +117,6 @@ public class WorkoutRVAdapter extends RecyclerView.Adapter<WorkoutRVAdapter.MyVi
 
             textViewName = itemView.findViewById(R.id.RecyclerWorkoutName);
             textViewType = itemView.findViewById(R.id.RecyclerWorkoutType);
-            textViewLastMod = itemView.findViewById(R.id.LastModifiedWorkout);
             imageView = itemView.findViewById(R.id.RecyclerWorkoutImage);
             textViewDuration = itemView.findViewById(R.id.WorkoutDurationTime);
             editButton = itemView.findViewById(R.id.EditWorkoutRV);

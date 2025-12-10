@@ -7,5 +7,6 @@
     <color name="grayBG">#efebfc</color>
     <color name="noSelectedBG">#dfdaed</color>
     <color name="oldGreyBG">#F5EEFC</color>
+    <color name="workoutRV">#5f7efa</color>
 
 </resources>

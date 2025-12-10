@@ -151,8 +151,8 @@
 
         <AutoCompleteTextView
             android:id="@+id/AutoCompleteLanguageList"
-            android:layout_width="352dp"
-            android:layout_height="76dp"
+            android:layout_width="302dp"
+            android:layout_height="56dp"
             android:layout_marginBottom="128dp"
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="parent"

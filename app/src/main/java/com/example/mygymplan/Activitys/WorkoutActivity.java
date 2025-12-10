@@ -383,6 +383,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
                                 thisWorkout = item;
                                 UpdateRecyclerView(thisWorkout);
                                 WorkoutsHorizontalRecyclerView(item.sequence);  // Change Color
+                                ChangeUIVisibility();
                                 displayedExercises.clear();
                             }
                         }, position - 1);
@@ -465,7 +466,7 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
     // ----------------------------------------------
     private void ChangeUIVisibility() {
         Log.d("Change UI Visibility Teste", "Number os Displayed Exercises: " + displayedExercises.size());
-        if (displayedExercises.isEmpty()) {
+        if (displayedExercises.isEmpty() || !thisWorkout.editable) {
             Log.d("Change UI Visibility Teste", "Displayed Exercises is Empty");
             recyclerView.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
@@ -474,6 +475,8 @@ public class WorkoutActivity extends AppCompatActivity implements NavigationView
             emptyButton2.setVisibility(View.VISIBLE);
         }
         else {
+            addButton.setVisibility(View.VISIBLE);
+            newButton.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             emptyButton1.setVisibility(View.GONE);
             emptyButton2.setVisibility(View.GONE);

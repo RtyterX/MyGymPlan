@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,6 +23,8 @@ import com.example.mygymplan.Database.AppDatabase;
 import com.example.mygymplan.R;
 import com.example.mygymplan.Services.DataInsert;
 import com.example.mygymplan.Services.SavedExerciseService;
+
+import java.io.ByteArrayOutputStream;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -155,11 +160,18 @@ public class WelcomeActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.createuserbg);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] bytesImageEncoded = byteArrayOutputStream.toByteArray();
+        bitmap1.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
+        String userImageString = Base64.encodeToString(bytesImageEncoded, Base64.DEFAULT);
+
         editor.putString("username", "No Name");
         editor.putString("email", "teste@gmail.com");
         editor.putInt("bodyType", 1);
         editor.putString("language", "English");
         editor.putBoolean("poundsOverKg", false);
+        editor.putString("userImageString", userImageString);
         editor.putBoolean("isPro", false);
         // ----------- FUTURE IDEAS ------------
         // Height
